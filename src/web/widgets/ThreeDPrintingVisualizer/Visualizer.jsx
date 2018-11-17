@@ -26,6 +26,7 @@ import VisualizerModelTransformation from './VisualizerModelTransformation';
 import VisualizerCameraOperations from './VisualizerCameraOperations';
 import VisualizerPreviewControl from './VisualizerPreviewControl';
 import VisualizerInfo from './VisualizerInfo';
+import ControlAxis from './ControlAxis';
 import Canvas from './Canvas';
 import ModelLoader from './ModelLoader';
 import ModelExporter from './ModelExporter';
@@ -34,6 +35,7 @@ import Model from './Model';
 import ModelGroup from './ModelGroup';
 import ContextMenu from './ContextMenu';
 import styles from './styles.styl';
+import TargetPoint from '../Visualizer/TargetPoint';
 
 const MATERIAL_NORMAL = new THREE.MeshPhongMaterial({ color: 0xe0e0e0, specular: 0xb0b0b0, shininess: 30 });
 const MATERIAL_OVERSTEPPED = new THREE.MeshPhongMaterial({
@@ -49,8 +51,180 @@ class Visualizer extends PureComponent {
     contextMenuDomElement = null;
     visualizerDomElement = null;
     getInitialState() {
+        const DOUBLE_HEAD = true;
+        const HEAD_TABLE = false;
+        // Double Head
+        let previwObject = new THREE.Object3D();
+        let L1 = new THREE.Object3D();
+        let L2 = new THREE.Object3D();
+        let L3 = new THREE.Object3D();
+        let L4 = new THREE.Object3D();
+        let L5 = new THREE.Object3D();
+        let toolhead = new TargetPoint();
+        let pathGeometry = new THREE.BufferGeometry();
+        let positions = new Float32Array(1000000 * 3);
+        pathGeometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+        let drawCount = 1000000;
+        pathGeometry.setDrawRange(0, drawCount);
+
+        let pathLine = new THREE.Line(pathGeometry, new THREE.LineBasicMaterial({ color: 0xffff00 }));
+
+        positions = pathLine.geometry.attributes.position.array;
+        positions[0] = 0;
+        positions[1] = 0;
+        positions[2] = 0;
+        positions[3] = 250;
+        positions[4] = 250;
+        positions[5] = 250;
+        pathLine.geometry.attributes.position.needsUpdate = true;
+
+        let xWidth = 250;
+        let yWidth = 250;
+        let zWidth = 250;
+        let pivotDistance = 27.5;
+        let cAxisOffset = 63.75;
+        let toolBodyLength = 30;
+
+        if (DOUBLE_HEAD) {
+            previwObject.add(L1);
+            L1.position.set(xWidth, 0, 0);
+            L1.add(L2);
+            L2.position.set(0, yWidth, 0);
+            L2.add(L3);
+            L3.position.set(0, 0, zWidth);
+            L3.add(L4);
+            L4.position.set(0, 0, 0);
+            L4.add(L5);
+            L5.position.set(cAxisOffset, 0, 0);
+
+            let l1M = new THREE.LineBasicMaterial({ color: 0xff0000 });
+            let l1A = new THREE.Vector3(0, 0, 0);
+            let l1B = new THREE.Vector3(xWidth, 0, 0);
+            let l1G = new THREE.Geometry();
+            l1G.vertices.push(l1A);
+            l1G.vertices.push(l1B);
+            let l1 = new THREE.Line(l1G, l1M);
+            previwObject.add(l1);
+
+            let l2M = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+            let l2A = new THREE.Vector3(0, 0, 0);
+            let l2B = new THREE.Vector3(0, yWidth, 0);
+            let l2G = new THREE.Geometry();
+            l2G.vertices.push(l2A);
+            l2G.vertices.push(l2B);
+            let l2 = new THREE.Line(l2G, l2M);
+            L1.add(l2);
+
+            let l3M = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            let l3A = new THREE.Vector3(0, 0, 0);
+            let l3B = new THREE.Vector3(0, 0, zWidth);
+            let l3G = new THREE.Geometry();
+            l3G.vertices.push(l3A);
+            l3G.vertices.push(l3B);
+            let l3 = new THREE.Line(l3G, l3M);
+            L2.add(l3);
+
+            let l4M = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            let l4A = new THREE.Vector3(0, 0, 0);
+            let l4B = new THREE.Vector3(0, 0, 0);
+            let l4G = new THREE.Geometry();
+            l4G.vertices.push(l4A);
+            l4G.vertices.push(l4B);
+            let l4 = new THREE.Line(l4G, l4M);
+            L3.add(l4);
+
+            let l5M = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            let l5A = new THREE.Vector3(0, 0, 0);
+            let l5B = new THREE.Vector3(cAxisOffset, 0, 0);
+            let l5G = new THREE.Geometry();
+            l5G.vertices.push(l5A);
+            l5G.vertices.push(l5B);
+            let l5 = new THREE.Line(l5G, l5M);
+            L4.add(l5);
+
+            let l6M = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+            let l6A = new THREE.Vector3(0, 0, 0);
+            let l6B = new THREE.Vector3(0, 0, toolBodyLength + pivotDistance);
+            let l6G = new THREE.Geometry();
+            l6G.vertices.push(l6A);
+            l6G.vertices.push(l6B);
+            let l6 = new THREE.Line(l6G, l6M);
+            L5.add(l6);
+            L5.add(toolhead);
+            toolhead.position.set(0, 0, toolBodyLength + pivotDistance);
+        }
+        // Head & Table
+        if (HEAD_TABLE) {
+            previwObject.add(L1);
+            L1.position.set(125, 0, 0);
+            L1.add(L2);
+            L2.position.set(0, 125, 0);
+            L2.add(L3);
+            L3.position.set(0, 0, 125);
+            L3.add(L4);
+            L4.position.set(0, -20, 0);
+            previwObject.add(L5);
+            let l1M = new THREE.LineBasicMaterial({ color: 0xff0000 });
+            let l1A = new THREE.Vector3(0, 0, 0);
+            let l1B = new THREE.Vector3(125, 0, 0);
+            let l1G = new THREE.Geometry();
+            l1G.vertices.push(l1A);
+            l1G.vertices.push(l1B);
+            let l1 = new THREE.Line(l1G, l1M);
+            L5.add(l1);
+            L5.add(L1);
+
+            let l2M = new THREE.LineBasicMaterial({ color: 0x00ff00 });
+            let l2A = new THREE.Vector3(0, 0, 0);
+            let l2B = new THREE.Vector3(0, 125, 0);
+            let l2G = new THREE.Geometry();
+            l2G.vertices.push(l2A);
+            l2G.vertices.push(l2B);
+            let l2 = new THREE.Line(l2G, l2M);
+            L1.add(l2);
+
+            let l3M = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            let l3A = new THREE.Vector3(0, 0, 0);
+            let l3B = new THREE.Vector3(0, 0, 125);
+            let l3G = new THREE.Geometry();
+            l3G.vertices.push(l3A);
+            l3G.vertices.push(l3B);
+            let l3 = new THREE.Line(l3G, l3M);
+            L2.add(l3);
+
+            let l4M = new THREE.LineBasicMaterial({ color: 0x0000ff });
+            let l4A = new THREE.Vector3(0, 0, 0);
+            let l4B = new THREE.Vector3(0, -20, 0);
+            let l4G = new THREE.Geometry();
+            l4G.vertices.push(l4A);
+            l4G.vertices.push(l4B);
+            let l4 = new THREE.Line(l4G, l4M);
+            L3.add(l4);
+
+            let l5M = new THREE.LineBasicMaterial({ color: 0xff0000 });
+            let l5A = new THREE.Vector3(0, 0, 0);
+            let l5B = new THREE.Vector3(0, -10, 0);
+            let l5G = new THREE.Geometry();
+            l5G.vertices.push(l5A);
+            l5G.vertices.push(l5B);
+            let l5 = new THREE.Line(l5G, l5M);
+
+            toolhead.position.set(0, -10, 0);
+            L4.add(toolhead);
+            L4.add(l5);
+        }
         return {
             stage: STAGES_3DP.noModel,
+            world: null,
+            csL1: L1,
+            csL2: L2,
+            csL3: L3,
+            csL4: L4,
+            csL5: L5,
+            previewObject: previwObject,
+            toolhead: toolhead,
+            pathGeometry: pathGeometry,
+            pathLine: pathLine,
 
             modelGroup: new ModelGroup(new THREE.Box3(
                 // use -0.1 to handle accuracy
@@ -106,6 +280,9 @@ class Visualizer extends PureComponent {
     }
 
     actions = {
+        goRun: () => {
+
+        },
         // topLeft
         onChangeFile: (event) => {
             const file = event.target.files[0];
@@ -551,7 +728,7 @@ class Visualizer extends PureComponent {
                 const dataObj = JSON.parse(data);
                 const result = this.gcodeRenderer.render(dataObj);
 
-                // destroy last line
+                // destroyrenderGcode last line
                 this.destroyGcodeLine();
                 const { line, layerCount, visibleLayerCount, bounds, gcodeTypeVisibility } = { ...result };
                 this.state.gcodeLineGroup.add(line);
@@ -604,6 +781,9 @@ class Visualizer extends PureComponent {
             >
                 <div className={styles['visualizer-top-left']}>
                     <VisualizerTopLeft actions={actions} state={state} />
+                </div>
+                <div className={styles['visualizer-control-axis']}>
+                    <ControlAxis actions={actions} state={state} />
                 </div>
 
                 <div className={styles['visualizer-model-transformation']}>

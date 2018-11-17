@@ -29,6 +29,7 @@
   },
   "preferGlobal": true,
   "scripts": {
+    "5axis": "babel-node experiment/test_5axis_gcode_parser.js",
     "pkgsync": "babel-node scripts/pkgsync.js",
     "gettext": "node scripts/gettext.js",
     "prepare": "npm run clean && npm run lint && npm run test && npm run build",

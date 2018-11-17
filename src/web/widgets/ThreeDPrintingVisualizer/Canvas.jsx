@@ -297,6 +297,11 @@ class Canvas extends Component {
         this.scene.add(this.camera);
 
         this.group = new THREE.Group();
+        this.group.add(this.props.state.previewObject);
+        this.scene.add(this.props.state.pathLine);
+        this.props.state.world = this.scene;
+
+        // this.scene.add(this.props.state.prewviewObject);
 
         this.group.add(this.props.state.modelGroup);
         // cling to bottom

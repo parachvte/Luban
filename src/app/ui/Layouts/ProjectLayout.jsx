@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import styles from './styles/project.styl';
 
-
 class ProjectLayout extends PureComponent {
     static propTypes = {
         renderRightView: PropTypes.func,

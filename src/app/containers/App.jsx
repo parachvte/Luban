@@ -26,13 +26,10 @@ import modal from '../lib/modal';
 import Header from './Header';
 // import Sidebar from './Sidebar';
 // import Workspace from './Workspace';
-// import Cnc from './Cnc';
-// import Laser from './Laser';
 import Workspace from '../ui/Pages/Workspace';
 import Printing from '../ui/Pages/Printing';
-import Cnc from '../ui/Pages/Cnc';
-import Laser from '../ui/Pages/Laser';
-
+import Laser from './Laser';
+import Cnc from './Cnc';
 import Settings from './Settings';
 import CaseLibrary from './CaseLibrary';
 import styles from './App.styl';

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import styles from './styles/homepage.styl';
 
-
 class ProjectLayout extends PureComponent {
     static propTypes = {
         renderTopView: PropTypes.func,

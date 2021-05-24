@@ -22,6 +22,22 @@ class ProjectLayout extends PureComponent {
 
     subToolBar = React.createRef();
 
+    componentDidMount() {
+        window.addEventListener('resize', this.resizeWindow, false);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.resizeWindow, false);
+    }
+
+    resizeWindow = () => {
+        const rightView = this.rightView.current;
+        const subToolBar = this.subToolBar.current;
+        const centerView = this.centerView.current;
+        if (centerView) {
+            centerView.style.width = `calc(100vw - ${rightView.clientWidth}px - ${subToolBar.clientWidth}px)`;
+        }
+    }
 
     componentDidMount() {
         window.addEventListener('resize', this.resizeWindow, false);
@@ -55,7 +71,6 @@ class ProjectLayout extends PureComponent {
                     )}
                 </div>
                 <div className={styles['content-flex']}>
-
                     <div
                         ref={this.rightView}
                         className={classNames(

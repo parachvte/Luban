@@ -97,7 +97,6 @@ class Printing extends PureComponent {
     };
 
     renderRightView = (widgets) => {
-        console.log('materialDefinition', widgets);
         return (
             <Sortable
                 options={{

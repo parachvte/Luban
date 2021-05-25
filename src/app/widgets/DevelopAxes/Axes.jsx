@@ -6,7 +6,7 @@ import { Creatable } from 'react-select';
 import pubsub from 'pubsub-js';
 
 import i18n from '../../lib/i18n';
-import combokeys from '../../lib/combokeys';
+//import combokeys from '../../lib/combokeys';
 import { controller } from '../../lib/controller';
 import { preventDefault } from '../../lib/dom-events';
 import { in2mm, mm2in } from '../../lib/units';
@@ -403,17 +403,17 @@ class Axes extends PureComponent {
     }
 
     addShuttleControlEvents() {
-        Object.keys(this.shuttleControlEvents).forEach(eventName => {
-            const callback = this.shuttleControlEvents[eventName];
-            combokeys.on(eventName, callback);
-        });
+    //     Object.keys(this.shuttleControlEvents).forEach(eventName => {
+    //         const callback = this.shuttleControlEvents[eventName];
+    //         combokeys.on(eventName, callback);
+    //     });
     }
 
     removeShuttleControlEvents() {
-        Object.keys(this.shuttleControlEvents).forEach(eventName => {
-            const callback = this.shuttleControlEvents[eventName];
-            combokeys.removeListener(eventName, callback);
-        });
+    //     Object.keys(this.shuttleControlEvents).forEach(eventName => {
+    //         const callback = this.shuttleControlEvents[eventName];
+    //         combokeys.removeListener(eventName, callback);
+    //     });
     }
 
     subscribe() {

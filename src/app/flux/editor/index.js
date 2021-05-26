@@ -377,6 +377,10 @@ export const actions = {
         if (!transformation.scaleY) {
             transformation.scaleY = transformation.height / height;
         }
+        // transformation.scaleX = transformation.width / width;
+        // transformation.scaleY = transformation.height / height;
+
+        console.log('generate', sourceWidth, sourceHeight, transformation.scaleX, transformation.scaleY, transformation.width, transformation.height);
 
         const options = {
             modelID,
@@ -471,7 +475,6 @@ export const actions = {
         const { SVGActions, modelGroup } = getState()[headType];
         const res = modelGroup.changeShowOrigin();
         SVGActions.updateElementImage(res.showImageName);
-
         dispatch(baseActions.updateState(headType, {
             showOrigin: res.showOrigin,
             renderingTimestamp: +new Date()
@@ -552,6 +555,7 @@ export const actions = {
 
         options.materials = materials;
         options.toolParams = toolParams;
+        console.log('before', options.transformation, selectedModel.width, selectedModel.height);
 
         dispatch(baseActions.updateState(headType, {
             stage: CNC_LASER_STAGE.PROCESSING_IMAGE,
@@ -757,11 +761,16 @@ export const actions = {
                     }
                 };
                 model.updateAndRefresh(modelOptions);
-                SVGActions.resetSelection();
             }
+            SVGActions.resetSelection();
+            const imagePath = `${DATA_PREFIX}/${processImageName}`;
+            model.elem.setAttribute('href', imagePath);
         }
-        model.updateTransformationProcess();
-        model.updateProcessImageName(processImageName);
+        if (model.sourceType !== SOURCE_TYPE_IMAGE3D) {
+            model.updateTransformationProcess();
+
+            model.updateProcessImageName(processImageName);
+        }
         // dispatch(baseActions.recordSnapshot(headType));
         dispatch(baseActions.resetCalculatedState(headType));
         dispatch(baseActions.render(headType));

@@ -179,6 +179,7 @@ class Workspace extends PureComponent {
 
     togglePrimaryContainer = () => {
         const { showPrimaryContainer } = this.props;
+        console.log('togglePrimaryContainer', showPrimaryContainer);
         this.props.updateTabContainer('left', { show: !showPrimaryContainer });
         this.setState({
             havePrimaryWidget: !showPrimaryContainer
@@ -189,6 +190,7 @@ class Workspace extends PureComponent {
 
     toggleSecondaryContainer = () => {
         const { showSecondaryContainer } = this.props;
+        console.log('toggleSecondaryContainer', showSecondaryContainer);
         this.props.updateTabContainer('right', { show: !showSecondaryContainer });
         this.setState({
             haveSecondaryWidget: !showSecondaryContainer
@@ -315,6 +317,7 @@ class Workspace extends PureComponent {
                         styles.fixed
                     )}
                 >
+
                     <DefaultWidgets
                         defaultWidgets={this.props.defaultWidgets}
                         toggleFromDefault={this.actions.toggleFromDefault}

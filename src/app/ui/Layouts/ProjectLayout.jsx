@@ -39,23 +39,6 @@ class ProjectLayout extends PureComponent {
         }
     }
 
-    componentDidMount() {
-        window.addEventListener('resize', this.resizeWindow, false);
-    }
-
-    componentWillUnmount() {
-        window.removeEventListener('resize', this.resizeWindow, false);
-    }
-
-    resizeWindow = () => {
-        const rightView = this.rightView.current;
-        const subToolBar = this.subToolBar.current;
-        const centerView = this.centerView.current;
-        if (centerView) {
-            centerView.style.width = `calc(100vw - ${rightView.clientWidth}px - ${subToolBar.clientWidth}px)`;
-        }
-    }
-
     render() {
         const { renderRightView, renderCenterView, renderMainToolBar, renderSubToolBar, renderModalView } = this.props;
         return (

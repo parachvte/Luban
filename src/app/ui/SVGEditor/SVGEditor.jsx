@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import styles from './index.styl';
 import { SVG_EVENT_CONTEXTMENU, SVG_EVENT_MODE } from './constants';
 import SVGCanvas from './SVGCanvas';
-import SvgTool from './SvgTool';
+import SVGLeftBar from './SVGLeftBar';
 
 import Cnc3DVisualizer from '../../views/Cnc3DVisualizer';
 
@@ -47,7 +47,10 @@ class SVGEditor extends PureComponent {
             rotateElementsFinish: PropTypes.func.isRequired
         }).isRequired,
 
-        createText: PropTypes.func.isRequired
+        createText: PropTypes.func.isRequired,
+
+        uploadImage: PropTypes.func, // todo: isRequired and cnc
+        switchToPage: PropTypes.func
     };
 
     canvas = React.createRef();
@@ -129,10 +132,12 @@ class SVGEditor extends PureComponent {
                             elementActions={this.props.elementActions}
                         />
                     </div>
-                    <SvgTool
+                    <SVGLeftBar
                         mode={this.state.mode}
                         insertDefaultTextVector={this.insertDefaultTextVector}
                         setMode={this.setMode}
+                        uploadImage={this.props.uploadImage}
+                        switchToPage={this.props.switchToPage}
                     />
 
                 </div>

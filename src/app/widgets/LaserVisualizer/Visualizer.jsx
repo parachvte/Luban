@@ -80,6 +80,8 @@ class Visualizer extends Component {
         createText: PropTypes.func.isRequired,
         updateTextTransformationAfterEdit: PropTypes.func.isRequired,
         getSelectedElementsUniformScalingState: PropTypes.func.isRequired,
+        uploadImage: PropTypes.func.isRequired,
+        switchToPage: PropTypes.func.isRequired,
 
         elementActions: PropTypes.shape({
             moveElementsStart: PropTypes.func.isRequired,
@@ -358,6 +360,8 @@ class Visualizer extends Component {
                         onMoveSelectedElementsByKey={this.props.onMoveSelectedElementsByKey}
                         createText={this.props.createText}
                         updateTextTransformationAfterEdit={this.props.updateTextTransformationAfterEdit}
+                        uploadImage={this.props.uploadImage}
+                        switchToPage={this.props.switchToPage}
                     />
                 </div>
                 <div
@@ -589,6 +593,9 @@ const mapDispatchToProps = (dispatch) => {
 
         createText: (text) => dispatch(editorActions.createText('laser', text)),
         updateTextTransformationAfterEdit: (element, transformation) => dispatch(editorActions.updateModelTransformationByElement('laser', element, transformation)),
+
+        uploadImage: (file, mode, onFailure) => dispatch(editorActions.uploadImage('laser', file, mode, onFailure)),
+        switchToPage: (page) => dispatch(editorActions.switchToPage('laser', page)),
 
         elementActions: {
             moveElementsStart: (elements) => dispatch(editorActions.moveElementsStart('laser', elements)),

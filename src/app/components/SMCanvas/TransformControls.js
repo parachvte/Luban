@@ -435,7 +435,7 @@ class TransformControls extends Object3D {
                 // Update peripherals
                 this.translatePeripheral.visible = (this.mode === 'translate' && child.visible);
                 this.rotatePeripheral.visible = (this.mode === 'rotate' && child.visible);
-                this.scalePeripheral.visible = (this.mode === 'scale' && child.visible);
+                this.scalePeripheral.visible = ((this.mode === 'scale' || this.mode === 'mirror') && child.visible);
             });
 
             this.object.matrixWorld.decompose(objectPosition, objectQuaternion, objectScale);
@@ -535,7 +535,7 @@ class TransformControls extends Object3D {
                 this.rotatePicker.scale.set(1, 1, 1).multiplyScalar(eyeDistance / 8);
 
                 handles.push(...this.rotatePeripheral.children);
-            } else if (this.mode === 'scale') {
+            } else if (this.mode === 'scale' || this.mode === 'mirror') {
                 this.scalePeripheral.position.copy(multiObjectPosition);
                 this.scalePeripheral.quaternion.copy(objectQuaternion);
                 this.scalePeripheral.scale.set(1, 1, 1).multiplyScalar(eyeDistance / 8);

@@ -49,8 +49,10 @@ class SVGEditor extends PureComponent {
 
         createText: PropTypes.func.isRequired,
 
-        uploadImage: PropTypes.func, // todo: isRequired and cnc
-        switchToPage: PropTypes.func
+        onChangeFile: PropTypes.func.isRequired,
+        onClickToUpload: PropTypes.func.isRequired,
+        fileInput: PropTypes.object.isRequired,
+        allowedFiles: PropTypes.string.isRequired
     };
 
     canvas = React.createRef();
@@ -136,8 +138,10 @@ class SVGEditor extends PureComponent {
                         mode={this.state.mode}
                         insertDefaultTextVector={this.insertDefaultTextVector}
                         setMode={this.setMode}
-                        uploadImage={this.props.uploadImage}
-                        switchToPage={this.props.switchToPage}
+                        onChangeFile={this.props.onChangeFile}
+                        onClickToUpload={this.props.onClickToUpload}
+                        fileInput={this.props.fileInput}
+                        allowedFiles={this.props.allowedFiles}
                     />
 
                 </div>

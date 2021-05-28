@@ -340,7 +340,7 @@ $visualizer-padding = 10px
     > .panel
         background-color: $background-color
         display: block
-        width: 235px
+        //width: 235px
         position: absolute
         left: (56px + $visualizer-padding)
         border: 1px solid $border-color
@@ -365,7 +365,7 @@ $visualizer-padding = 10px
 
         &.move-panel
             top: 0
-
+            width: 130px
             transform: translate(0, 64px * 1.5 - 93px / 2)
 
         &.scale-panel, &.scale-panel-multi
@@ -393,10 +393,12 @@ $visualizer-padding = 10px
 
         &.rotate-panel
             top: 0
+            width: 130px
             transform: translate(0, 64px * 3.5 - 133px / 2)
 
         &.mirror-panel
             top: 0
+            width: 235px
             transform: translate(0, 64px * 4.5 - 133px / 2)
 
         &.support-panel
@@ -437,11 +439,6 @@ $visualizer-padding = 10px
             text-align: center
             font-size: 16px
             float: left
-
-        .axis-slider
-            margin-left: 8px
-            display: inline-block
-            width: 108px
 
         // move & rotate
         // axis-input-1 for move panel

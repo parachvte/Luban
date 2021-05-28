@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import Slider from 'rc-slider';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
@@ -41,7 +40,9 @@ class VisualizerLeftBar extends PureComponent {
         updateSelectedModelTransformation: PropTypes.func.isRequired,
         setTransformMode: PropTypes.func.isRequired,
         uploadModel: PropTypes.func.isRequired,
-        arrangeAllModels: PropTypes.func.isRequired
+        arrangeAllModels: PropTypes.func.isRequired,
+        scaleToFitSelectedModel: PropTypes.func.isRequired,
+        autoRotateSelectedModel: PropTypes.func.isRequired
     };
 
     state = {}
@@ -393,27 +394,6 @@ class VisualizerLeftBar extends PureComponent {
                                 />
                             </span>
                             <span className={styles['axis-unit-1']}>mm</span>
-                            <span className={styles['axis-slider']}>
-                                <Slider
-                                    handleStyle={{
-                                        borderColor: 'white',
-                                        backgroundColor: '#e83100'
-                                    }}
-                                    trackStyle={{
-                                        backgroundColor: '#e9e9e9'
-                                    }}
-                                    value={moveX}
-                                    min={-size.x / 2}
-                                    max={size.x / 2}
-                                    step={0.1}
-                                    onChange={(value) => {
-                                        actions.onModelTransform({ 'moveX': value });
-                                    }}
-                                    onAfterChange={() => {
-                                        actions.onModelAfterTransform();
-                                    }}
-                                />
-                            </span>
                         </div>
                         <div className={styles.axis}>
                             <span className={classNames(styles['axis-label'], styles['axis-green'])}>Y</span>
@@ -429,29 +409,6 @@ class VisualizerLeftBar extends PureComponent {
                                 />
                             </span>
                             <span className={styles['axis-unit-1']}>mm</span>
-                            <span className={styles['axis-slider']}>
-                                <Slider
-                                    handleStyle={{
-                                        borderColor: 'white',
-                                        backgroundColor: '#22ac38'
-                                    }}
-                                    trackStyle={{
-                                        backgroundColor: '#e9e9e9'
-                                    }}
-                                    value={moveY}
-                                    min={-size.y / 2}
-                                    max={size.y / 2}
-                                    step={0.1}
-                                    onChange={(value) => {
-                                        actions.onModelTransform({ 'moveY': value });
-                                    }}
-                                    onAfterChange={() => {
-                                        actions.onModelAfterTransform();
-                                    }}
-
-
-                                />
-                            </span>
                         </div>
                         <div className={styles.axis}>
                             <Anchor
@@ -516,6 +473,15 @@ class VisualizerLeftBar extends PureComponent {
                             >
                                 <i className={classNames(styles.icon, uniformScalingState ? styles['icon-checked'] : styles['icon-unchecked'])} />
                                 <span>{i18n._('Uniform Scaling')}</span>
+                            </Anchor>
+                        </div>
+                        <div className={styles.axis}>
+                            <Anchor
+                                componentClass="button"
+                                className={styles['reset-button']}
+                                onClick={this.props.scaleToFitSelectedModel}
+                            >
+                                <span>{i18n._('Scale to Fit')}</span>
                             </Anchor>
                         </div>
                         <div className={styles.axis}>
@@ -593,29 +559,6 @@ class VisualizerLeftBar extends PureComponent {
                                 />
                             </span>
                             <span className={styles['axis-unit-3']}>°</span>
-                            <span className={styles['axis-slider']}>
-                                <Slider
-                                    handleStyle={{
-                                        borderColor: 'white',
-                                        backgroundColor: '#e83100'
-                                    }}
-                                    trackStyle={{
-                                        backgroundColor: '#e9e9e9'
-                                    }}
-                                    value={rotateX}
-                                    min={-180}
-                                    max={180}
-                                    step={0.1}
-                                    onChange={(degree) => {
-                                        actions.onModelTransform({ 'rotateX': THREE.Math.degToRad(degree) });
-                                    }}
-                                    onAfterChange={() => {
-                                        actions.onModelAfterTransform();
-                                    }}
-
-
-                                />
-                            </span>
                         </div>
                         <div className={styles.axis}>
                             <span className={classNames(styles['axis-label'], styles['axis-green'])}>Y</span>
@@ -631,29 +574,6 @@ class VisualizerLeftBar extends PureComponent {
                                 />
                             </span>
                             <span className={styles['axis-unit-3']}>°</span>
-                            <span className={styles['axis-slider']}>
-                                <Slider
-                                    handleStyle={{
-                                        borderColor: 'white',
-                                        backgroundColor: '#22ac38'
-                                    }}
-                                    trackStyle={{
-                                        backgroundColor: '#e9e9e9'
-                                    }}
-                                    value={rotateY}
-                                    min={-180}
-                                    max={180}
-                                    step={0.1}
-                                    onChange={(degree) => {
-                                        actions.onModelTransform({ 'rotateY': THREE.Math.degToRad(degree) });
-                                    }}
-                                    onAfterChange={() => {
-                                        actions.onModelAfterTransform();
-                                    }}
-
-
-                                />
-                            </span>
                         </div>
                         <div className={styles.axis}>
                             <span className={classNames(styles['axis-label'], styles['axis-blue'])}>Z</span>
@@ -669,31 +589,16 @@ class VisualizerLeftBar extends PureComponent {
                                 />
                             </span>
                             <span className={styles['axis-unit-3']}>°</span>
-                            <span className={styles['axis-slider']}>
-                                <Slider
-                                    handleStyle={{
-                                        borderColor: 'white',
-                                        backgroundColor: '#00b7ee'
-                                    }}
-                                    trackStyle={{
-                                        backgroundColor: '#e9e9e9'
-                                    }}
-                                    value={rotateZ}
-                                    min={-180}
-                                    max={180}
-                                    step={0.1}
-                                    onChange={(degree) => {
-                                        actions.onModelTransform({ 'rotateZ': THREE.Math.degToRad(degree) });
-                                    }}
-                                    onAfterChange={() => {
-                                        actions.onModelAfterTransform();
-                                    }}
-
-
-                                />
-                            </span>
                         </div>
-
+                        <div className={styles.axis}>
+                            <Anchor
+                                componentClass="button"
+                                className={styles['reset-button']}
+                                onClick={this.props.autoRotateSelectedModel}
+                            >
+                                <span>{i18n._('Auto Rotate')}</span>
+                            </Anchor>
+                        </div>
                         <div className={styles.axis}>
                             <Anchor
                                 componentClass="button"
@@ -737,16 +642,17 @@ class VisualizerLeftBar extends PureComponent {
                                 <span>{i18n._('Z-axis')}</span>
                             </Anchor>
                         </div>
-                        <div className={classNames(styles.axis, styles['axis-padding-left'])}>
-                            <Anchor
-                                componentClass="button"
-                                style={{ width: '198px' }}
-                                className={styles['reset-button']}
-                                onClick={() => actions.mirrorSelectedModel('Reset')}
-                            >
-                                <span>{i18n._('Reset')}</span>
-                            </Anchor>
-                        </div>
+                        {/*TODO: Cannot easily reset because different method to calculate scales*/}
+                        {/*<div className={classNames(styles.axis, styles['axis-padding-left'])}>*/}
+                        {/*    <Anchor*/}
+                        {/*        componentClass="button"*/}
+                        {/*        style={{ width: '198px' }}*/}
+                        {/*        className={styles['reset-button']}*/}
+                        {/*        onClick={() => actions.mirrorSelectedModel('Reset')}*/}
+                        {/*    >*/}
+                        {/*        <span>{i18n._('Reset')}</span>*/}
+                        {/*    </Anchor>*/}
+                        {/*</div>*/}
                     </div>
                 )}
 

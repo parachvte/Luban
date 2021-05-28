@@ -373,6 +373,8 @@ class Visualizer extends PureComponent {
                         defaultSupportSize={this.state.defaultSupportSize}
                         isSupporting={this.state.isSupporting}
                         arrangeAllModels={this.actions.arrangeAllModels}
+                        scaleToFitSelectedModel={this.actions.scaleToFitSelectedModel}
+                        autoRotateSelectedModel={this.actions.autoRotateSelectedModel}
                     />
                 </div>
 

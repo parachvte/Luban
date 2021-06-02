@@ -69,6 +69,7 @@ function ToolParameters(props) {
     const isSVG = type === TOOLPATH_TYPE_VECTOR;
 
     const toolDefinitionOptions = [];
+    const toolDefinitionOptionsObj = {};
 
     function onShowCncToolManager() {
         dispatch(cncActions.updateShowCncToolManager(true));
@@ -84,34 +85,41 @@ function ToolParameters(props) {
         }
     }
 
+    toolDefinitions.forEach(tool => {
+        const category = tool.category;
+        const definitionId = tool.definitionId;
 
-    toolDefinitions.forEach(d => {
-        const category = d.category;
-        const definitionId = d.definitionId;
-        const groupOptions = {
-            label: category,
-            definitionId: definitionId,
-            options: []
-        };
-        for (const tool of d.toolList) {
-            if (Object.keys(tool?.config).length > 0) {
-                const checkboxAndSelectGroup = {};
-                const name = tool.name;
-                let detailName = '';
-                if (tool.config.angle.default_value !== '180') {
-                    detailName = `${tool.name} (${tool.config.angle.default_value}${tool.config.angle.unit} ${tool.config.shaft_diameter.default_value}${tool.config.shaft_diameter.unit} )`;
-                } else {
-                    detailName = `${tool.name} (${tool.config.shaft_diameter.default_value}${tool.config.shaft_diameter.unit} )`;
-                }
-                checkboxAndSelectGroup.name = name;
-                checkboxAndSelectGroup.definitionId = definitionId;
-                checkboxAndSelectGroup.label = `${detailName}`;
-                checkboxAndSelectGroup.value = `${definitionId}-${name}`;
+        if (Object.keys(tool?.settings).length > 0) {
+            const checkboxAndSelectGroup = {};
+            const name = tool.name;
+            let detailName = '';
+            if (tool.settings.angle.default_value !== '180') {
+                detailName = `${tool.name} (${tool.settings.angle.default_value}${tool.settings.angle.unit} ${tool.settings.shaft_diameter.default_value}${tool.settings.shaft_diameter.unit} )`;
+            } else {
+                detailName = `${tool.name} (${tool.settings.shaft_diameter.default_value}${tool.settings.shaft_diameter.unit} )`;
+            }
+            checkboxAndSelectGroup.name = name;
+            checkboxAndSelectGroup.definitionId = definitionId;
+            checkboxAndSelectGroup.label = `${detailName}`;
+            checkboxAndSelectGroup.value = `${definitionId}-${name}`;
+            if (toolDefinitionOptionsObj[category]) {
+                toolDefinitionOptionsObj[category].options.push(checkboxAndSelectGroup);
+            } else {
+                const groupOptions = {
+                    label: category,
+                    definitionId: definitionId,
+                    options: []
+                };
+                toolDefinitionOptionsObj[category] = groupOptions;
                 groupOptions.options.push(checkboxAndSelectGroup);
             }
         }
-        toolDefinitionOptions.push(groupOptions);
+        return true;
     });
+    Object.values(toolDefinitionOptionsObj).forEach((item) => {
+        toolDefinitionOptions.push(item);
+    });
+
     const valueObj = {
         firstKey: 'definitionId',
         firstValue: activeToolDefinition.definitionId,
@@ -182,8 +190,8 @@ function ToolParameters(props) {
                         </Anchor>
                     </div>
 
-                    {(Object.keys(activeToolDefinition.config).map(key => {
-                        const setting = activeToolDefinition.config[key];
+                    {(Object.keys(activeToolDefinition.settings).map(key => {
+                        const setting = activeToolDefinition.settings[key];
                         return (
                             <SettingItem
                                 setting={setting}

@@ -49,6 +49,7 @@ function PrintingManager() {
     if (!showPrintingManager) {
         return null;
     }
+    console.log('materialDefinitions', materialDefinitions);
 
     const actions = {
         closeManager: () => {

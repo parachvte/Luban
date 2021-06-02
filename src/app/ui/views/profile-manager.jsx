@@ -1,9 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+<<<<<<< Updated upstream:src/app/ui/views/profile-manager.jsx
 import { isUndefined, cloneDeep, uniqWith, isEqual } from 'lodash';
 import { PRINTING_QUALITY_CONFIG_GROUP } from '../../constants';
 import modal from '../../lib/modal';
+=======
+import { isUndefined, cloneDeep, uniqWith } from 'lodash';
+import { PRINTING_QUALITY_CONFIG_GROUP } from '../constants';
+import modal from '../lib/modal';
+>>>>>>> Stashed changes:src/app/views/profile-manager.jsx
 import CreateModal from './CreateModal';
 import i18n from '../../lib/i18n';
 import SvgIcon from '../components/SvgIcon';
@@ -153,26 +159,34 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             const definitionForManager = definitionState?.definitionForManager;
             const isCategorySelected = definitionState?.isCategorySelected;
             let title = i18n._('Create');
-            let copyType = '', copyTargetName = '';
-            if (isCreate && disableCategory) {
-                title = i18n._('Create');
-                copyType = 'Tool';
-                copyTargetName = 'New Profile';
-            }
+            let copyType = '', copyCategoryName = '', copyToolName = '';
+
             if (!isCreate) {
                 title = i18n._('Copy');
                 copyType = isCategorySelected ? 'Material' : 'Tool';
-                copyTargetName = isCategorySelected ? definitionForManager.category : definitionForManager.name;
+                copyCategoryName = definitionForManager.category;
+                if (!isCategorySelected) {
+                    copyToolName = definitionForManager.name;
+                }
+            } else {
+                copyCategoryName = definitionForManager.category;
+            }
+            if (isCreate && disableCategory) {
+                title = i18n._('Create');
+                copyType = 'Tool';
+                copyToolName = 'New Profile';
             }
             isCreate = isCreate && !disableCategory;
 
             let materialOptions = definitionState?.definitionOptions.map(option => {
                 return {
                     label: option.category,
-                    value: option.value
+                    value: option.category
                 };
             });
-            materialOptions = uniqWith(materialOptions, isEqual);
+            materialOptions = uniqWith(materialOptions, (a, b) => {
+                return a.label === b.label;
+            });
 
             const popupActions = modal({
                 title: title,
@@ -184,7 +198,8 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                             ref={refs.refCreateModal}
                             materialOptions={materialOptions}
                             copyType={copyType}
-                            copyTargetName={copyTargetName}
+                            copyCategoryName={copyCategoryName}
+                            copyToolName={copyToolName}
                         />
                     </React.Fragment>
                 ),
@@ -195,14 +210,15 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                         onClick={async () => {
                             const data = refs.refCreateModal.current.getData();
                             const newDefinitionForManager = cloneDeep(definitionState.definitionForManager);
-                            let isEmptyCategory = false;
                             let newName = '';
                             popupActions.close();
                             if (!isCreate) {
+                                // printing all goes here
                                 if (isCategorySelected) {
+                                    // TODO
                                     newName = data.materialName;
                                 } else {
-                                    newDefinitionForManager.definitionId = data.materialDefinitionId;
+                                    newDefinitionForManager.category = data.materialName;
                                     newName = data.toolName;
                                 }
                                 const newDefinition = await outsideActions.onCreateManagerDefinition(newDefinitionForManager, newName, isCategorySelected);
@@ -211,13 +227,13 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                 if (data.createType === 'Material') {
                                     newDefinitionForManager.category = data.materialName;
                                     newName = data.materialName;
-                                    isEmptyCategory = true;
+                                    newDefinitionForManager.settings = {};
                                 } else {
-                                    newDefinitionForManager.definitionId = data.materialDefinitionId;
                                     newDefinitionForManager.category = data.materialName;
                                     newName = data.toolName;
                                 }
-                                const newDefinition = await outsideActions.onCreateManagerDefinition(newDefinitionForManager, newName, data.createType === 'Material', isEmptyCategory);
+                                console.log('newDefinitionForManager', newDefinitionForManager);
+                                const newDefinition = await outsideActions.onCreateManagerDefinition(newDefinitionForManager, newName, data.createType === 'Material');
                                 actions.onSelectDefinitionById(newDefinition.definitionId, newDefinition.name);
                             }
                         }}
@@ -255,7 +271,6 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             const selectedName = definitionState.selectedName;
             if (selectedName !== definition.category) { // changed
                 try {
-                    await outsideActions.updateCategoryName(definition, selectedName);
                     options = options.map(o => {
                         if (o.category === definition.category) {
                             o.category = selectedName;
@@ -265,6 +280,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                     setDefinitionState({
                         definitionOptions: [...options]
                     });
+                    await outsideActions.updateCategoryName(definition, selectedName);
                 } catch (err) {
                     actions.showNotification(err);
                 }
@@ -365,11 +381,11 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             if (d?.category) {
                 checkboxAndSelectGroup.category = d.category;
             }
-            // if (isOfficialDefinition(d)) {
-            //     checkboxAndSelectGroup.category = 'Default';
-            // }else {
-            //     checkboxAndSelectGroup.category = 'Custom';
-            // }
+            // TODO change d.settings as a Object
+            // console.log('useEffect', d.settings.length);
+            if (d.settings.length === 0) {
+                checkboxAndSelectGroup.isHidden = true;
+            }
             return checkboxAndSelectGroup;
         });
         Object.assign(newState, {
@@ -405,7 +421,6 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             }
         }
     });
-
     return (
         <React.Fragment>
             {definitionState?.definitionForManager && (
@@ -475,7 +490,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                             const displayName = limitStringLength(i18n._(currentOption.label), 24);
                                                             const definitionForManager = definitionState?.definitionForManager;
                                                             const isSelected = !definitionState.isCategorySelected && currentOption.value === definitionForManager.definitionId && currentOption.label === definitionForManager.name;
-                                                            if (isUndefined(currentOption.label)) {
+                                                            if (isUndefined(currentOption.label) || currentOption.isHidden) {
                                                                 return null;
                                                             } else {
                                                                 return (

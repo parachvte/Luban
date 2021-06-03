@@ -1,4 +1,4 @@
-// import { cloneDeep } from 'lodash';
+import { cloneDeep } from 'lodash';
 import ModelGroup from '../../models/ModelGroup';
 import i18n from '../../lib/i18n';
 import SVGActionsFactory from '../../models/SVGActionsFactory';
@@ -133,7 +133,7 @@ export const actions = {
         return null;
     },
     // TODO
-    updateToolDefinitionName: (isCategorySelected, definitionId, oldName, newName) => async (dispatch, getState) => {
+    updateToolDefinitionName: (isCategorySelected, definitionId, oldName, newName, shouleCheckSameName = true) => async (dispatch, getState) => {
         let definitionsWithSameCategory;
         const { toolDefinitions } = getState().cnc;
         const activeDefinition = toolDefinitions.find(d => d.definitionId === definitionId);
@@ -142,7 +142,7 @@ export const actions = {
         }
         if (isCategorySelected) {
             const duplicated = toolDefinitions.find(d => d.category === newName);
-            if (duplicated) {
+            if (shouleCheckSameName && duplicated) {
                 return Promise.reject(i18n._('Failed to rename. "{{name}}" already exists.', { newName }));
             }
             definitionsWithSameCategory = toolDefinitions.filter(d => d.category === oldName);
@@ -176,27 +176,33 @@ export const actions = {
         return null;
     },
     // // TODO:
-    duplicateToolCategoryDefinition: (activeToolCategory) => async (dispatch, getState) => {
+    duplicateToolCategoryDefinition: (activeToolList, isCreate) => async (dispatch, getState) => {
         const state = getState().cnc;
-        const newToolCategory = {
-            ...activeToolCategory
-        };
-        const definitionId = `${activeToolCategory.definitionId}${timestamp()}`;
-        newToolCategory.definitionId = definitionId;
-        newToolCategory.toolList.forEach((item) => {
-            item.definitionId = definitionId;
-        });
-
+        const toolDefinitions = cloneDeep(state.toolDefinitions);
+        const newToolCategory = activeToolList;
+        let newCategoryName = newToolCategory.category;
+        const allDupliateDefinitions = [];
         // make sure category is not repeated
-        while (state.toolDefinitions.find(d => d.category === newToolCategory.category)) {
-            newToolCategory.category = `#${newToolCategory.category}`;
+        while (toolDefinitions.find(d => d.category === newCategoryName)) {
+            newCategoryName = `#${newCategoryName}`;
         }
-        const createdDefinition = await definitionManager.createToolCategoryDefinition(newToolCategory);
+        const definitionsWithSameCategory = isCreate ? [activeToolList]
+            : state.toolDefinitions.filter(d => d.category === activeToolList.category);
+        for (let i = 0; i < definitionsWithSameCategory.length; i++) {
+            const newDefinition = definitionsWithSameCategory[i];
+            newDefinition.category = newCategoryName;
+            const definitionId = `${newDefinition.definitionId}${timestamp()}`;
+            newDefinition.definitionId = definitionId;
+            const createdDefinition = await definitionManager.createToolListDefinition(newDefinition);
+            if (createdDefinition) {
+                allDupliateDefinitions.push(createdDefinition);
+            }
+        }
         dispatch(editorActions.updateState('cnc', {
-            toolDefinitions: [...state.toolDefinitions, createdDefinition]
+            toolDefinitions: [...toolDefinitions, ...allDupliateDefinitions]
         }));
 
-        return createdDefinition;
+        return allDupliateDefinitions[0];
     },
     duplicateToolListDefinition: (activeToolListDefinition) => async (dispatch, getState) => {
         const state = getState().cnc;
@@ -216,15 +222,19 @@ export const actions = {
         dispatch(editorActions.updateState('cnc', {
             toolDefinitions: [...newToolDefinitions, createdDefinition]
         }));
-        return newToolListDefinition;
+        return createdDefinition;
     },
-    // TODO
-    removeToolCategoryDefinition: (definitionId) => async (dispatch, getState) => {
+
+    removeToolCategoryDefinition: (category) => async (dispatch, getState) => {
         const state = getState().cnc;
-        await definitionManager.removeToolCategoryDefinition(definitionId);
+        const newToolDefinitions = state.toolDefinitions;
+        const definitionsWithSameCategory = newToolDefinitions.filter(d => d.category === category);
+        for (let i = 0; i < definitionsWithSameCategory.length; i++) {
+            await definitionManager.removeToolListDefinition(definitionsWithSameCategory[i]);
+        }
 
         dispatch(editorActions.updateState('cnc', {
-            toolDefinitions: state.toolDefinitions.filter(d => d.definitionId !== definitionId)
+            toolDefinitions: newToolDefinitions.filter(d => d.category !== category)
         }));
     },
     removeToolListDefinition: (activeToolList) => async (dispatch, getState) => {

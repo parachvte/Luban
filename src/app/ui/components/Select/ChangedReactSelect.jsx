@@ -143,9 +143,6 @@ class ChangedReactSelect extends PureComponent {
         // customValue: false
     };
 
-    actions = {
-    };
-
     render() {
         const {
             valueObj,
@@ -156,6 +153,7 @@ class ChangedReactSelect extends PureComponent {
             componentsCovered,
             ...props
         } = this.props;
+        // console.log('valueObj', valueObj);
         let defaultValue = {};
         if (isGroup) {
             const {

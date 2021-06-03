@@ -33,10 +33,10 @@ class DefinitionManager {
         return res.body.definition;
     }
 
-    async removeToolCategoryDefinition(definitionId) {
-        await api.cncConfigs.removeToolCategoryDefinition(definitionId);
-        return null;
-    }
+    // async removeToolCategoryDefinition(definitionId) {
+    //     await api.cncConfigs.removeToolCategoryDefinition(definitionId);
+    //     return null;
+    // }
 
     async removeToolListDefinition(activeToolList) {
         const res = await api.cncConfigs.removeToolListDefinition(activeToolList);
@@ -62,9 +62,6 @@ class DefinitionManager {
         const res = await api.cncConfigs.changeActiveToolListDefinition(definitionId, name);
         return res.body.definition;
     }
-    // TODO:
-    // Update active definition
-    // Only definitionId & name are configurable
 }
 
 const definitionManager = new DefinitionManager();

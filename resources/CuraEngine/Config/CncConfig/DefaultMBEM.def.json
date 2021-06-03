@@ -1,6 +1,6 @@
 {
     "category": "Default Material",
-    "definitionId": "DefaultBEM",
+    "definitionId": "DefaultMBEM",
     "version": "1.0.0",
     "name": "Ball End Mill",
     "settings": {

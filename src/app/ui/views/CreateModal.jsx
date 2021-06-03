@@ -37,7 +37,6 @@ class CreateModal extends PureComponent {
                 toolName: this.props.copyToolName
             });
         }
-        console.log('this', this.state);
     }
 
     getData() {
@@ -128,7 +127,6 @@ class CreateModal extends PureComponent {
                             value={this.state.materialName}
                             onChange={(option) => {
                                 const materialName = option.label;
-                                console.log('option', option, materialName);
                                 this.setState({ materialName });
                             }}
                         />

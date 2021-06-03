@@ -114,11 +114,12 @@ function ToolParameters(props) {
                 groupOptions.options.push(checkboxAndSelectGroup);
             }
         }
-        return true;
+        // return true;
     });
     Object.values(toolDefinitionOptionsObj).forEach((item) => {
         toolDefinitionOptions.push(item);
     });
+    // console.log('toolDefinitionOptionsObj', toolDefinitionOptionsObj, toolDefinitionOptions);
 
     const valueObj = {
         firstKey: 'definitionId',

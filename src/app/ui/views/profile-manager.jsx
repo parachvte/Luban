@@ -16,6 +16,51 @@ import TipTrigger from '../components/TipTrigger';
 import useSetState from '../../lib/hooks/set-state';
 import { limitStringLength } from '../../lib/normalize-range';
 
+function useGetDefinitions(allDefinitions, definitionState, setDefinitionState, defaultKeysAndId) {
+    const definitionsRef = useRef([]);
+    useEffect(() => {
+        const newState = {};
+        const lastDefinitionForManager = definitionState?.definitionForManager;
+        let definitionForManager = allDefinitions.find(d => d.definitionId === lastDefinitionForManager?.definitionId && d.name === lastDefinitionForManager?.name);
+        if (!definitionForManager && defaultKeysAndId?.name) {
+            definitionForManager = allDefinitions.find(d => d.definitionId === defaultKeysAndId?.id && d.name === defaultKeysAndId?.name);
+        } else if (!definitionForManager && !defaultKeysAndId?.name) {
+            definitionForManager = allDefinitions.find(d => d.definitionId === defaultKeysAndId?.id);
+        }
+        Object.assign(newState, {
+            definitionForManager: definitionForManager
+        });
+
+        const definitionOptions = allDefinitions.map(d => {
+            const checkboxAndSelectGroup = {};
+            defaultKeysAndId.keysArray.forEach((key) => {
+                checkboxAndSelectGroup[key] = d.settings[key].default_value;
+            });
+            checkboxAndSelectGroup.label = d.name;
+            checkboxAndSelectGroup.value = d.definitionId;
+            if (d?.category) {
+                checkboxAndSelectGroup.category = d.category;
+            }
+            if (Object.keys(d.settings).length === 0 || isUndefined(d.settings)) {
+                checkboxAndSelectGroup.isHidden = true;
+            }
+            return checkboxAndSelectGroup;
+        });
+        Object.assign(newState, {
+            definitionOptions: definitionOptions
+        });
+        allDefinitions.forEach((item) => {
+            definitionsRef.current.push(item);
+        });
+        setDefinitionState(newState);
+
+        return () => {
+            definitionsRef.current = [];
+        };
+    }, [allDefinitions, definitionState.definitionForManager, setDefinitionState, defaultKeysAndId]);
+    return definitionsRef;
+}
+
 function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitle, defaultKeysAndId, styles, allDefinitions, outsideActions, isDefinitionEditable, isOfficialDefinition }) {
     const [definitionState, setDefinitionState] = useSetState({
         definitionForManager: null,
@@ -39,7 +84,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
         refCreateModal: useRef(null),
         scrollDom: useRef(null)
     };
-    const currentDefinitions = useRef([]);
+    const currentDefinitions = useGetDefinitions(allDefinitions, definitionState, setDefinitionState, defaultKeysAndId);
     const setRenamingStatus = (status) => {
         const currentDefinition = definitionState?.definitionForManager;
         if (isOfficialDefinition(currentDefinition)) {
@@ -357,46 +402,6 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
     };
 
 
-    useEffect(() => {
-        const newState = {};
-        const lastDefinitionForManager = definitionState?.definitionForManager;
-        let definitionForManager = allDefinitions.find(d => d.definitionId === lastDefinitionForManager?.definitionId && d.name === lastDefinitionForManager?.name);
-        if (!definitionForManager && defaultKeysAndId?.name) {
-            definitionForManager = allDefinitions.find(d => d.definitionId === defaultKeysAndId?.id && d.name === defaultKeysAndId?.name);
-        } else if (!definitionForManager && !defaultKeysAndId?.name) {
-            definitionForManager = allDefinitions.find(d => d.definitionId === defaultKeysAndId?.id);
-        }
-        Object.assign(newState, {
-            definitionForManager: definitionForManager
-        });
-
-        const definitionOptions = allDefinitions.map(d => {
-            const checkboxAndSelectGroup = {};
-            defaultKeysAndId.keysArray.forEach((key) => {
-                checkboxAndSelectGroup[key] = d.settings[key].default_value;
-            });
-            checkboxAndSelectGroup.label = d.name;
-            checkboxAndSelectGroup.value = d.definitionId;
-            if (d?.category) {
-                checkboxAndSelectGroup.category = d.category;
-            }
-            if (Object.keys(d.settings).length === 0 || isUndefined(d.settings)) {
-                checkboxAndSelectGroup.isHidden = true;
-            }
-            return checkboxAndSelectGroup;
-        });
-        Object.assign(newState, {
-            definitionOptions: definitionOptions
-        });
-        allDefinitions.forEach((item) => {
-            currentDefinitions.current.push(item);
-        });
-        setDefinitionState(newState);
-
-        return () => {
-            currentDefinitions.current = [];
-        };
-    }, [allDefinitions]);
     const optionList = definitionState.definitionOptions;
     const cates = [];
     const regex = /^[a-z]+.[0-9]+$/;

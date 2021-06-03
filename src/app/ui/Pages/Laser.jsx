@@ -65,6 +65,7 @@ class Laser extends Component {
         const leftItems = [
             {
                 title: 'Copy',
+                name: 'Copy',
                 action: () => this.props.history.push('/')
             },
             {
@@ -74,6 +75,7 @@ class Laser extends Component {
         const centerItems = [
             {
                 title: 'Edit',
+                name: 'Edit',
                 action: () => this.props.history.push('cnc')
             }
         ];

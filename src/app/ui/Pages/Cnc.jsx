@@ -75,6 +75,7 @@ class Cnc extends Component {
         const leftItems = [
             {
                 title: 'Copy',
+                name: 'Copy',
                 action: () => this.props.history.push('/')
             },
             {
@@ -83,6 +84,7 @@ class Cnc extends Component {
         ];
         const centerItems = [
             {
+                name: 'Edit',
                 title: 'Edit',
                 action: () => this.props.history.push('cnc')
             }

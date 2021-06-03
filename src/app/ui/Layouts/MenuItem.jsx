@@ -10,7 +10,7 @@ function MenuItem({ menuItem, actions }) {
     if (!menuItem) {
         return null;
     }
-    const { type = 'button', title } = menuItem;
+    const { type = 'button', name = 'Copy', title } = menuItem;
     switch (type) {
         case 'separator':
             return (
@@ -21,7 +21,7 @@ function MenuItem({ menuItem, actions }) {
                 <SvgIcon
                     key={title + timestamp()}
                     size={18}
-                    name={title}
+                    name={name}
                     isHorizontal={false}
                     className={classNames(styles['bar-icon'])}
                     onClick={() => { actions.handleClick(menuItem.action); }}

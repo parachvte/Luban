@@ -23,20 +23,10 @@ class DefinitionManager {
         this.toolDefinitions = toolDefinitions.body.definitions;
     }
 
-    async createToolCategoryDefinition(activeToolCategory) {
-        const res = await api.cncConfigs.createToolCategoryDefinition(activeToolCategory);
-        return res.body.definition;
-    }
-
     async createToolListDefinition(activeToolListDefinition) {
         const res = await api.cncConfigs.createToolListDefinition(activeToolListDefinition);
         return res.body.definition;
     }
-
-    // async removeToolCategoryDefinition(definitionId) {
-    //     await api.cncConfigs.removeToolCategoryDefinition(definitionId);
-    //     return null;
-    // }
 
     async removeToolListDefinition(activeToolList) {
         const res = await api.cncConfigs.removeToolListDefinition(activeToolList);

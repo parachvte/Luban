@@ -35,7 +35,7 @@ function ToolPathConfigurations(props) {
         });
         if (oldTooldefinition) {
             activeToolDefinition.definitionId = oldTooldefinition.definitionId;
-            activeToolDefinition.name = oldTooldefinition.definitionName;
+            activeToolDefinition.name = oldTooldefinition.name;
             activeToolDefinition.settings.angle.default_value = toolParams?.toolAngle;
             activeToolDefinition.settings.diameter.default_value = toolParams?.toolDiameter;
             activeToolDefinition.settings.shaft_diameter.default_value = toolParams?.toolShaftDiameter;

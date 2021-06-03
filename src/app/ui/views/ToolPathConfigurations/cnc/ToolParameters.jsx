@@ -62,6 +62,7 @@ SettingItem.propTypes = {
     isSVG: PropTypes.bool.isRequired
 };
 
+
 function ToolParameters(props) {
     const dispatch = useDispatch();
     const { toolDefinitions, activeToolDefinition, toolPath, isModifiedDefinition, updateToolConfig } = props;
@@ -81,7 +82,7 @@ function ToolParameters(props) {
         } else {
             const definitionId = option.definitionId;
             const name = option.name;
-            dispatch(cncActions.changeActiveToolListDefinition(definitionId, name));
+            await dispatch(cncActions.changeActiveToolListDefinition(definitionId, name));
         }
     }
 
@@ -119,14 +120,12 @@ function ToolParameters(props) {
     Object.values(toolDefinitionOptionsObj).forEach((item) => {
         toolDefinitionOptions.push(item);
     });
-    // console.log('toolDefinitionOptionsObj', toolDefinitionOptionsObj, toolDefinitionOptions);
 
     const valueObj = {
         firstKey: 'definitionId',
-        firstValue: activeToolDefinition.definitionId,
-        secondKey: 'name',
-        secondValue: activeToolDefinition.name
+        firstValue: activeToolDefinition.definitionId
     };
+
     if (isModifiedDefinition) {
         toolDefinitionOptions.push({
             name: 'modified',

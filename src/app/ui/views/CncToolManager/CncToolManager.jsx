@@ -28,47 +28,9 @@ function isDefinitionEditable(activeToolList) {
         activeToolList.definitionId));
 }
 
-
-// function adaptateToProfileDefinitions(toolDefinitions) {
-//     const newDefinitions = cloneDeep(toolDefinitions);
-//     const result = [];
-//     newDefinitions.forEach((toolCategory) => {
-//         toolCategory.toolList.forEach((list) => {
-//             if (list) {
-//                 const item = {};
-//                 item.category = toolCategory.category;
-//                 item.definitionId = toolCategory.definitionId;
-//                 item.name = list.name;
-//                 item.settings = list.config;
-//                 result.push(item);
-//             }
-//         });
-//         if (toolCategory.toolList.length === 0) {
-//             const item = {};
-//             item.category = toolCategory.category;
-//             item.definitionId = toolCategory.definitionId;
-//             item.settings = {};
-//             result.push(item);
-//         }
-//     });
-//     return result;
-// }
-// function adaptateToToolDefinition(toolDefinitions, definition, newName) {
-//     const newDefinitions = cloneDeep(toolDefinitions);
-//     const activeToolCategory = newDefinitions.find((toolCategory) => toolCategory?.definitionId === definition?.definitionId);
-//     const activeToolList = newName ? { ...definition, name: newName } : definition;
-//     const oldConfig = activeToolList.settings;
-//     activeToolList.config = oldConfig;
-//     return {
-//         activeToolCategory,
-//         activeToolList
-//     };
-// }
-
 function CncToolManager() {
     const showCncToolManager = useSelector(state => state?.cnc?.showCncToolManager, shallowEqual);
     const toolDefinitions = useSelector(state => state?.cnc?.toolDefinitions);
-    // const activeToolListDefinition = useSelector(state => state?.cnc?.activeToolListDefinition, shallowEqual);
     const dispatch = useDispatch();
     if (!showCncToolManager) {
         return null;

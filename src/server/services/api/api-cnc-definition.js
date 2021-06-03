@@ -66,23 +66,6 @@ export const getToolDefinitions = (req, res) => {
     }
     res.send({ definitions });
 };
-// TODO
-export const createToolCategoryDefinition = (req, res) => {
-    const { activeToolCategory } = req.body;
-    const definitionId = activeToolCategory.definitionId;
-    const filename = `${definitionId}.def.json`;
-
-    const destPath = path.join(`${DataStorage.configDir}`, CNC_CONFIG_SUBCATEGORY, filename);
-
-    fs.writeFile(destPath, JSON.stringify(activeToolCategory, null, 2), 'utf8', (err) => {
-        if (err) {
-            res.status(ERR_INTERNAL_SERVER_ERROR).send({ err });
-        } else {
-            // load definition using new loader to avoid potential settings override issues
-            res.send({ definition: activeToolCategory });
-        }
-    });
-};
 export const createToolListDefinition = (req, res) => {
     const { activeToolList } = req.body;
     const newActiveToolDefinition = JSON.parse(JSON.stringify(activeToolList));
@@ -97,19 +80,6 @@ export const createToolListDefinition = (req, res) => {
         } else {
             // load definition using new loader to avoid potential settings override issues
             res.send({ definition: newActiveToolDefinition });
-        }
-    });
-};
-// TODO
-export const removeToolCategoryDefinition = (req, res) => {
-    const { definitionId } = req.body;
-
-    const filePath = path.join(`${DataStorage.configDir}/${CNC_CONFIG_SUBCATEGORY}`, `${definitionId}.def.json`);
-    fs.unlink(filePath, (err) => {
-        if (err) {
-            res.status(ERR_INTERNAL_SERVER_ERROR).send({ err });
-        } else {
-            res.send({ status: 'ok' });
         }
     });
 };
@@ -128,7 +98,6 @@ export const removeToolListDefinition = (req, res) => {
     });
 };
 
-// TODO param changed
 export const updateToolDefinition = (req, res) => {
     const { activeToolList } = req.body;
     const filePath = path.join(`${DataStorage.configDir}/${CNC_CONFIG_SUBCATEGORY}`, `${activeToolList.definitionId}.def.json`);

@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import styles from './styles/maintoolbar.styl';
 import MenuItem from './MenuItem';
+import { timestamp } from '../../../shared/lib/random-utils';
 
 class MainToolBar extends PureComponent {
     static propTypes = {
@@ -43,7 +44,7 @@ class MainToolBar extends PureComponent {
                     )}
                 >
                     {leftItems && (leftItems.map((menuItem) => {
-                        return <MenuItem menuItem={menuItem} actions={actions} />;
+                        return <MenuItem key={timestamp()} menuItem={menuItem} actions={actions} />;
                     }))}
                 </div>
                 <div className={styles['bar-item']}>

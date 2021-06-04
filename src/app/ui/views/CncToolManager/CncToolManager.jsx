@@ -1,14 +1,12 @@
 import React from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
-// import { includes, cloneDeep } from 'lodash';
 import { includes } from 'lodash';
 
 import { actions as cncActions } from '../../../flux/cnc';
 import { actions as projectActions } from '../../../flux/project';
-import styles from './styles.styl';
 
 import { CNC_TOOL_CONFIG_GROUP } from '../../../constants';
-import ProfileManager from '../profile-manager';
+import ProfileManager from '../ProfileManager';
 import i18n from '../../../lib/i18n';
 
 const SUBCATEGORY = 'CncConfig';
@@ -73,11 +71,12 @@ function CncToolManager() {
                         definitionsWithSameCategory[i].definitionId,
                         definitionsWithSameCategory[i].category,
                         selectedName,
-                        false
                     ));
+                    console.log('i');
                 }
                 return null;
             } catch (e) {
+                console.log('error');
                 return Promise.reject(i18n._('Failed to rename. Name already exists.'));
             }
         },
@@ -99,7 +98,6 @@ function CncToolManager() {
         }
     };
     const optionConfigGroup = CNC_TOOL_CONFIG_GROUP;
-    // const allDefinitions = adaptateToProfileDefinitions(toolDefinitions);
     const allDefinitions = toolDefinitions;
     const defaultKeysAndId = {
         id: 'DefaultCVbit',
@@ -108,7 +106,6 @@ function CncToolManager() {
     };
     return (
         <ProfileManager
-            styles={styles}
             outsideActions={actions}
             isDefinitionEditable={isDefinitionEditable}
             isOfficialDefinition={isOfficialDefinition}

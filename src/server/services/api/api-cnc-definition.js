@@ -9,7 +9,6 @@ import DataStorage from '../../DataStorage';
  */
 export const getToolListDefinition = (req, res) => {
     const { definitionId } = req.params;
-    const name = req.query.name;
     if (!definitionId) {
         res.status(ERR_BAD_REQUEST).send({
             err: 'Parameter "definitionId" is required.'
@@ -26,7 +25,6 @@ export const getToolListDefinition = (req, res) => {
 
 export const changeActiveToolListDefinition = (req, res) => {
     const { definitionId } = req.params;
-    const name = req.query.name;
     if (!definitionId) {
         res.status(ERR_BAD_REQUEST).send({
             err: 'Parameter "definitionId" is required.'

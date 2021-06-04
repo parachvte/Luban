@@ -6,6 +6,7 @@
     "settings": {
         "diameter": {
             "default_value": 1.5,
+            "type": "float",
             "min": 0.1,
             "max": 10,
             "unit": "mm",
@@ -13,6 +14,7 @@
         },
         "angle": {
             "default_value": 180,
+            "type": "float",
             "min": 1,
             "max": 180,
             "unit": "°",
@@ -20,6 +22,7 @@
         },
         "shaft_diameter": {
             "default_value": 1.5,
+            "type": "float",
             "min": 0.1,
             "max": 10,
             "unit": "mm",
@@ -27,6 +30,7 @@
         },
         "jog_speed": {
             "default_value": 1500,
+            "type": "float",
             "min": 1,
             "max": 6000,
             "unit": "mm/min",
@@ -35,6 +39,7 @@
         },
         "work_speed": {
             "default_value": 300,
+            "type": "float",
             "min": 1,
             "max": 6000,
             "unit": "mm/min",
@@ -43,6 +48,7 @@
         },
         "plunge_speed": {
             "default_value": 300,
+            "type": "float",
             "min": 0.1,
             "max": 1000,
             "unit": "mm/min",
@@ -51,6 +57,7 @@
         },
         "step_down": {
             "default_value": 0.5,
+            "type": "float",
             "min": 0.01,
             "unit": "mm",
             "label": "Step Down",
@@ -58,6 +65,7 @@
         },
         "density": {
             "default_value": 5,
+            "type": "float",
             "min": 0.01,
             "max": 20,
             "unit": "dot/mm",

@@ -132,8 +132,7 @@ export const actions = {
 
         return null;
     },
-    // TODO
-    updateToolDefinitionName: (isCategorySelected, definitionId, oldName, newName, shouleCheckSameName = true) => async (dispatch, getState) => {
+    updateToolDefinitionName: (isCategorySelected, definitionId, oldName, newName) => async (dispatch, getState) => {
         let definitionsWithSameCategory;
         const { toolDefinitions } = getState().cnc;
         const activeDefinition = toolDefinitions.find(d => d.definitionId === definitionId);
@@ -142,7 +141,7 @@ export const actions = {
         }
         if (isCategorySelected) {
             const duplicated = toolDefinitions.find(d => d.category === newName);
-            if (shouleCheckSameName && duplicated) {
+            if (duplicated) {
                 return Promise.reject(i18n._('Failed to rename. "{{name}}" already exists.', { newName }));
             }
             definitionsWithSameCategory = toolDefinitions.filter(d => d.category === oldName);

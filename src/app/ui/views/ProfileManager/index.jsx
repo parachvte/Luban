@@ -2,19 +2,48 @@ import React, { useEffect, useState, useRef } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import { isUndefined, cloneDeep, uniqWith } from 'lodash';
-import { PRINTING_QUALITY_CONFIG_GROUP } from '../../constants';
-import modal from '../../lib/modal';
-import CreateModal from './CreateModal';
-import i18n from '../../lib/i18n';
-import SvgIcon from '../components/SvgIcon';
-import Select from '../components/Select';
-import Notifications from '../components/Notifications';
-import Modal from '../components/Modal';
-import Anchor from '../components/Anchor';
-import { NumberInput as Input } from '../components/Input';
-import TipTrigger from '../components/TipTrigger';
-import useSetState from '../../lib/hooks/set-state';
-import { limitStringLength } from '../../lib/normalize-range';
+// import { PRINTING_QUALITY_CONFIG_GROUP } from '../../../constants';
+import modal from '../../../lib/modal';
+import CreateModal from '../CreateModal';
+import Anchor from '../../components/Anchor';
+import i18n from '../../../lib/i18n';
+import SvgIcon from '../../components/SvgIcon';
+import Notifications from '../../components/Notifications';
+import Modal from '../../components/Modal';
+import ConfigItem from './ConfigItem';
+import useSetState from '../../../lib/hooks/set-state';
+import { limitStringLength } from '../../../lib/normalize-range';
+import styles from './styles.styl';
+
+function creatCateArray(optionList) {
+    const cates = [];
+    const regex = /^[a-z]+.[0-9]+$/;
+    optionList.forEach(option => {
+        if (option.category) {
+            const cateItem = cates.find((cate) => cate.category === option.category);
+            if (cateItem) {
+                cateItem.items.push(option);
+            } else {
+                const eachCate = { items: [] };
+                eachCate.category = option.category;
+                eachCate.items.push(option);
+                cates.push(eachCate);
+            }
+        } else {
+            const idx = regex.test(option.value) ? 'Custom' : 'Default';
+            const cateItem = cates.find((cate) => cate.category === idx);
+            if (cateItem) {
+                cateItem.items.push(option);
+            } else {
+                const eachCate = { items: [] };
+                eachCate.category = idx;
+                eachCate.items.push(option);
+                cates.push(eachCate);
+            }
+        }
+    });
+    return cates;
+}
 
 function useGetDefinitions(allDefinitions, definitionState, setDefinitionState, defaultKeysAndId) {
     const definitionsRef = useRef([]);
@@ -61,7 +90,7 @@ function useGetDefinitions(allDefinitions, definitionState, setDefinitionState, 
     return definitionsRef;
 }
 
-function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitle, defaultKeysAndId, styles, allDefinitions, outsideActions, isDefinitionEditable, isOfficialDefinition }) {
+function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitle, defaultKeysAndId, allDefinitions, outsideActions, isDefinitionEditable, isOfficialDefinition }) {
     const [definitionState, setDefinitionState] = useSetState({
         definitionForManager: null,
         definitionOptions: [],
@@ -72,12 +101,13 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
     const [configExpanded, setConfigExpanded] = useState({});
     const [notificationMessage, setNotificationMessage] = useState('');
     const [activeCateId, setActiveCateId] = useState(2);
-    const [qualityConfigExpanded, setQualityConfigExpanded] = useState((function () {
-        PRINTING_QUALITY_CONFIG_GROUP.forEach((config) => {
-            this[config.name] = false;
-        });
-        return this;
-    }).call({}));
+    // const [qualityConfigExpanded, setQualityConfigExpanded] = useState((() => {
+    //     const obj = {};
+    //     PRINTING_QUALITY_CONFIG_GROUP.forEach((config) => {
+    //         obj[config.name] = false;
+    //     });
+    //     return obj;
+    // }));
     const refs = {
         fileInput: useRef(null),
         renameInput: useRef(null),
@@ -85,57 +115,55 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
         scrollDom: useRef(null)
     };
     const currentDefinitions = useGetDefinitions(allDefinitions, definitionState, setDefinitionState, defaultKeysAndId);
-    const setRenamingStatus = (status) => {
-        const currentDefinition = definitionState?.definitionForManager;
-        if (isOfficialDefinition(currentDefinition)) {
-            return;
-        } else if (!status) {
-            setDefinitionState({
-                renamingStatus: status
-            });
-            return;
-        }
-        if (status) {
-            const title = definitionState.isCategorySelected ? currentDefinition.category : currentDefinition.name;
-            setDefinitionState({
-                selectedName: title,
-                renamingStatus: status
-            });
-
-            setTimeout(() => {
-                refs.renameInput.current.focus();
-            }, 0);
-        }
-    };
-    const onSelectDefinitionById = (definitionId, name) => {
-        const definitionForManager = definitionState?.definitionForManager;
-        let selected;
-        if (!name) {
-            if (definitionId === definitionForManager?.definitionId) {
-                return;
-            }
-            selected = currentDefinitions.current.find(d => d.definitionId === definitionId);
-        } else {
-            selected = currentDefinitions.current.find(d => d.definitionId === definitionId && d.name === name);
-        }
-
-        if (definitionState?.renamingStatus) {
-            setRenamingStatus(false);
-        }
-        if (selected) {
-            setDefinitionState({
-                definitionForManager: selected,
-                isCategorySelected: false,
-                selectedName: selected.name
-            });
-        }
-    };
-
-
     const actions = {
         isCategorySelectedNow: (category) => {
             const { definitionForManager, isCategorySelected } = definitionState;
             return isCategorySelected && definitionForManager.category === category;
+        },
+        setRenamingStatus: (status) => {
+            const currentDefinition = definitionState?.definitionForManager;
+            if (isOfficialDefinition(currentDefinition)) {
+                return;
+            } else if (!status) {
+                setDefinitionState({
+                    renamingStatus: status
+                });
+                return;
+            }
+            if (status) {
+                const title = definitionState.isCategorySelected ? currentDefinition.category : currentDefinition.name;
+                setDefinitionState({
+                    selectedName: title,
+                    renamingStatus: status
+                });
+
+                setTimeout(() => {
+                    refs.renameInput.current.focus();
+                }, 0);
+            }
+        },
+        onSelectDefinitionById: (definitionId, name) => {
+            const definitionForManager = definitionState?.definitionForManager;
+            let selected;
+            if (!name) {
+                if (definitionId === definitionForManager?.definitionId) {
+                    return;
+                }
+                selected = currentDefinitions.current.find(d => d.definitionId === definitionId);
+            } else {
+                selected = currentDefinitions.current.find(d => d.definitionId === definitionId && d.name === name);
+            }
+
+            if (definitionState?.renamingStatus) {
+                actions.setRenamingStatus(false);
+            }
+            if (selected) {
+                setDefinitionState({
+                    definitionForManager: selected,
+                    isCategorySelected: false,
+                    selectedName: selected.name
+                });
+            }
         },
         onSelectToolCategory: (category) => {
             if (disableCategory) return;
@@ -144,7 +172,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                 return;
             }
             if (renamingStatus) {
-                setRenamingStatus(false);
+                actions.setRenamingStatus(false);
             }
             const activeToolCategory = currentDefinitions.current.find(d => d.category === category);
 
@@ -281,7 +309,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                     newDefinitionForManager.category = data.materialName;
                                     newName = data.toolName;
                                     const newDefinition = await outsideActions.onCreateManagerDefinition(newDefinitionForManager, newName, isCategorySelected);
-                                    onSelectDefinitionById(newDefinition.definitionId, newDefinition.name);
+                                    actions.onSelectDefinitionById(newDefinition.definitionId, newDefinition.name);
                                 }
                             } else {
                                 if (data.createType === 'Material') {
@@ -297,7 +325,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                         newDefinitionForManager.settings = cloneDeep(allDefinitions[0].settings);
                                     }
                                     const newDefinition = await outsideActions.onCreateManagerDefinition(newDefinitionForManager, newName, data.createType === 'Material', isCreate);
-                                    onSelectDefinitionById(newDefinition.definitionId, newDefinition.name);
+                                    actions.onSelectDefinitionById(newDefinition.definitionId, newDefinition.name);
                                 }
                             }
                         }}
@@ -335,6 +363,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             const selectedName = definitionState.selectedName;
             if (selectedName !== definition.category) { // changed
                 try {
+                    await outsideActions.updateCategoryName(definition, selectedName);
                     options = options.map(o => {
                         if (o.category === definition.category) {
                             o.category = selectedName;
@@ -344,7 +373,6 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                     setDefinitionState({
                         definitionOptions: [...options]
                     });
-                    await outsideActions.updateCategoryName(definition, selectedName);
                 } catch (err) {
                     actions.showNotification(err);
                 }
@@ -400,36 +428,8 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
             outsideActions.onSaveDefinitionForManager(newDefinitionForManager);
         }
     };
+    const cates = creatCateArray(definitionState?.definitionOptions);
 
-
-    const optionList = definitionState.definitionOptions;
-    const cates = [];
-    const regex = /^[a-z]+.[0-9]+$/;
-
-    optionList.forEach(option => {
-        if (option.category) {
-            const cateItem = cates.find((cate) => cate.category === option.category);
-            if (cateItem) {
-                cateItem.items.push(option);
-            } else {
-                const eachCate = { items: [] };
-                eachCate.category = option.category;
-                eachCate.items.push(option);
-                cates.push(eachCate);
-            }
-        } else {
-            const idx = regex.test(option.value) ? 'Custom' : 'Default';
-            const cateItem = cates.find((cate) => cate.category === idx);
-            if (cateItem) {
-                cateItem.items.push(option);
-            } else {
-                const eachCate = { items: [] };
-                eachCate.category = idx;
-                eachCate.items.push(option);
-                cates.push(eachCate);
-            }
-        }
-    });
     return (
         <React.Fragment>
             {definitionState?.definitionForManager && (
@@ -462,7 +462,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                 <Anchor
                                                     className={classNames(styles['manager-btn'], { [styles.selected]: actions.isCategorySelectedNow(cate.category) })}
                                                     onClick={() => actions.onSelectToolCategory(cate.category)}
-                                                    onDoubleClick={() => setRenamingStatus(true)}
+                                                    onDoubleClick={() => actions.setRenamingStatus(true)}
                                                 >
                                                     <div className={classNames(styles['manager-btn-unfold'])}>
                                                         <span
@@ -482,12 +482,12 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                             onKeyPress={(e) => {
                                                                 if (e.key === 'Enter') {
                                                                     e.preventDefault();
-                                                                    setRenamingStatus(false);
+                                                                    actions.setRenamingStatus(false);
                                                                     actions.updateCategoryName();
                                                                 }
                                                             }}
                                                             onBlur={() => {
-                                                                setRenamingStatus(false);
+                                                                actions.setRenamingStatus(false);
                                                                 actions.updateCategoryName();
                                                             }}
                                                         />
@@ -498,7 +498,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                         {(cate.items.map((currentOption) => {
                                                             const displayName = limitStringLength(i18n._(currentOption.label), 24);
                                                             const definitionForManager = definitionState?.definitionForManager;
-                                                            const isSelected = !definitionState.isCategorySelected && currentOption.value === definitionForManager.definitionId && currentOption.label === definitionForManager.name;
+                                                            const isSelected = !definitionState.isCategorySelected && currentOption.value === definitionForManager.definitionId;
                                                             if (isUndefined(currentOption.label) || currentOption.isHidden) {
                                                                 return null;
                                                             } else {
@@ -508,8 +508,8 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                                             className={classNames(styles['manager-btn'], { [styles.selected]: isSelected })}
                                                                             style={{ paddingLeft: '42px' }}
                                                                             title={currentOption.label}
-                                                                            onClick={() => onSelectDefinitionById(currentOption.value, currentOption.label)}
-                                                                            onDoubleClick={() => setRenamingStatus(true)}
+                                                                            onClick={() => actions.onSelectDefinitionById(currentOption.value, currentOption.label)}
+                                                                            onDoubleClick={() => actions.setRenamingStatus(true)}
                                                                         >
                                                                             {(isSelected && definitionState.renamingStatus) ? (
                                                                                 <input
@@ -520,12 +520,12 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                                                                     onKeyPress={(e) => {
                                                                                         if (e.key === 'Enter') {
                                                                                             e.preventDefault();
-                                                                                            setRenamingStatus(false);
+                                                                                            actions.setRenamingStatus(false);
                                                                                             actions.updateDefinitionName();
                                                                                         }
                                                                                     }}
                                                                                     onBlur={() => {
-                                                                                        setRenamingStatus(false);
+                                                                                        actions.setRenamingStatus(false);
                                                                                         actions.updateDefinitionName();
                                                                                     }}
                                                                                 // disabled={!isDefinitionEditable(qualityDefinitionForManager)}
@@ -555,7 +555,7 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                         disabled={isOfficialDefinition(definitionState.definitionForManager)}
                                         size={18}
                                         title={i18n._('Edit')}
-                                        onClick={() => setRenamingStatus(true)}
+                                        onClick={() => actions.setRenamingStatus(true)}
                                     />
                                     <input
                                         ref={refs.fileInput}
@@ -649,186 +649,16 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                 )}
 
                                 <div className="sm-parameter-container" ref={refs.scrollDom}>
-                                    {!definitionState?.isCategorySelected && optionConfigGroup.map((group, idx) => {
+                                    {!definitionState?.isCategorySelected && optionConfigGroup.map((group) => {
                                         return (
-                                            <div key={i18n._(idx)}>
-                                                {group.name && (
-                                                    <Anchor
-                                                        className="sm-parameter-header"
-                                                        onClick={() => {
-                                                            qualityConfigExpanded[group.name] = !qualityConfigExpanded[group.name];
-                                                            setQualityConfigExpanded(JSON.parse(JSON.stringify(qualityConfigExpanded)));
-                                                        }}
-                                                    >
-                                                        <span className="fa fa-gear sm-parameter-header__indicator" />
-                                                        <span className="sm-parameter-header__title">{i18n._(group.name)}</span>
-
-                                                    </Anchor>
-                                                )}
-                                                { group.fields.map((key) => {
-                                                    const setting = definitionState.definitionForManager.settings[key];
-                                                    const { label, description, type, unit = '', enabled, options } = setting;
-                                                    const defaultValue = setting.default_value;
-                                                    if (typeof enabled === 'string') {
-                                                        if (enabled.indexOf(' and ') !== -1) {
-                                                            const andConditions = enabled.split(' and ').map(c => c.trim());
-                                                            for (const condition of andConditions) {
-                                                            // parse resolveOrValue('adhesion_type') == 'skirt'
-                                                                const enabledKey = condition.match("resolveOrValue\\('(.[^)|']*)'") ? condition.match("resolveOrValue\\('(.[^)|']*)'")[1] : null;
-                                                                const enabledValue = condition.match("== ?'(.[^)|']*)'") ? condition.match("== ?'(.[^)|']*)'")[1] : null;
-                                                                if (enabledKey) {
-                                                                    if (definitionState.definitionForManager.settings[enabledKey]) {
-                                                                        const value = definitionState.definitionForManager.settings[enabledKey].default_value;
-                                                                        if (value !== enabledValue) {
-                                                                            return null;
-                                                                        }
-                                                                    }
-                                                                } else {
-                                                                    if (definitionState.definitionForManager.settings[condition]) {
-                                                                        const value = definitionState.definitionForManager.settings[condition].default_value;
-                                                                        if (!value) {
-                                                                            return null;
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        } else {
-                                                            const orConditions = enabled.split(' or ')
-                                                                .map(c => c.trim());
-                                                            let result = false;
-                                                            for (const condition of orConditions) {
-                                                                if (definitionState.definitionForManager.settings[condition]) {
-                                                                    const value = definitionState.definitionForManager.settings[condition].default_value;
-                                                                    if (value) {
-                                                                        result = true;
-                                                                    }
-                                                                }
-                                                                if (condition.match('(.*) > ([0-9]+)')) {
-                                                                    const m = condition.match('(.*) > ([0-9]+)');
-                                                                    const enabledKey = m[1];
-                                                                    const enabledValue = parseInt(m[2], 10);
-                                                                    if (definitionState.definitionForManager.settings[enabledKey]) {
-                                                                        const value = definitionState.definitionForManager.settings[enabledKey].default_value;
-                                                                        if (value > enabledValue) {
-                                                                            result = true;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if (condition.match('(.*) < ([0-9]+)')) {
-                                                                    const m = condition.match('(.*) > ([0-9]+)');
-                                                                    const enabledKey = m[1];
-                                                                    const enabledValue = parseInt(m[2], 10);
-                                                                    if (definitionState.definitionForManager.settings[enabledKey]) {
-                                                                        const value = definitionState.definitionForManager.settings[enabledKey].default_value;
-                                                                        if (value < enabledValue) {
-                                                                            result = true;
-                                                                        }
-                                                                    }
-                                                                }
-                                                                if (condition.match("resolveOrValue\\('(.[^)|']*)'")) {
-                                                                    const m1 = condition.match("resolveOrValue\\('(.[^)|']*)'");
-                                                                    const m2 = condition.match("== ?'(.[^)|']*)'");
-                                                                    const enabledKey = m1[1];
-                                                                    const enabledValue = m2[1];
-                                                                    if (definitionState.definitionForManager.settings[enabledKey]) {
-                                                                        const value = definitionState.definitionForManager.settings[enabledKey].default_value;
-                                                                        if (value === enabledValue) {
-                                                                            result = true;
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                            if (!result) {
-                                                                return null;
-                                                            }
-                                                        }
-                                                    } else if (typeof enabled === 'boolean' && enabled === false) {
-                                                        return null;
-                                                    }
-
-                                                    const opts = [];
-                                                    if (options) {
-                                                        Object.keys(options).forEach((k) => {
-                                                            opts.push({
-                                                                value: k,
-                                                                label: i18n._(options[k])
-                                                            });
-                                                        });
-                                                    }
-                                                    return (
-                                                        <TipTrigger title={i18n._(label)} content={i18n._(description)} key={key}>
-                                                            <div className="sm-parameter-row" key={key}>
-                                                                <span className="sm-parameter-row__label-lg">{i18n._(label)}</span>
-                                                                {type === 'float' && (
-                                                                    <Input
-                                                                        className="sm-parameter-row__input"
-                                                                        style={{ width: '160px' }}
-                                                                        value={defaultValue}
-                                                                        disabled={!isDefinitionEditable(definitionState.definitionForManager)}
-                                                                        onChange={(value) => {
-                                                                            actions.onChangeDefinition(key, value);
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                {type === 'float' && (
-                                                                    <span className="sm-parameter-row__input-unit">{unit}</span>
-                                                                )}
-                                                                {type === 'int' && (
-                                                                    <Input
-                                                                        className="sm-parameter-row__input"
-                                                                        style={{ width: '160px' }}
-                                                                        value={defaultValue}
-                                                                        disabled={!isDefinitionEditable(definitionState.definitionForManager)}
-                                                                        onChange={(value) => {
-                                                                            actions.onChangeDefinition(key, value);
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                {type === 'int' && (
-                                                                    <span className="sm-parameter-row__input-unit">{unit}</span>
-                                                                )}
-                                                                {type === 'bool' && (
-                                                                    <input
-                                                                        className="sm-parameter-row__checkbox"
-                                                                        style={{ cursor: !isDefinitionEditable(definitionState.definitionForManager) ? 'not-allowed' : 'default' }}
-                                                                        type="checkbox"
-                                                                        checked={defaultValue}
-                                                                        disabled={!isDefinitionEditable(definitionState.definitionForManager)}
-                                                                        onChange={(event) => actions.onChangeDefinition(key, event.target.checked, defaultKeysAndId.keysArray)}
-                                                                    />
-                                                                )}
-                                                                {type === 'enum' && (
-                                                                    <Select
-                                                                        className="sm-parameter-row__select-md"
-                                                                        backspaceRemoves={false}
-                                                                        clearable={false}
-                                                                        menuContainerStyle={{ zIndex: 5 }}
-                                                                        name={key}
-                                                                        disabled={!isDefinitionEditable(definitionState.definitionForManager)}
-                                                                        options={opts}
-                                                                        value={defaultValue}
-                                                                        onChange={(option) => {
-                                                                            actions.onChangeDefinition(key, option.value, defaultKeysAndId.keysArray);
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                                {type === undefined && (
-                                                                    <Input
-                                                                        className="sm-parameter-row__input"
-                                                                        style={{ width: '160px' }}
-                                                                        value={defaultValue}
-                                                                        disabled={!isDefinitionEditable(definitionState.definitionForManager)}
-                                                                        onChange={(value) => {
-                                                                            actions.onChangeDefinition(key, value);
-                                                                        }}
-                                                                    />
-                                                                )}
-                                                            </div>
-                                                        </TipTrigger>
-                                                    );
-                                                })
-                                                }
-                                            </div>
+                                            <ConfigItem
+                                                definitionForManager={definitionState?.definitionForManager}
+                                                group={group}
+                                                defaultKeysAndId={defaultKeysAndId}
+                                                key={group.name || group.fields[0]}
+                                                isDefinitionEditable={isDefinitionEditable}
+                                                onChangeDefinition={actions.onChangeDefinition}
+                                            />
                                         );
                                     })}
                                 </div>
@@ -872,7 +702,6 @@ ProfileManager.propTypes = {
     defaultKeysAndId: PropTypes.object.isRequired,
     managerTitle: PropTypes.string.isRequired,
     disableCategory: PropTypes.bool,
-    styles: PropTypes.object.isRequired,
     optionConfigGroup: PropTypes.array.isRequired,
     allDefinitions: PropTypes.array.isRequired,
     isDefinitionEditable: PropTypes.func.isRequired,

@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import i18n from '../../lib/i18n';
 import styles from './styles/maintoolbar.styl';
 import SvgIcon from '../components/SvgIcon';
-import { timestamp } from '../../../shared/lib/random-utils';
 
 function MenuItem({ menuItem, actions }) {
     if (!menuItem) {
@@ -14,12 +13,11 @@ function MenuItem({ menuItem, actions }) {
     switch (type) {
         case 'separator':
             return (
-                <div key={title + timestamp()} className={styles.separator} />
+                <div className={styles.separator} />
             );
         case 'button':
             return (
                 <SvgIcon
-                    key={title + timestamp()}
                     size={18}
                     name={name}
                     isHorizontal={false}
@@ -34,7 +32,7 @@ function MenuItem({ menuItem, actions }) {
     }
 }
 MenuItem.propTypes = {
-    menuItem: PropTypes.array.isRequired,
+    menuItem: PropTypes.object.isRequired,
     actions: PropTypes.object.isRequired
 };
 

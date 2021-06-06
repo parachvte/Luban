@@ -72,11 +72,9 @@ function CncToolManager() {
                         definitionsWithSameCategory[i].category,
                         selectedName,
                     ));
-                    console.log('i');
                 }
                 return null;
             } catch (e) {
-                console.log('error');
                 return Promise.reject(i18n._('Failed to rename. Name already exists.'));
             }
         },

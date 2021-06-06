@@ -174,6 +174,9 @@ function ConfigItem({ definitionForManager, group, isDefinitionEditable, onChang
                                     }}
                                 />
                             )}
+                            {type === undefined && (
+                                <span className="sm-parameter-row__input-unit">{unit}</span>
+                            )}
                         </div>
                     </TipTrigger>
                 );

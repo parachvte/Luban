@@ -1,8 +1,15 @@
 import fs from 'fs';
 import path from 'path';
+import { isNil, includes } from 'lodash';
 import { ERR_BAD_REQUEST, ERR_INTERNAL_SERVER_ERROR, CNC_CONFIG_SUBCATEGORY } from '../../constants';
 import DataStorage from '../../DataStorage';
 
+const defaultToolListNames = [
+    'Carving V-bit',
+    'Flat End Mill',
+    'Ball End Mill',
+    'Straight Groove V-bit'
+];
 
 /**
  * Get definition
@@ -59,7 +66,33 @@ export const getToolDefinitions = (req, res) => {
             const filePath = path.join(configDir, filename);
             const data = fs.readFileSync(filePath, 'utf8');
             const json = JSON.parse(data);
-            definitions.push(json);
+            if (json.toolList && isNil(json.settings)) {
+                const toolLists = json.toolList;
+                const shouldCheckName = json?.definitionId === 'Default';
+                toolLists.forEach((item) => {
+                    let shouldCoverDefinition = false;
+                    if (shouldCheckName && item.name && !includes(defaultToolListNames, item.name)) {
+                        shouldCoverDefinition = true;
+                    } else if (!shouldCheckName && item.name) {
+                        shouldCoverDefinition = true;
+                    }
+                    if (shouldCoverDefinition) {
+                        const newDefinition = {};
+                        newDefinition.category = json.category;
+                        newDefinition.version = json.version;
+                        newDefinition.name = item.name;
+                        newDefinition.settings = item.config;
+                        const newName = `Old${json.definitionId}${item.name}`;
+                        newDefinition.definitionId = newName;
+                        fs.writeFileSync(path.join(configDir, `${newName}.def.json`), JSON.stringify(newDefinition));
+                        // JSON.stringify
+                        definitions.push(newDefinition);
+                    }
+                });
+                fs.unlinkSync(filePath);
+            } else {
+                definitions.push(json);
+            }
         }
     }
     res.send({ definitions });

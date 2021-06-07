@@ -48,7 +48,10 @@ class Canvas extends Component {
         // tmp
         canOperateModel: PropTypes.bool,
         // isToolpathModel: PropTypes.bool,
-        showContextMenu: PropTypes.func
+        showContextMenu: PropTypes.func,
+
+        // inProgress
+        inProgress: PropTypes.func
     };
 
     static defaultProps = {
@@ -111,10 +114,18 @@ class Canvas extends Component {
 
             window.addEventListener('resize', this.resizeWindow, false);
         }
+
+        if (this.controls && this.props.inProgress) {
+            this.controls.setInProgress(this.props.inProgress);
+        }
     }
 
     // just for laser and cnc, dont set scale prop for 3dp
     componentWillReceiveProps(nextProps) {
+        if (nextProps.inProgress !== this.props.inProgress) {
+            this.controls.setInProgress(nextProps.inProgress);
+        }
+
         if (nextProps.scale && nextProps.scale !== this.lastScale) {
             const currentScale = this.initialDistance / (this.camera.position.distanceTo(this.controls.target));
             this.controls.setScale(currentScale / nextProps.scale);

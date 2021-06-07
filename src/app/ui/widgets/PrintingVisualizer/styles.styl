@@ -280,6 +280,7 @@ $visualizer-padding = 10px
                 background-image: url('/resources/images/224x224/toolbar_add_files.jpg')
 
                 &:disabled
+                    opacity(.2) // Todo: the same to others after change image
                     background-image: url('/resources/images/224x224/toolbar_add_files.jpg')
 
             &.operation-mirror
@@ -290,9 +291,10 @@ $visualizer-padding = 10px
                     background-image: url('/resources/images/224x224/toolbar_mirror_models.jpg')
 
             &.operation-arrange
-                background-image: url('/resources/224x224/toolbar_arrange_models.jpg')
+                background-image: url('/resources/images/224x224/toolbar_arrange_models.jpg')
 
                 &:disabled
+                    opacity(.2) // Todo: the same to others after change image
                     background-image: url('/resources/images/224x224/toolbar_arrange_models.jpg')
 
             &.operation-move

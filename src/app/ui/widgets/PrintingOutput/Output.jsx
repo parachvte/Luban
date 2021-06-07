@@ -31,6 +31,7 @@ class Output extends PureComponent {
         hasAnyModelVisible: PropTypes.bool.isRequired,
         stage: PropTypes.number.isRequired,
         isAnyModelOverstepped: PropTypes.bool.isRequired,
+        inProgress: PropTypes.bool.isRequired,
         generateGcode: PropTypes.func.isRequired,
         exportFile: PropTypes.func.isRequired,
         renderGcodeFile: PropTypes.func.isRequired
@@ -121,7 +122,7 @@ class Output extends PureComponent {
     render() {
         const state = this.state;
         const actions = this.actions;
-        const { workflowState, stage, gcodeLine, hasModel, hasAnyModelVisible } = this.props;
+        const { workflowState, stage, gcodeLine, hasModel, hasAnyModelVisible, inProgress } = this.props;
 
         const isSlicing = stage === PRINTING_STAGE.SLICING;
         const { isAnyModelOverstepped } = this.props;
@@ -133,7 +134,7 @@ class Output extends PureComponent {
                         type="button"
                         className="sm-btn-large sm-btn-default"
                         onClick={actions.onClickGenerateGcode}
-                        disabled={!hasModel || !hasAnyModelVisible || isSlicing || isAnyModelOverstepped}
+                        disabled={!hasModel || !hasAnyModelVisible || isSlicing || isAnyModelOverstepped || inProgress}
                         style={{ display: 'block', width: '100%' }}
                     >
                         {i18n._('Generate G-code')}
@@ -164,7 +165,7 @@ class Output extends PureComponent {
                                         type="button"
                                         className="sm-btn-large sm-btn-default"
                                         style={{ width: '100%', lineHeight: '95%' }}
-                                        disabled={!hasModel}
+                                        disabled={!hasModel || inProgress}
                                         onClick={actions.onClickExportModel}
                                     >
                                         {i18n._('Export Models')}
@@ -177,7 +178,7 @@ class Output extends PureComponent {
                         type="button"
                         className="sm-btn-large sm-btn-default"
                         onClick={actions.onClickLoadGcode}
-                        disabled={workflowState === 'running' || !gcodeLine}
+                        disabled={workflowState === 'running' || !gcodeLine || inProgress}
                         style={{ display: 'block', width: '100%', marginTop: '10px' }}
                     >
                         {i18n._('Load G-code to Workspace')}
@@ -186,7 +187,7 @@ class Output extends PureComponent {
                         type="button"
                         className="sm-btn-large sm-btn-default"
                         onClick={actions.onClickExportGcode}
-                        disabled={!gcodeLine}
+                        disabled={!gcodeLine || inProgress}
                         style={{ display: 'block', width: '100%', marginTop: '10px' }}
                     >
                         {i18n._('Export G-code to File')}
@@ -208,7 +209,7 @@ const mapStateToProps = (state) => {
     const {
         stage,
         modelGroup, hasModel, isAnyModelOverstepped,
-        isGcodeOverstepped, gcodeLine, gcodeFile
+        isGcodeOverstepped, gcodeLine, gcodeFile, inProgress
     } = printing;
 
     return {
@@ -220,7 +221,8 @@ const mapStateToProps = (state) => {
         isAnyModelOverstepped,
         isGcodeOverstepped,
         gcodeLine,
-        gcodeFile
+        gcodeFile,
+        inProgress
     };
 };
 

@@ -15,7 +15,7 @@ import ContextMenu from '../../components/ContextMenu';
 
 import Canvas from '../../components/SMCanvas';
 import PrintablePlate from '../CncLaserShared/PrintablePlate';
-import SecondaryToolbar from '../CanvasToolbar/SecondaryToolbar';
+import VisualizerBottomLeft from '../CncLaserShared/VisualizerBottomLeft';
 import { actions as editorActions } from '../../../flux/editor';
 import VisualizerTopRight from '../CncLaserTopRight/VisualizerTopRight';
 import LaserCameraAidBackground from '../LaserCameraAidBackground';
@@ -430,8 +430,8 @@ class Visualizer extends Component {
                         transformSourceType="2D"
                     />
                 </div>
-                <div className={styles['canvas-footer']}>
-                    <SecondaryToolbar
+                <div className={styles['bottom-left']}>
+                    <VisualizerBottomLeft
                         zoomIn={this.actions.zoomIn}
                         zoomOut={this.actions.zoomOut}
                         toFront={this.actions.autoFocus}

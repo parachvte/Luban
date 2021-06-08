@@ -1550,7 +1550,7 @@ class SVGCanvas extends PureComponent {
         return (
             <React.Fragment>
                 <div ref={this.node} style={{ height: 'calc(100vh - 61px)' }} className={className} />
-                <input ref={this.input} style={{ position: 'absolute', bottom: '0' }} type="text" size="35" autoComplete="off" />
+                <input ref={this.input} style={{ position: 'absolute', top: '-45px' }} type="text" size="35" autoComplete="off" />
             </React.Fragment>
         );
     }

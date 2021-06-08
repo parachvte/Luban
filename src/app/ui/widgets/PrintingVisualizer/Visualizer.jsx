@@ -477,13 +477,6 @@ class Visualizer extends PureComponent {
                         showContextMenu={this.showContextMenu}
                     />
                 </div>
-                {/*<div className={styles['canvas-footer']}>*/}
-                {/*    <SecondaryToolbar*/}
-                {/*        zoomIn={this.actions.zoomIn}*/}
-                {/*        zoomOut={this.actions.zoomOut}*/}
-                {/*        toFront={this.actions.toFront}*/}
-                {/*    />*/}
-                {/*</div>*/}
                 <ContextMenu
                     ref={this.contextMenuRef}
                     id="3dp"

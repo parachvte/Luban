@@ -202,3 +202,32 @@
     &:active
         background-color: #e4e4e4
         opacity(1)
+
+.camera-operation
+    border: 1px solid $border-color
+
+    .to-front
+        background-image: url("images/focus.svg")
+
+    .zoom-in
+        background-image: url("images/zoom-in.svg")
+
+    .zoom-out
+        background-image: url("images/zoom-out.svg")
+
+
+.zoom-button
+        display: inline-block
+        width: 28px
+        height: 28px
+        text-align: center
+        vertical-align: middle
+        background-repeat: no-repeat
+        background-position: center
+
+        border: 0
+        &:hover
+            opacity(.5)
+
+        &:active
+            opacity(.3)

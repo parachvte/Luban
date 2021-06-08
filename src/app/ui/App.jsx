@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
+
 // import { Trans } from 'react-i18next';
 import { /* shortcutActions, */ priorities, ShortcutManager } from '../lib/shortcut';
 import { ToastContainer } from './components/Toast';
@@ -17,10 +18,10 @@ import { actions as printingActions } from '../flux/printing';
 import { actions as workspaceActions } from '../flux/workspace';
 import { actions as textActions } from '../flux/text';
 import { actions as projectActions } from '../flux/project';
-import { actions as settingActions } from '../flux/setting';
+// import { actions as settingActions } from '../flux/setting';
 
 
-import i18n from '../lib/i18n';
+// import i18n from '../lib/i18n';
 
 import HomePage from './Pages/HomePage';
 import Workspace from './Pages/Workspace';
@@ -54,6 +55,7 @@ class App extends PureComponent {
         // printingInit: PropTypes.func.isRequired,
         textInit: PropTypes.func.isRequired,
         initRecoverService: PropTypes.func.isRequired,
+        openProject: PropTypes.func.isRequired,
         // projectState: PropTypes.object.isRequired,
         // onRecovery: PropTypes.func.isRequired,
         // quitRecovery: PropTypes.func.isRequired,
@@ -156,14 +158,15 @@ class App extends PureComponent {
             } else {
                 try {
                     await this.props.openProject(file, this.router.current.history);
+                    UniApi.File.addRecentFiles(file);
                 } catch (e) {
                     console.log(e.message);
                 }
             }
         },
-        updateRecentFile: (arr, type) => {
-            this.props.updateRecentProject(arr, type);
-        },
+        // updateRecentFile: (arr, type) => {
+        //     this.props.updateRecentProject(arr, type);
+        // },
         initFileOpen: async () => {
             const file = await UniApi.File.popFile();
             if (file) {
@@ -172,46 +175,6 @@ class App extends PureComponent {
             // start recover service after file opened on startup
             // to ensure opened file set before service run
             this.props.initRecoverService();
-        },
-        initUniEvent: () => {
-            UniApi.Event.on('message', (event, message) => {
-                this.props.updateAutoupdateMessage(message);
-            });
-            UniApi.Event.on('download-has-started', () => {
-                this.props.updateIsDownloading(true);
-            });
-            UniApi.Event.on('update-should-check-for-update', (event, checkForUpdate) => {
-                this.props.updateShouldCheckForUpdate(checkForUpdate);
-            });
-            UniApi.Event.on('update-available', (event, downloadInfo, oldVersion) => {
-                UniApi.Update.downloadUpdate(downloadInfo, oldVersion, this.props.shouldCheckForUpdate);
-            });
-            UniApi.Event.on('is-replacing-app-now', (event, downloadInfo) => {
-                UniApi.Update.isReplacingAppNow(downloadInfo);
-                this.props.updateIsDownloading(false);
-            });
-            UniApi.Event.on('open-file', (event, file, arr) => {
-                this.actions.openProject(file);
-                if (arr.length) {
-                    this.actions.updateRecentFile(arr, 'update');
-                }
-            });
-            UniApi.Event.on('save-as-file', (event, file) => {
-                this.actions.saveAsFile(file);
-            });
-            UniApi.Event.on('save', () => {
-                this.actions.save();
-            });
-            UniApi.Event.on('save-and-close', async () => {
-                await this.actions.saveAll();
-                UniApi.Window.call('destroy');
-            });
-            UniApi.Event.on('close-file', async () => {
-                await this.actions.closeFile();
-            });
-            UniApi.Event.on('update-recent-file', (event, arr, type) => {
-                this.actions.updateRecentFile(arr, type);
-            });
         }
     };
 
@@ -246,7 +209,7 @@ class App extends PureComponent {
         this.props.textInit();
 
         UniApi.Window.initWindow();
-        this.actions.initUniEvent();
+        // this.actions.initUniEvent();
         this.actions.initFileOpen();
         // auto update
         setTimeout(() => {
@@ -381,20 +344,16 @@ class App extends PureComponent {
 const mapStateToProps = (state) => {
     const machineInfo = state.machine;
     const { shouldCheckForUpdate } = machineInfo;
-
-    const projectState = state.project;
+    // const projectState = state.project;
     return {
-        machineInfo,
-        shouldCheckForUpdate,
-        projectState
+        // machineInfo,
+        shouldCheckForUpdate
+        // projectState
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
         machineInit: () => dispatch(machineActions.init()),
-        updateShouldCheckForUpdate: (shouldAutoUpdate) => dispatch(machineActions.updateShouldCheckForUpdate(shouldAutoUpdate)),
-        updateAutoupdateMessage: (message) => dispatch(machineActions.updateAutoupdateMessage(message)),
-        updateIsDownloading: (isDownloading) => dispatch(machineActions.updateIsDownloading(isDownloading)),
         developToolsInit: () => dispatch(developToolsActions.init()),
         workspaceInit: () => dispatch(workspaceActions.init()),
         laserInit: () => dispatch(laserActions.init()),
@@ -405,6 +364,7 @@ const mapDispatchToProps = (dispatch) => {
         setShouldShowCncWarning: (value) => {
             dispatch(machineActions.setShouldShowCncWarning(value));
         },
+        openProject: (file, history) => dispatch(projectActions.open(file, history)),
         functionsInit: () => {
             dispatch(editorActions.initSelectedModelListener('laser'));
             dispatch(editorActions.initSelectedModelListener('cnc'));

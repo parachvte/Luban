@@ -12,6 +12,7 @@ import {
 } from '../../../constants';
 import { NumberInput as Input } from '../../components/Input';
 import Select from '../../components/Select';
+import UniApi from '../../../lib/uni-api';
 
 class JobType extends PureComponent {
     static propTypes = {
@@ -71,6 +72,24 @@ class JobType extends PureComponent {
         changeCoordinateMode: (option) => {
             const newCoordinateMode = this.coordinateModeList.find(d => d.value === option.value);
             this.props.changeCoordinateMode(newCoordinateMode.mode);
+        },
+        handleNewFile: (is4Axis) => {
+            if (is4Axis) {
+                const { materials: { diameter, length } } = this.props;
+
+                this.props.changeCoordinateMode(
+                    COORDINATE_MODE_BOTTOM_CENTER, {
+                        x: diameter * Math.PI,
+                        y: length
+                    }
+                );
+                this.props.updateMaterials({ isRotate: true });
+            } else {
+                this.props.changeCoordinateMode(
+                    COORDINATE_MODE_CENTER
+                );
+                this.props.updateMaterials({ isRotate: false });
+            }
         }
     };
 
@@ -80,8 +99,16 @@ class JobType extends PureComponent {
         this.props.isWidget === true && this.props.widgetActions.setDisplay(this.props.use4Axis && this.props.page === PAGE_EDITOR);
     }
 
+    componentDidMount() {
+        UniApi.Event.on('topbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
+    }
+
     componentWillReceiveProps(nextProps) {
         this.props.isWidget === true && this.props.widgetActions.setDisplay(nextProps.use4Axis && nextProps.page === PAGE_EDITOR);
+    }
+
+    componentWillUnmount() {
+        UniApi.Event.off('topbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
     }
 
     render() {

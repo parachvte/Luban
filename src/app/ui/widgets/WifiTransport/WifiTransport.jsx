@@ -9,6 +9,7 @@ import path from 'path';
 import request from 'superagent';
 import { pathWithRandomSuffix } from '../../../../shared/lib/random-utils';
 import i18n from '../../../lib/i18n';
+import UniApi from '../../../lib/uni-api';
 import widgetStyles from '../styles.styl';
 import styles from './index.styl';
 import {
@@ -189,6 +190,17 @@ class WifiTransport extends PureComponent {
                     }
                 });
             });
+        },
+        importFile: (fileObj) => {
+            if (fileObj) {
+                this.actions.onChangeFile({
+                    target: {
+                        files: [fileObj]
+                    }
+                });
+            } else {
+                this.actions.onClickToUpload();
+            }
         }
     };
 
@@ -202,6 +214,8 @@ class WifiTransport extends PureComponent {
         for (let i = 0; i < 5; i++) {
             this.changeNameInput[i] = React.createRef();
         }
+        UniApi.Event.on('topbar-menu:workspace.export-gcode', this.actions.onExport);
+        UniApi.Event.on('topbar-menu:workspace.import', this.actions.importFile);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -215,6 +229,8 @@ class WifiTransport extends PureComponent {
         for (let i = 0; i < 5; i++) {
             this.changeNameInput[i] = null;
         }
+        UniApi.Event.off('topbar-menu:workspace.export-gcode', this.actions.onExport);
+        UniApi.Event.off('topbar-menu:workspace.import', this.actions.importFile);
     }
 
     render() {

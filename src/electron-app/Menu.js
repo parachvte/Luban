@@ -1,9 +1,8 @@
-import { URL } from 'url';
 import path from 'path';
 import fs from 'fs';
-import { app, shell, Menu, dialog, MenuItem } from 'electron';
+import { Menu, dialog, MenuItem } from 'electron';
+// import { URL } from 'url';
 import DataStorage from '../DataStorage';
-
 
 function getSavedRecentFile() {
     const recentFileName = `${DataStorage.userDataDir}/recent-opened-files.json`;
@@ -39,7 +38,6 @@ function saveRecentFile(file) {
     fs.writeFileSync(recentFileName, JSON.stringify(arr), 'utf-8');
 }
 
-
 export function addRecentFile(file, isSave = true) {
     const menu = Menu.getApplicationMenu();
     const itemRecentFiles = menu.getMenuItemById('recent-files');
@@ -74,14 +72,14 @@ export function cleanAllRecentFiles() {
     fs.writeFileSync(recentFileName, JSON.stringify([]), 'utf-8');
 }
 
-function onClickPreferences(browserWindow) {
-    const window = browserWindow;
+// function onClickPreferences(browserWindow) {
+//     const window = browserWindow;
 
-    const url = window.webContents.getURL();
-    const urlInstance = new URL(url);
+//     const url = window.webContents.getURL();
+//     const urlInstance = new URL(url);
 
-    window.webContents.loadURL(`${urlInstance.origin}/#/settings`);
-}
+//     window.webContents.loadURL(`${urlInstance.origin}/#/settings`);
+// }
 
 async function openFile(browserWindow, file) {
     if (!file) {
@@ -103,136 +101,137 @@ async function openFile(browserWindow, file) {
     browserWindow.webContents.send('open-file', file, arr);
 }
 
-function saveAsFile(browserWindow) {
-    browserWindow.webContents.send('save-as-file');
-}
+// function saveAsFile(browserWindow) {
+//     browserWindow.webContents.send('save-as-file');
+// }
 
-function closeFile(browserWindow) {
-    browserWindow.webContents.send('close-file');
-}
+// function closeFile(browserWindow) {
+//     browserWindow.webContents.send('close-file');
+// }
 
-function save(browserWindow) {
-    browserWindow.webContents.send('save');
-}
+// function save(browserWindow) {
+//     browserWindow.webContents.send('save');
+// }
 
 function getMenuTemplate(options) {
-    const { url } = options;
+    // const { url } = options;
 
-    const template = [
-        {
-            label: 'File',
-            submenu: [
-                {
-                    id: 'new',
-                    label: 'New File',
-                    accelerator: 'CmdOrCtrl+N',
-                    click: (menuItem, browserWindow) => {
-                        closeFile(browserWindow);
-                    }
-                },
-                { type: 'separator' },
-                {
-                    label: 'Open File...',
-                    accelerator: 'CmdOrCtrl+O',
-                    click: (menuItem, browserWindow) => {
-                        openFile(browserWindow);
-                    }
-                },
-                {
-                    id: 'recent-files',
-                    label: 'Recent Files',
-                    submenu: [
-                        {
-                            id: 'remove-recent',
-                            label: 'Clean All Recent Files',
+    // const template = [
+    //     {
+    //         label: 'File',
+    //         submenu: [
+    //             {
+    //                 id: 'new',
+    //                 label: 'New File',
+    //                 accelerator: 'CmdOrCtrl+N',
+    //                 click: (menuItem, browserWindow) => {
+    //                     closeFile(browserWindow);
+    //                 }
+    //             },
+    //             { type: 'separator' },
+    //             {
+    //                 label: 'Open File...',
+    //                 accelerator: 'CmdOrCtrl+O',
+    //                 click: (menuItem, browserWindow) => {
+    //                     openFile(browserWindow);
+    //                 }
+    //             },
+    //             {
+    //                 id: 'recent-files',
+    //                 label: 'Recent Files',
+    //                 submenu: [
+    //                     {
+    //                         id: 'remove-recent',
+    //                         label: 'Clean All Recent Files',
 
-                            click: (menuItem, browserWindow) => {
-                                for (const item of menuItem.menu.items) {
-                                    if (item !== menuItem) item.visible = false;
-                                }
-                                const recentFileName = `${DataStorage.userDataDir}/recent-opened-files.json`;
-                                const type = 'reset';
-                                fs.writeFileSync(recentFileName, JSON.stringify([]), 'utf-8');
-                                browserWindow.webContents.send('update-recent-file', [], type);
-                            }
-                        }
-                    ]
-                },
-                { type: 'separator' },
-                {
-                    id: 'save',
-                    label: 'Save',
-                    accelerator: 'CommandOrControl+S',
-                    click: (menuItem, browserWindow) => {
-                        save(browserWindow);
-                    }
-                },
-                {
-                    id: 'save-as',
-                    label: 'Save As...',
-                    click: (menuItem, browserWindow) => {
-                        saveAsFile(browserWindow);
-                    }
-                }
-            ]
-        },
-        {
-            label: 'View',
-            submenu: [
-                { role: 'reload' },
-                { role: 'forcereload' },
-                { type: 'separator' },
-                {
-                    label: 'View In Browser',
-                    click: () => {
-                        shell.openExternal(url);
-                    }
-                },
-                { role: 'toggledevtools' },
-                { type: 'separator' },
-                { role: 'togglefullscreen' }
-            ]
-        },
-        {
-            role: 'window',
-            submenu: [
-                { role: 'minimize' },
-                { role: 'close' }
-            ]
-        }
-    ];
+    //                         click: (menuItem, browserWindow) => {
+    //                             for (const item of menuItem.menu.items) {
+    //                                 if (item !== menuItem) item.visible = false;
+    //                             }
+    //                             const recentFileName = `${DataStorage.userDataDir}/recent-opened-files.json`;
+    //                             const type = 'reset';
+    //                             fs.writeFileSync(recentFileName, JSON.stringify([]), 'utf-8');
+    //                             browserWindow.webContents.send('update-recent-file', [], type);
+    //                         }
+    //                     }
+    //                 ]
+    //             },
+    //             { type: 'separator' },
+    //             {
+    //                 id: 'save',
+    //                 label: 'Save',
+    //                 accelerator: 'CommandOrControl+S',
+    //                 click: (menuItem, browserWindow) => {
+    //                     save(browserWindow);
+    //                 }
+    //             },
+    //             {
+    //                 id: 'save-as',
+    //                 label: 'Save As...',
+    //                 click: (menuItem, browserWindow) => {
+    //                     saveAsFile(browserWindow);
+    //                 }
+    //             }
+    //         ]
+    //     },
+    //     {
+    //         label: 'View',
+    //         submenu: [
+    //             { role: 'reload' },
+    //             { role: 'forcereload' },
+    //             { type: 'separator' },
+    //             {
+    //                 label: 'View In Browser',
+    //                 click: () => {
+    //                     shell.openExternal(url);
+    //                 }
+    //             },
+    //             { role: 'toggledevtools' },
+    //             { type: 'separator' },
+    //             { role: 'togglefullscreen' }
+    //         ]
+    //     },
+    //     {
+    //         role: 'window',
+    //         submenu: [
+    //             { role: 'minimize' },
+    //             { role: 'close' }
+    //         ]
+    //     }
+    // ];
 
-    if (process.platform === 'darwin') {
-        // About
-        template.unshift({
-            label: app.getName(),
-            submenu: [
-                { role: 'about' },
-                { type: 'separator' },
-                {
-                    label: 'Preferences...',
-                    accelerator: 'CommandOrControl+,',
-                    click: onClickPreferences
-                },
-                { type: 'separator' },
-                { role: 'services', submenu: [] },
-                { type: 'separator' },
-                {
-                    role: 'hide',
-                    label: 'Hide'
-                },
-                { role: 'hideothers' },
-                { role: 'unhide' },
-                { type: 'separator' },
-                {
-                    role: 'quit',
-                    label: 'Quit'
-                }
-            ]
-        });
-    }
+    // if (process.platform === 'darwin') {
+    //     // About
+    //     template.unshift({
+    //         label: app.getName(),
+    //         submenu: [
+    //             { role: 'about' },
+    //             { type: 'separator' },
+    //             {
+    //                 label: 'Preferences...',
+    //                 accelerator: 'CommandOrControl+,',
+    //                 click: onClickPreferences
+    //             },
+    //             { type: 'separator' },
+    //             { role: 'services', submenu: [] },
+    //             { type: 'separator' },
+    //             {
+    //                 role: 'hide',
+    //                 label: 'Hide'
+    //             },
+    //             { role: 'hideothers' },
+    //             { role: 'unhide' },
+    //             { type: 'separator' },
+    //             {
+    //                 role: 'quit',
+    //                 label: 'Quit'
+    //             }
+    //         ]
+    //     });
+    // }
 
-    return template;
+    // return template;
+    return [];
 }
 
 /**

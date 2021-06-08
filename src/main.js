@@ -6,7 +6,7 @@ import Store from 'electron-store';
 import { isUndefined, isNull } from 'lodash';
 import path from 'path';
 import { configureWindow } from './electron-app/window';
-import MenuBuilder, { addRecentFile, cleanAllRecentFiles } from './electron-app/Menu';
+import { addRecentFile, cleanAllRecentFiles } from './electron-app/Menu';
 import launchServer from './server-cli';
 import DataStorage from './DataStorage';
 import pkg from './package.json';
@@ -174,7 +174,6 @@ const createWindow = async () => {
     const windowOptions = getBrowserWindowOptions();
     const window = new BrowserWindow(windowOptions);
 
-
     mainWindow = window;
     configureWindow(window);
 
@@ -208,8 +207,8 @@ const createWindow = async () => {
 
 
     // Setup menu
-    const menuBuilder = new MenuBuilder(window, { url: loadUrl });
-    menuBuilder.buildMenu();
+    // const menuBuilder = new MenuBuilder(window, { url: loadUrl });
+    // menuBuilder.buildMenu();
     // Init homepage recent files
     ipcMain.on('get-recent-file', () => {
         const fileArr = menuBuilder.getInitRecentFile();

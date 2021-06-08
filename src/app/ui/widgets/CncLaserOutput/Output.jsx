@@ -47,6 +47,13 @@ class Output extends PureComponent {
     thumbnail = React.createRef();
 
     actions = {
+        switchToEditPage: () => {
+            if (this.props.displayedType === DISPLAYED_TYPE_TOOLPATH) {
+                this.props.showModelGroupObject();
+            } else {
+                this.props.showToolPathGroupObject();
+            }
+        },
         onGenerateGcode: () => {
             const thumbnail = this.thumbnail.current.getThumbnail();
             this.props.commitGenerateGcode(thumbnail);
@@ -112,7 +119,7 @@ class Output extends PureComponent {
 
     render() {
         const actions = this.actions;
-        const { page, workflowState, isGcodeGenerating, canGenerateGcode, gcodeFile, hasModel, hasToolPathModel, autoPreviewEnabled, inProgress } = this.props;
+        const { page, workflowState, isGcodeGenerating, canGenerateGcode, gcodeFile, hasModel, hasToolPathModel, autoPreviewEnabled, inProgress, displayedType } = this.props;
         const isEditor = page === PAGE_EDITOR;
         const isProcess = page === PAGE_PROCESS;
 
@@ -129,7 +136,7 @@ class Output extends PureComponent {
                             {i18n._('Process')}
                         </button>
                     )}
-                    {isProcess && (
+                    {isProcess && displayedType !== DISPLAYED_TYPE_TOOLPATH && (
                         <button
                             type="button"
                             className="sm-btn-large sm-btn-default"
@@ -138,6 +145,17 @@ class Output extends PureComponent {
                             disabled={inProgress || (!hasToolPathModel ?? false)}
                         >
                             {i18n._('Preview')}
+                        </button>
+                    )}
+                    {isProcess && displayedType === DISPLAYED_TYPE_TOOLPATH && (
+                        <button
+                            type="button"
+                            className="sm-btn-large sm-btn-default"
+                            onClick={this.actions.switchToEditPage}
+                            style={{ display: 'block', width: '100%', marginBottom: '10px' }}
+                            disabled={inProgress || (!hasToolPathModel ?? false)}
+                        >
+                            {i18n._('Back to Object View')}
                         </button>
                     )}
                     {isProcess && (

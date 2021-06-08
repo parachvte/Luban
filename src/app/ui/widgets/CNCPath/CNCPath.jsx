@@ -25,6 +25,7 @@ class CNCPath extends PureComponent {
         config: PropTypes.object.isRequired,
         // transformation: PropTypes.object.isRequired,
         selectedModel: PropTypes.object,
+        inProgress: PropTypes.bool.isRequired,
 
         // functions
         setDisplay: PropTypes.func.isRequired,
@@ -77,7 +78,8 @@ class CNCPath extends PureComponent {
             updateSelectedModelUniformScalingState,
             selectedModel,
             modifyText,
-            updateSelectedModelConfig
+            updateSelectedModelConfig,
+            inProgress
         } = this.props;
         const selectedNotHide = selectedModelArray && selectedModelArray.length === 1 && selectedModelVisible;
 
@@ -89,6 +91,7 @@ class CNCPath extends PureComponent {
             <React.Fragment>
                 {isEditor && (
                     <TransformationSection
+                        disabled={inProgress}
                         headType="cnc"
                         updateSelectedModelUniformScalingState={updateSelectedModelUniformScalingState}
                     />
@@ -99,7 +102,7 @@ class CNCPath extends PureComponent {
                             <ImageProcessMode
                                 sourceType={sourceType}
                                 mode={mode}
-                                disabled={!selectedNotHide}
+                                disabled={inProgress || !selectedNotHide}
                                 showOrigin={showOrigin}
                                 changeSelectedModelShowOrigin={changeSelectedModelShowOrigin}
                                 changeSelectedModelMode={changeSelectedModelMode}
@@ -107,7 +110,7 @@ class CNCPath extends PureComponent {
                         )}
                         {isEditor && isTextVector && (
                             <TextParameters
-                                disabled={!selectedModelVisible}
+                                disabled={inProgress || !selectedModelVisible}
                                 config={config}
                                 headType="cnc"
                                 selectedModel={selectedModel}
@@ -116,7 +119,7 @@ class CNCPath extends PureComponent {
                         )}
                         {isEditor && isImage3d && (
                             <Image3dParameters
-                                disabled={!selectedModelVisible}
+                                disabled={inProgress || !selectedModelVisible}
                                 config={config}
                                 updateSelectedModelConfig={updateSelectedModelConfig}
                             />
@@ -129,7 +132,7 @@ class CNCPath extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-    const { page, modelGroup } = state.cnc;
+    const { page, modelGroup, inProgress } = state.cnc;
     const selectedModel = modelGroup.getSelectedModel();
     const selectedModelID = selectedModel.modelID;
     const {
@@ -152,7 +155,8 @@ const mapStateToProps = (state) => {
         sourceType,
         mode,
         showOrigin,
-        config
+        config,
+        inProgress
     };
 };
 

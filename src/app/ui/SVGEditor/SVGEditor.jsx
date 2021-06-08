@@ -189,17 +189,16 @@ class SVGEditor extends PureComponent {
                                 elementActions={this.props.elementActions}
                             />
                         </div>
-                        {this.props.editable && (
-                            <SVGLeftBar
-                                mode={this.state.mode}
-                                insertDefaultTextVector={this.insertDefaultTextVector}
-                                setMode={this.setMode}
-                                onChangeFile={this.props.onChangeFile}
-                                onClickToUpload={this.props.onClickToUpload}
-                                fileInput={this.props.fileInput}
-                                allowedFiles={this.props.allowedFiles}
-                            />
-                        )}
+                        <SVGLeftBar
+                            mode={this.state.mode}
+                            insertDefaultTextVector={this.insertDefaultTextVector}
+                            setMode={this.setMode}
+                            onChangeFile={this.props.onChangeFile}
+                            onClickToUpload={this.props.onClickToUpload}
+                            fileInput={this.props.fileInput}
+                            allowedFiles={this.props.allowedFiles}
+                            editable={this.props.editable}
+                        />
                     </div>
                     {this.props.use3DVisualizer && (
                         <Cnc3DVisualizer />

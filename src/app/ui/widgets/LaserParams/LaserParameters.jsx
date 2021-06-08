@@ -27,6 +27,7 @@ class LaserParameters extends PureComponent {
         showOrigin: PropTypes.bool,
         config: PropTypes.object.isRequired,
         headType: PropTypes.string,
+        inProgress: PropTypes.bool.isRequired,
 
         setDisplay: PropTypes.func.isRequired,
 
@@ -115,7 +116,7 @@ class LaserParameters extends PureComponent {
             config,
             changeSelectedModelMode, showOrigin, changeSelectedModelShowOrigin,
             headType, updateSelectedModelUniformScalingState,
-            modifyText
+            modifyText, inProgress
         } = this.props;
 
         const actions = this.actions;
@@ -139,11 +140,12 @@ class LaserParameters extends PureComponent {
                     <TransformationSection
                         headType={headType}
                         updateSelectedModelUniformScalingState={updateSelectedModelUniformScalingState}
+                        disabled={inProgress}
                     />
                 )}
                 {isEditor && showImageProcessMode && (selectedModelArray.length === 1) && (
                     <ImageProcessMode
-                        disabled={!selectedModelVisible}
+                        disabled={inProgress || !selectedModelVisible}
                         sourceType={sourceType}
                         mode={mode}
                         showOrigin={showOrigin}
@@ -154,7 +156,7 @@ class LaserParameters extends PureComponent {
 
                 {isEditor && isTextVector && (selectedModelArray.length === 1) && (
                     <TextParameters
-                        disabled={!selectedModelVisible}
+                        disabled={inProgress || !selectedModelVisible}
                         headType={headType}
                         config={config}
                         modifyText={modifyText}
@@ -166,7 +168,7 @@ class LaserParameters extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-    const { page, modelGroup, printOrder } = state.laser;
+    const { page, modelGroup, printOrder, inProgress } = state.laser;
     const selectedModelArray = modelGroup.getSelectedModelArray();
     const selectedModel = ((selectedModelArray && selectedModelArray.length > 0) ? selectedModelArray[0] : {
         // modelGroup.mockModel
@@ -194,7 +196,8 @@ const mapStateToProps = (state) => {
         sourceType,
         mode,
         showOrigin,
-        config
+        config,
+        inProgress
     };
 };
 

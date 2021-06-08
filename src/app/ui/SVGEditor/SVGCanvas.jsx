@@ -161,9 +161,6 @@ class SVGCanvas extends PureComponent {
     }
 
     componentWillReceiveProps(nextProps) {
-        if (nextProps.editable !== this.props.editable) {
-            this.svgContentGroup.setEditable(nextProps.editable);
-        }
         if (nextProps.scale !== this.lastScale) {
             // Updates from outsider
             this.lastScale = nextProps.scale;
@@ -296,8 +293,7 @@ class SVGCanvas extends PureComponent {
 
         this.svgContentGroup = new SVGContentGroup({
             svgContent: this.svgContent,
-            scale: this.scale,
-            editable: this.props.editable
+            scale: this.scale
         });
     }
 

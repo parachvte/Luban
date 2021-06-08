@@ -13,11 +13,10 @@ import modal from '../../../lib/modal';
 import ProgressBar from '../../components/ProgressBar';
 import ContextMenu from '../../components/ContextMenu';
 import Canvas from '../../components/SMCanvas';
-import SecondaryToolbar from '../CanvasToolbar/SecondaryToolbar';
 import { actions as printingActions, PRINTING_STAGE } from '../../../flux/printing';
 import VisualizerLeftBar from './VisualizerLeftBar';
-import VisualizerCameraOperations from './VisualizerCameraOperations';
 import VisualizerPreviewControl from './VisualizerPreviewControl';
+import VisualizerBottomLeft from './VisualizerBottomLeft';
 import VisualizerInfo from './VisualizerInfo';
 import PrintableCube from './PrintableCube';
 import styles from './styles.styl';
@@ -444,8 +443,8 @@ class Visualizer extends PureComponent {
                     />
                 </div>
 
-                <div className={styles['visualizer-camera-operations']}>
-                    <VisualizerCameraOperations actions={this.actions} />
+                <div className={styles['visualizer-bottom-left']}>
+                    <VisualizerBottomLeft actions={this.actions} />
                 </div>
 
                 <div className={styles['visualizer-preview-control']}>
@@ -478,13 +477,13 @@ class Visualizer extends PureComponent {
                         showContextMenu={this.showContextMenu}
                     />
                 </div>
-                <div className={styles['canvas-footer']}>
-                    <SecondaryToolbar
-                        zoomIn={this.actions.zoomIn}
-                        zoomOut={this.actions.zoomOut}
-                        toFront={this.actions.toFront}
-                    />
-                </div>
+                {/*<div className={styles['canvas-footer']}>*/}
+                {/*    <SecondaryToolbar*/}
+                {/*        zoomIn={this.actions.zoomIn}*/}
+                {/*        zoomOut={this.actions.zoomOut}*/}
+                {/*        toFront={this.actions.toFront}*/}
+                {/*    />*/}
+                {/*</div>*/}
                 <ContextMenu
                     ref={this.contextMenuRef}
                     id="3dp"

@@ -81,9 +81,11 @@ function CncToolManager() {
         onCreateManagerDefinition: async (definition, name, isCategorySelected, isCreate) => {
             let result = {};
             if (isCategorySelected) {
+                const oldCategoryName = definition.category;
                 definition.category = name;
-                result = await dispatch(cncActions.duplicateToolCategoryDefinition(definition, isCreate));
+                result = await dispatch(cncActions.duplicateToolCategoryDefinition(definition, isCreate, oldCategoryName));
             } else {
+                definition.name = name;
                 result = await dispatch(cncActions.duplicateToolListDefinition(definition));
             }
             return result;

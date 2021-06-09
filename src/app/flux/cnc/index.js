@@ -175,7 +175,7 @@ export const actions = {
         return null;
     },
     // // TODO:
-    duplicateToolCategoryDefinition: (activeToolList, isCreate) => async (dispatch, getState) => {
+    duplicateToolCategoryDefinition: (activeToolList, isCreate, oldCategory) => async (dispatch, getState) => {
         const state = getState().cnc;
         const toolDefinitions = cloneDeep(state.toolDefinitions);
         const newToolCategory = activeToolList;
@@ -186,7 +186,7 @@ export const actions = {
             newCategoryName = `#${newCategoryName}`;
         }
         const definitionsWithSameCategory = isCreate ? [activeToolList]
-            : state.toolDefinitions.filter(d => d.category === activeToolList.category);
+            : state.toolDefinitions.filter(d => d.category === oldCategory);
         for (let i = 0; i < definitionsWithSameCategory.length; i++) {
             const newDefinition = definitionsWithSameCategory[i];
             newDefinition.category = newCategoryName;

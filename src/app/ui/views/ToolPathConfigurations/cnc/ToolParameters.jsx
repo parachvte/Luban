@@ -134,7 +134,7 @@ function ToolParameters(props) {
             value: 'new-modified'
         });
     }
-    const foundDefinition = toolDefinitionOptions.find(d => d.definitionId === activeToolDefinition.definitionId);
+    const foundDefinition = toolDefinitionOptions.find(d => d.label === activeToolDefinition.category);
 
     return (
         <div>

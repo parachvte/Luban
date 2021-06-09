@@ -264,11 +264,23 @@ const Window = {
     },
 
     setOpenedFile(filename = 'new') {
+        let window;
+        if (isElectron()) {
+            window = window.require('electron').remote.getCurrentWindow();
+            this.initTitle = this.window.getTitle();
+        } else {
+            window = {
+                setTitle(title) {
+                    document.title = title;
+                }
+            };
+            this.initTitle = document.title;
+        }
         let title = this.initTitle;
         if (filename) {
             title = `${this.initTitle} / ${filename}`;
         }
-        this.window.setTitle(title);
+        window.setTitle(title);
     },
 
     copySelection(text) {

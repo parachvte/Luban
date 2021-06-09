@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import Widget from '../widgets/Widget';
 import PrintingVisualizer from '../widgets/PrintingVisualizer';
+import PrintingOutput from '../widgets/PrintingOutput';
 import PrintingManager from '../views/PrintingManager';
 import i18n from '../../lib/i18n';
 import modal from '../../lib/modal';
@@ -112,31 +113,34 @@ function Printing({ history, location }) {
 
     function renderRightView(newWidgets) {
         return (
-            <Sortable
-                options={{
-                    animation: 150,
-                    delay: 0,
-                    group: {
-                        name: '3dp-control'
-                    },
-                    handle: '.sortable-handle',
-                    filter: '.sortable-filter',
-                    chosenClass: 'sortable-chosen',
-                    ghostClass: 'sortable-ghost',
-                    dataIdAttr: 'data-widget-id',
-                    onStart: onDragWidgetStart,
-                    onEnd: onDragWidgetEnd
-                }}
-                onChange={onChangeWidgetOrder}
-            >
-                { newWidgets.map(widget => {
-                    return (
-                        <div data-widget-id={widget} key={widget}>
-                            <Widget widgetId={widget} width="360px" />
-                        </div>
-                    );
-                })}
-            </Sortable>
+            <div>
+                <Sortable
+                    options={{
+                        animation: 150,
+                        delay: 0,
+                        group: {
+                            name: '3dp-control'
+                        },
+                        handle: '.sortable-handle',
+                        filter: '.sortable-filter',
+                        chosenClass: 'sortable-chosen',
+                        ghostClass: 'sortable-ghost',
+                        dataIdAttr: 'data-widget-id',
+                        onStart: onDragWidgetStart,
+                        onEnd: onDragWidgetEnd
+                    }}
+                    onChange={onChangeWidgetOrder}
+                >
+                    { newWidgets.map(widget => {
+                        return (
+                            <div data-widget-id={widget} key={widget}>
+                                <Widget widgetId={widget} width="360px" />
+                            </div>
+                        );
+                    })}
+                </Sortable>
+                <PrintingOutput />
+            </div>
         );
     }
 

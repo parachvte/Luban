@@ -224,6 +224,18 @@ export const CNC_TOOL_CONFIG_GROUP = [
         ]
     }
 ];
+
+export const PRINTING_QUALITY_CUSTOMIZE_FIELDS = [
+    'layer_height',
+    'infill_pattern',
+    'wall_thickness',
+    'adhesion_type',
+    // 'skirt_line_count',
+    // 'brim_line_count',
+    // 'raft_margin',
+    'support_enable'
+    // 'support_type'
+];
 export const PRINTING_MANAGER_TYPE_MATERIAL = 'material';
 export const PRINTING_MANAGER_TYPE_QUALITY = 'quality';
 

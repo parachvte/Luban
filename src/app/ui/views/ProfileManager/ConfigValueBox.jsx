@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
+import { includes } from 'lodash';
 import i18n from '../../../lib/i18n';
 import SettingItem from './SettingItem';
 import CheckboxItem from './CheckboxItem';
@@ -8,8 +9,9 @@ import Anchor from '../../components/Anchor';
 import styles from './styles.styl';
 
 
-function ConfigValueBox({ optionConfigGroup, type = 'input', isDefinitionEditable = () => true, onChangeDefinition, definitionState }) {
+function ConfigValueBox({ optionConfigGroup, type = 'input', isDefinitionEditable = () => true, onChangeDefinition, definitionState, customConfigs }) {
     const [activeCateId, setActiveCateId] = useState(2);
+    // console.log('customConfigs', customConfigs);
     const scrollDom = useRef(null);
     function setActiveCate(cateId) {
         if (scrollDom.current) {
@@ -86,6 +88,7 @@ function ConfigValueBox({ optionConfigGroup, type = 'input', isDefinitionEditabl
                                         return (
                                             <CheckboxItem
                                                 settings={definitionState?.settings}
+                                                defaultValue={includes(customConfigs, key)}
                                                 definitionKey={key}
                                                 key={key}
                                                 isDefinitionEditable={() => isDefinitionEditable(definitionState)}
@@ -107,6 +110,7 @@ function ConfigValueBox({ optionConfigGroup, type = 'input', isDefinitionEditabl
 ConfigValueBox.propTypes = {
     definitionState: PropTypes.object.isRequired,
     optionConfigGroup: PropTypes.array.isRequired,
+    customConfigs: PropTypes.array,
     type: PropTypes.string,
     isDefinitionEditable: PropTypes.func,
     onChangeDefinition: PropTypes.func.isRequired

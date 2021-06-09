@@ -111,6 +111,8 @@ export const updateDefinition = (req, res) => {
     }
 
     const filePath = path.join(`${DataStorage.configDir}/${series}`, `${definitionId}.def.json`);
+    console.log('updateDefinition', series, definitionId, filePath);
+
     fs.writeFile(filePath, JSON.stringify(definitionLoader.toJSON(), null, 2), 'utf8', (err) => {
         if (err) {
             res.status(ERR_INTERNAL_SERVER_ERROR).send({ err });

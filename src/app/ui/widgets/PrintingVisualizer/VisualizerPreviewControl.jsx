@@ -128,33 +128,36 @@ class VisualizerPreviewControl extends PureComponent {
 
         return (
             <React.Fragment>
-                <span className={styles['layer-label']}>{this.props.layerCountDisplayed}</span>
-                <div
-                    style={{
-                        position: 'relative',
-                        marginLeft: '2px'
-                    }}
-                >
-                    <img src="/resources/images/3dp/preview-slider.png" alt="" />
-                    <Slider
-                        className={styles['vertical-slider']}
-                        vertical
-                        handle={Handle}
-                        trackStyle={{
-                            backgroundColor: '#eaeaea'
+                {state.showPreviewPanel && (
+                    <div
+                        style={{
+                            position: 'relative',
+                            marginLeft: '2px'
                         }}
-                        railStyle={{
-                            backgroundColor: '#eaeaea'
-                        }}
-                        min={0}
-                        max={layerCount}
-                        step={1}
-                        value={layerCountDisplayed}
-                        onChange={(value) => {
-                            actions.onChangeShowLayer(value);
-                        }}
-                    />
-                </div>
+                    >
+                        <span className={styles['layer-label']}>{this.props.layerCountDisplayed}</span>
+
+                        <img src="/resources/images/3dp/preview-slider.png" alt="" />
+                        <Slider
+                            className={styles['vertical-slider']}
+                            vertical
+                            handle={Handle}
+                            trackStyle={{
+                                backgroundColor: '#eaeaea'
+                            }}
+                            railStyle={{
+                                backgroundColor: '#eaeaea'
+                            }}
+                            min={0}
+                            max={layerCount}
+                            step={1}
+                            value={layerCountDisplayed}
+                            onChange={(value) => {
+                                actions.onChangeShowLayer(value);
+                            }}
+                        />
+                    </div>
+                )}
                 {state.showToggleBtn && (
                     <Anchor
                         className={classNames(

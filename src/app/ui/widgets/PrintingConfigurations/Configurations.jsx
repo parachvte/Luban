@@ -2,29 +2,18 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import { cloneDeep, includes } from 'lodash';
 import Select from '../../components/Select';
 import Anchor from '../../components/Anchor';
-import OptionalDropdown from '../../components/OptionalDropdown';
+import Modal from '../../components/Modal';
 import i18n from '../../../lib/i18n';
 import { actions as printingActions } from '../../../flux/printing';
 import { actions as projectActions } from '../../../flux/project';
-import { HEAD_3DP, PRINTING_MANAGER_TYPE_QUALITY } from '../../../constants';
-import Space from '../../components/Space';
-
+import { HEAD_3DP, PRINTING_MANAGER_TYPE_QUALITY, PRINTING_QUALITY_CUSTOMIZE_FIELDS, PRINTING_QUALITY_CONFIG_GROUP } from '../../../constants';
+import SettingItem from '../../views/ProfileManager/SettingItem';
+import ConfigValueBox from '../../views/ProfileManager/ConfigValueBox';
 import styles from './styles.styl';
 
-const OFFICIAL_CONFIG_KEYS = [
-    'layer_height',
-    'top_thickness',
-    'infill_sparse_density',
-    'speed_infill',
-    'speed_wall_0',
-    'speed_wall_x',
-    'speed_travel',
-    'infill_pattern',
-    'magic_mesh_surface_mode',
-    'support_enable'
-];
 
 class Configurations extends PureComponent {
     static propTypes = {
@@ -32,6 +21,8 @@ class Configurations extends PureComponent {
         defaultQualityId: PropTypes.string.isRequired,
         qualityDefinitions: PropTypes.array.isRequired,
 
+        updateDefinitionSettings: PropTypes.func.isRequired,
+        updateDefinitionsForManager: PropTypes.func.isRequired,
         updateManagerDisplayType: PropTypes.func.isRequired,
         updateActiveDefinition: PropTypes.func.isRequired,
         updateShowPrintingManager: PropTypes.func.isRequired,
@@ -39,13 +30,51 @@ class Configurations extends PureComponent {
     };
 
     state = {
-        // control UI
-        showOfficialConfigDetails: true,
-
+        customConfigs: PRINTING_QUALITY_CUSTOMIZE_FIELDS,
+        showCustomConfigPannel: false,
         selectedDefinition: null
     };
 
     actions = {
+        toggleShowCustomConfigPannel: () => {
+            const { showCustomConfigPannel } = this.state;
+            this.setState({
+                showCustomConfigPannel: !showCustomConfigPannel
+            });
+        },
+        closePannel: () => {
+            this.setState({
+                showCustomConfigPannel: false
+            });
+        },
+        onChangeCustomConfig: (key, value) => {
+            let { customConfigs } = this.state;
+            console.log('onChangeCustomConfig', customConfigs, key, value);
+            if (value && !includes(customConfigs, key)) {
+                customConfigs.push(key);
+            } else if (!value) {
+                customConfigs = customConfigs.filter((a) => a !== key);
+            }
+            this.setState({
+                customConfigs
+            });
+            console.log('after onChangeCustomConfig', customConfigs);
+        },
+        onChangeDefinition: async (key, value) => {
+            // const {} = this.state;
+            const { selectedDefinition } = this.state;
+            const newDefinitionForManager = cloneDeep(selectedDefinition);
+            newDefinitionForManager.settings[key].default_value = value;
+
+            const newDefinitionSettings = {};
+            newDefinitionSettings[key] = { 'default_value': value };
+
+            await this.props.updateDefinitionSettings(selectedDefinition, newDefinitionSettings);
+            await this.props.updateDefinitionsForManager(selectedDefinition.definitionId, 'quality');
+            this.setState({
+                selectedDefinition: newDefinitionForManager
+            });
+        },
         onShowMaterialManager: () => {
             this.props.updateManagerDisplayType(PRINTING_MANAGER_TYPE_QUALITY);
             this.props.updateShowPrintingManager(true);
@@ -108,7 +137,6 @@ class Configurations extends PureComponent {
         if (defaultQualityId !== prevProps.defaultQualityId || qualityDefinitions !== prevProps.qualityDefinitions) {
             // re-select definition based on new properties
             let definition = null;
-
             if (defaultQualityId && qualityDefinitions.length > 0) {
                 definition = qualityDefinitions.find(d => d.definitionId === defaultQualityId);
             }
@@ -125,7 +153,7 @@ class Configurations extends PureComponent {
     render() {
         const { qualityDefinitions } = this.props;
         const state = this.state;
-        // const actions = this.actions;
+        const actions = this.actions;
         const qualityDefinition = this.state.selectedDefinition;
 
         const customDefinitionOptions = qualityDefinitions.map(d => ({
@@ -149,12 +177,12 @@ class Configurations extends PureComponent {
                         options={customDefinitionOptions}
                         value={qualityDefinition.definitionId}
                         onChange={(option) => {
-                            this.actions.onSelectCustomDefinitionById(option.value);
+                            actions.onSelectCustomDefinitionById(option.value);
                         }}
                     />
                 </div>
                 <Anchor
-                    onClick={this.actions.onShowMaterialManager}
+                    onClick={actions.onShowMaterialManager}
                 >
                     <span
                         className={classNames(
@@ -162,92 +190,77 @@ class Configurations extends PureComponent {
                         )}
                     />
                 </Anchor>
-                <div>
-                    <OptionalDropdown
-                        draggable="false"
-                        title={i18n._('Show Details')}
-                        hidden={!state.showOfficialConfigDetails}
-                        onClick={() => {
-                            this.setState({ showOfficialConfigDetails: !state.showOfficialConfigDetails });
-                        }}
-                    >
-                        {state.showOfficialConfigDetails && (
-                            <table className={styles['config-details-table']}>
-                                <tbody>
-                                    {OFFICIAL_CONFIG_KEYS.map((key) => {
-                                        const setting = qualityDefinition.settings[key];
-                                        const { label, type, unit = '', enabled = '' } = setting;
-                                        const defaultValue = setting.default_value;
-
-                                        if (enabled) {
-                                            // for example: retraction_hop.enable = retraction_enable and retraction_hop_enabled
-                                            const conditions = enabled.split('and').map(c => c.trim());
-
-                                            for (const condition of conditions) {
-                                                // Simple implementation of condition
-                                                if (qualityDefinition.settings[condition]) {
-                                                    const value = qualityDefinition.settings[condition].default_value;
-                                                    if (!value) {
-                                                        return null;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        return (
-                                            <tr key={key}>
-                                                <td>{i18n._(label)}</td>
-                                                { type === 'float' && (
-                                                    <td>
-                                                        <span>{i18n._(defaultValue)}</span>
-                                                        <Space width="4" />
-                                                        <span>{i18n._(unit)}</span>
-                                                    </td>
-                                                )}
-                                                { type === 'enum' && (
-                                                    <td>
-                                                        <span>{i18n._(setting.options[defaultValue])}</span>
-                                                        <Space width="4" />
-                                                        <span>{i18n._(unit)}</span>
-                                                    </td>
-                                                )}
-                                                { type === 'bool' && (
-                                                    <td>
-                                                        {defaultValue ? i18n._('Yes') : i18n._('No')}
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        );
-                                    })}
-                                </tbody>
-                            </table>
-                        )}
-                    </OptionalDropdown>
+                <div className="sm-parameter-container">
+                    { state.customConfigs.map((key) => {
+                        return (
+                            <SettingItem
+                                settings={qualityDefinition?.settings}
+                                definitionKey={key}
+                                key={key}
+                                onChangeDefinition={actions.onChangeDefinition}
+                            />
+                        );
+                    })}
                 </div>
+                <button
+                    type="button"
+                    className="sm-btn-large sm-btn-default"
+                    onClick={actions.toggleShowCustomConfigPannel}
+                >
+                    {i18n._('Custom')}
+                </button>
+                {state.showCustomConfigPannel && (
+                    <Modal
+                        className={classNames(styles['manager-body'])}
+                        style={{ minWidth: '700px' }}
+                        onClose={actions.closePannel}
+                    >
+                        <Modal.Body>
+                            <div className={classNames(styles['manager-type-wrapper'])}>
+                                <div
+                                    className={classNames(styles['manager-type'])}
+                                >
+                                    {i18n._('managerTitle')}
+                                </div>
+                            </div>
+
+                            <div
+                                className={classNames(styles['manager-content'])}
+                            >
+                                <ConfigValueBox
+                                    customConfigs={state.customConfigs}
+                                    definitionState={state.selectedDefinition}
+                                    optionConfigGroup={PRINTING_QUALITY_CONFIG_GROUP}
+                                    type="checkbox"
+                                    onChangeDefinition={actions.onChangeCustomConfig}
+                                />
+                            </div>
+                        </Modal.Body>
+                    </Modal>
+                )}
             </div>
         );
     }
 }
 
 const mapStateToProps = (state) => {
-    const { qualityDefinitions, defaultQualityId, isRecommended, activeDefinition } = state.printing;
+    const { qualityDefinitions, defaultQualityId } = state.printing;
     return {
         qualityDefinitions,
-        defaultQualityId,
-        isRecommended,
-        activeDefinition
+        defaultQualityId
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        updateIsRecommended: (isRecommended) => dispatch(printingActions.updateIsRecommended(isRecommended)),
         updateDefaultQualityId: (qualityId) => dispatch(printingActions.updateDefaultQualityId(qualityId)),
         updateActiveDefinition: (definition) => {
             dispatch(printingActions.updateActiveDefinition(definition));
             dispatch(projectActions.autoSaveEnvironment(HEAD_3DP, true));
         },
+        updateDefinitionsForManager: (definition, type) => dispatch(printingActions.updateDefinitionsForManager(definition, type)),
+        updateDefinitionSettings: (definition, settings) => dispatch(printingActions.updateDefinitionSettings(definition, settings)),
         updateManagerDisplayType: (managerDisplayType) => dispatch(printingActions.updateManagerDisplayType(managerDisplayType)),
-        updateQualityDefinitionName: (definition, name) => dispatch(printingActions.updateQualityDefinitionName(definition, name)),
         updateShowPrintingManager: (showPrintingManager) => dispatch(printingActions.updateShowPrintingManager(showPrintingManager))
     };
 };

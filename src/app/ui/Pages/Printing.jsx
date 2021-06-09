@@ -75,6 +75,30 @@ function Printing({ history, location }) {
             },
             {
                 type: 'separator'
+            },
+            {
+                title: 'Save',
+                name: 'Copy',
+                type: 'button',
+                action: () => {
+                    const headType = getCurrentHeadType(location.pathname);
+                    if (!headType) {
+                        return;
+                    }
+                    dispatch(projectActions.save(headType));
+                }
+            },
+            {
+                title: 'Undo',
+                name: 'Copy',
+                type: 'button',
+                action: () => dispatch(printingActions.undo())
+            },
+            {
+                title: 'Redo',
+                name: 'Copy',
+                type: 'button',
+                action: () => dispatch(printingActions.redo())
             }
         ];
         const centerItems = [

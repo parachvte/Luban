@@ -230,12 +230,18 @@ export const PRINTING_QUALITY_CUSTOMIZE_FIELDS = [
     'infill_pattern',
     'wall_thickness',
     'adhesion_type',
-    // 'skirt_line_count',
-    // 'brim_line_count',
-    // 'raft_margin',
     'support_enable'
-    // 'support_type'
 ];
+export const PRINTING_QUALITY_CONFIG_INDEX = {
+    'retraction_amount': 1,
+    'retraction_speed': 1,
+    'retraction_hop_enabled': 1,
+    'retraction_hop': 2,
+    'support_type': 1,
+    'skirt_line_count': 1,
+    'brim_line_count': 1,
+    'raft_margin': 1
+};
 export const PRINTING_MANAGER_TYPE_MATERIAL = 'material';
 export const PRINTING_MANAGER_TYPE_QUALITY = 'quality';
 

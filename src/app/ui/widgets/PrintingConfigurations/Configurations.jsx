@@ -9,11 +9,19 @@ import Modal from '../../components/Modal';
 import i18n from '../../../lib/i18n';
 import { actions as printingActions } from '../../../flux/printing';
 import { actions as projectActions } from '../../../flux/project';
-import { HEAD_3DP, PRINTING_MANAGER_TYPE_QUALITY, PRINTING_QUALITY_CUSTOMIZE_FIELDS, PRINTING_QUALITY_CONFIG_GROUP } from '../../../constants';
+import { HEAD_3DP, PRINTING_MANAGER_TYPE_QUALITY, PRINTING_QUALITY_CONFIG_INDEX,
+    PRINTING_QUALITY_CUSTOMIZE_FIELDS, PRINTING_QUALITY_CONFIG_GROUP } from '../../../constants';
 import SettingItem from '../../views/ProfileManager/SettingItem';
 import ConfigValueBox from '../../views/ProfileManager/ConfigValueBox';
 import styles from './styles.styl';
 
+const newKeys = cloneDeep(PRINTING_QUALITY_CONFIG_INDEX);
+function isDefinitionEditable(key) {
+    return !includes(cloneDeep(PRINTING_QUALITY_CUSTOMIZE_FIELDS), key);
+}
+function calculateTextIndex(key) {
+    return `${newKeys[key] * 20}px`;
+}
 
 class Configurations extends PureComponent {
     static propTypes = {
@@ -30,7 +38,7 @@ class Configurations extends PureComponent {
     };
 
     state = {
-        customConfigs: PRINTING_QUALITY_CUSTOMIZE_FIELDS,
+        customConfigs: cloneDeep(PRINTING_QUALITY_CUSTOMIZE_FIELDS),
         showCustomConfigPannel: false,
         selectedDefinition: null
     };
@@ -49,16 +57,15 @@ class Configurations extends PureComponent {
         },
         onChangeCustomConfig: (key, value) => {
             let { customConfigs } = this.state;
-            console.log('onChangeCustomConfig', customConfigs, key, value);
             if (value && !includes(customConfigs, key)) {
                 customConfigs.push(key);
+                customConfigs = [...customConfigs];
             } else if (!value) {
                 customConfigs = customConfigs.filter((a) => a !== key);
             }
             this.setState({
                 customConfigs
             });
-            console.log('after onChangeCustomConfig', customConfigs);
         },
         onChangeDefinition: async (key, value) => {
             // const {} = this.state;
@@ -228,12 +235,23 @@ class Configurations extends PureComponent {
                                 className={classNames(styles['manager-content'])}
                             >
                                 <ConfigValueBox
+                                    calculateTextIndex={calculateTextIndex}
                                     customConfigs={state.customConfigs}
-                                    definitionState={state.selectedDefinition}
+                                    definitionForManager={state.selectedDefinition}
                                     optionConfigGroup={PRINTING_QUALITY_CONFIG_GROUP}
+                                    isDefinitionEditable={isDefinitionEditable}
                                     type="checkbox"
                                     onChangeDefinition={actions.onChangeCustomConfig}
                                 />
+                            </div>
+                            <div style={{ float: 'right' }}>
+                                <Anchor
+                                    onClick={actions.closePannel}
+                                    className="sm-btn-large sm-btn-default"
+                                    style={{ marginRight: '11px' }}
+                                >
+                                    {i18n._('Close')}
+                                </Anchor>
                             </div>
                         </Modal.Body>
                     </Modal>

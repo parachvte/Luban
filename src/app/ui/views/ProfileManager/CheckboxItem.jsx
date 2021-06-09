@@ -3,29 +3,34 @@ import PropTypes from 'prop-types';
 import i18n from '../../../lib/i18n';
 import TipTrigger from '../../components/TipTrigger';
 
-function CheckboxItem({ definitionKey, settings, defaultValue, width = 'auto', isDefinitionEditable = () => true, onChangeDefinition }) {
+function CheckboxItem({ definitionKey, settings, calculateTextIndex = () => 0, defaultValue, width = 'auto', isDefinitionEditable = () => true, onChangeDefinition }) {
     const setting = settings[definitionKey];
     const { label, description } = setting;
-    // console.log('defaultValue', definitionKey, defaultValue,);
 
     return (
         <TipTrigger title={i18n._(label)} content={i18n._(description)} key={definitionKey}>
             <div className="sm-parameter-row">
                 <input
                     className="sm-parameter-row__checkbox"
-                    style={{ width: width, cursor: !isDefinitionEditable() ? 'not-allowed' : 'default' }}
+                    style={{ width: width, cursor: !isDefinitionEditable(definitionKey) ? 'not-allowed' : 'default' }}
                     type="checkbox"
                     checked={defaultValue}
-                    disabled={!isDefinitionEditable()}
+                    disabled={!isDefinitionEditable(definitionKey)}
                     onChange={(event) => onChangeDefinition(definitionKey, event.target.checked)}
                 />
-                <span className="sm-parameter-row__label-lg">{i18n._(label)}</span>
+                <span
+                    className="sm-parameter-row__label-lg"
+                    style={{ textIndent: calculateTextIndex(definitionKey) }}
+                >
+                    {i18n._(label)}
+                </span>
             </div>
         </TipTrigger>
     );
 }
 CheckboxItem.propTypes = {
     settings: PropTypes.object.isRequired,
+    calculateTextIndex: PropTypes.func,
     definitionKey: PropTypes.string.isRequired,
     defaultValue: PropTypes.bool.isRequired,
     isDefinitionEditable: PropTypes.func,

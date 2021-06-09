@@ -59,7 +59,6 @@ function useGetDefinitions(allDefinitions, definitionState, setDefinitionState, 
         Object.assign(newState, {
             definitionForManager: definitionForManager
         });
-        // console.log('allDefinitions',allDefinitions);
 
         const definitionOptions = allDefinitions.map(d => {
             const checkboxAndSelectGroup = {};
@@ -591,7 +590,8 @@ function ProfileManager({ optionConfigGroup, disableCategory = true, managerTitl
                                 </div>
                             </div>
                             <ConfigValueBox
-                                definitionState={definitionState}
+                                definitionForManager={definitionState.definitionForManager}
+                                isCategorySelected={definitionState.isCategorySelected}
                                 optionConfigGroup={optionConfigGroup}
                                 isDefinitionEditable={isDefinitionEditable}
                                 onChangeDefinition={actions.onChangeDefinition}

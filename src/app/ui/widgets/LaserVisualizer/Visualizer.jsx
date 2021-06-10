@@ -23,7 +23,9 @@ import styles from './styles.styl';
 import {
     DISPLAYED_TYPE_TOOLPATH,
     PAGE_EDITOR,
-    SELECTEVENT
+    SELECTEVENT,
+    MAX_LASER_CNC_CANVAS_SCALE,
+    MIN_LASER_CNC_CANVAS_SCALE
 } from '../../../constants';
 import SVGEditor from '../../SVGEditor';
 import { CNC_LASER_STAGE } from '../../../flux/editor/utils';
@@ -377,6 +379,8 @@ class Visualizer extends Component {
                         size={this.props.size}
                         initContentGroup={this.props.initContentGroup}
                         scale={this.props.scale}
+                        minScale={MIN_LASER_CNC_CANVAS_SCALE}
+                        maxScale={MAX_LASER_CNC_CANVAS_SCALE}
                         target={this.props.target}
                         coordinateMode={this.props.coordinateMode}
                         coordinateSize={this.props.coordinateSize}
@@ -422,6 +426,8 @@ class Visualizer extends Component {
                         onModelTransform={noop}
                         showContextMenu={this.showContextMenu}
                         scale={this.props.scale}
+                        minScale={MIN_LASER_CNC_CANVAS_SCALE}
+                        maxScale={MAX_LASER_CNC_CANVAS_SCALE}
                         target={this.props.target}
                         coordinateMode={this.props.coordinateMode}
                         coordinateSize={this.props.coordinateSize}
@@ -432,6 +438,10 @@ class Visualizer extends Component {
                 </div>
                 <div className={styles['bottom-left']}>
                     <VisualizerBottomLeft
+                        scale={this.props.scale}
+                        minScale={MIN_LASER_CNC_CANVAS_SCALE}
+                        maxScale={MAX_LASER_CNC_CANVAS_SCALE}
+                        updateScale={this.props.updateScale}
                         zoomIn={this.actions.zoomIn}
                         zoomOut={this.actions.zoomOut}
                         toFront={this.actions.autoFocus}

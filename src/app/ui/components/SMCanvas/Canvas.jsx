@@ -34,6 +34,8 @@ class Canvas extends Component {
         cameraInitialTarget: PropTypes.object.isRequired,
         cameraUp: PropTypes.object,
         scale: PropTypes.number,
+        minScale: PropTypes.number,
+        maxScale: PropTypes.number,
         target: PropTypes.object,
 
         supportActions: PropTypes.object,
@@ -164,8 +166,14 @@ class Canvas extends Component {
         if (typeof this.props.updateScale !== 'function') {
             return;
         }
-        const currentScale = this.initialDistance / (this.camera.position.distanceTo(this.controls.target));
+        let currentScale = this.initialDistance / (this.camera.position.distanceTo(this.controls.target));
         if (Math.abs(currentScale - this.lastScale) > EPS) {
+            if (this.props.minScale && currentScale < this.props.minScale) {
+                currentScale = this.props.minScale;
+            }
+            if (this.props.maxScale && currentScale > this.props.maxScale) {
+                currentScale = this.props.maxScale;
+            }
             this.lastScale = currentScale;
             this.props.updateScale(currentScale);
         }

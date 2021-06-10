@@ -104,6 +104,8 @@ class SVGCanvas extends PureComponent {
         SVGActions: PropTypes.object,
 
         scale: PropTypes.number.isRequired,
+        minScale: PropTypes.number,
+        maxScale: PropTypes.number,
         target: PropTypes.object,
         updateScale: PropTypes.func.isRequired,
         updateTarget: PropTypes.func.isRequired,
@@ -211,9 +213,14 @@ class SVGCanvas extends PureComponent {
     set scale(val) {
         this.lastScale = val / DEFAULT_SCALE * ZOOM_RATE;
         // Notify scale updates, this method should be named `onScaleUpdated`
+        if (this.props.minScale && this.lastScale < this.props.minScale) {
+            this.lastScale = this.props.minScale;
+        }
+        if (this.props.maxScale && this.lastScale > this.props.maxScale) {
+            this.lastScale = this.props.maxScale;
+        }
         this.props.updateScale(this.lastScale);
     }
-
 
     setupTextActions() {
         this.textActions = new TextAction(

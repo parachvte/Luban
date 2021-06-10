@@ -22,7 +22,7 @@ import styles from './styles.styl';
 import VisualizerTopRight from '../CncLaserTopRight/VisualizerTopRight';
 // eslint-disable-next-line no-unused-vars
 import {
-    DISPLAYED_TYPE_TOOLPATH,
+    DISPLAYED_TYPE_TOOLPATH, MAX_LASER_CNC_CANVAS_SCALE, MIN_LASER_CNC_CANVAS_SCALE,
     PAGE_EDITOR, PROCESS_MODE_GREYSCALE, PROCESS_MODE_MESH, PROCESS_MODE_VECTOR,
     SELECTEVENT
 } from '../../../constants';
@@ -440,6 +440,8 @@ class Visualizer extends Component {
                         size={this.props.size}
                         initContentGroup={this.props.initContentGroup}
                         scale={this.props.scale}
+                        minScale={MIN_LASER_CNC_CANVAS_SCALE}
+                        maxScale={MAX_LASER_CNC_CANVAS_SCALE}
                         target={this.props.target}
                         coordinateMode={this.props.coordinateMode}
                         coordinateSize={this.props.coordinateSize}
@@ -485,6 +487,8 @@ class Visualizer extends Component {
                         onModelTransform={noop}
                         showContextMenu={this.showContextMenu}
                         scale={this.props.scale}
+                        minScale={MIN_LASER_CNC_CANVAS_SCALE}
+                        maxScale={MAX_LASER_CNC_CANVAS_SCALE}
                         target={this.props.target}
                         coordinateMode={this.props.coordinateMode}
                         coordinateSize={this.props.coordinateSize}

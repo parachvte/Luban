@@ -18,6 +18,8 @@ class SVGEditor extends PureComponent {
         materials: PropTypes.object.isRequired,
         SVGActions: PropTypes.object.isRequired,
         scale: PropTypes.number.isRequired,
+        minScale: PropTypes.number,
+        maxScale: PropTypes.number,
         target: PropTypes.object,
         coordinateMode: PropTypes.object.isRequired,
         coordinateSize: PropTypes.object.isRequired,
@@ -174,6 +176,8 @@ class SVGEditor extends PureComponent {
                                 size={this.props.size}
                                 materials={this.props.materials}
                                 scale={this.props.scale}
+                                minScale={this.props.minScale}
+                                maxScale={this.props.maxScale}
                                 target={this.props.target}
                                 updateScale={this.props.updateScale}
                                 updateTarget={this.props.updateTarget}

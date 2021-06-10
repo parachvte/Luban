@@ -655,9 +655,7 @@ export const actions = {
     },
 
     removeSelectedModel: (headType) => (dispatch, getState) => {
-        const { page, modelGroup, SVGActions } = getState()[headType];
-
-        if (page === PAGE_PROCESS) return;
+        const { modelGroup, SVGActions } = getState()[headType];
 
         SVGActions.deleteSelectedElements();
 

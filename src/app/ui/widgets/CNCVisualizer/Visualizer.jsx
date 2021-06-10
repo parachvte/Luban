@@ -360,9 +360,6 @@ class Visualizer extends Component {
         if (this.props.modelGroup.selectedModelArray.length > 1) {
             return;
         }
-        if (this.props.page !== PAGE_EDITOR) {
-            return;
-        }
         this.contextMenuRef.current.show(event);
     };
 
@@ -434,7 +431,7 @@ class Visualizer extends Component {
                 }}
                 >
                     <SVGEditor
-                        isActive={this.props.pathname.indexOf('cnc') > 0 && isEditor}
+                        isActive={this.props.pathname.indexOf('cnc') > 0}
                         ref={this.svgCanvas}
                         editable={!this.props.inProgress}
                         size={this.props.size}

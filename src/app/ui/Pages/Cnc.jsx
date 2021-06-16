@@ -1,23 +1,32 @@
+<<<<<<< Updated upstream
 // import React, { useState, useEffect } from 'react';
 import React, { useState, useEffect } from 'react';
+=======
+import React, { useState, useEffect } from 'react';
+
+// import React, { useState } from 'react';
+>>>>>>> Stashed changes
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 
 import path from 'path';
 import { Trans } from 'react-i18next';
+import { renderPopup, renderModal, renderWidgetList, useRenderRecoveryModal } from '../utils';
 import { HEAD_CNC, PROCESS_MODE_GREYSCALE, PROCESS_MODE_MESH, PROCESS_MODE_VECTOR, PAGE_EDITOR, PAGE_PROCESS } from '../../constants';
 import i18n from '../../lib/i18n';
 import modal from '../../lib/modal';
 import Dropzone from '../components/Dropzone';
 import Space from '../components/Space';
-import { renderModal, renderWidgetList, useRenderRecoveryModal } from '../utils';
+
+import Home from './HomePage';
 
 import CNCVisualizer from '../widgets/CNCVisualizer';
 import ProjectLayout from '../Layouts/ProjectLayout';
 import MainToolBar from '../Layouts/MainToolBar';
 
-
+import { actions as projectActions } from '../../flux/project';
+import { actions as cncActions } from '../../flux/cnc';
 import { actions as editorActions } from '../../flux/editor';
 import { actions as cncActions } from '../../flux/cnc';
 import { actions as machineActions } from '../../flux/machine';
@@ -85,10 +94,12 @@ const pageHeadType = HEAD_CNC;
 function useRenderWarning() {
     const [showWarning, setShowWarning] = useState(false);
     const dispatch = useDispatch();
+
     const onClose = () => setShowWarning(false);
     function onChangeShouldShowWarning(value) {
         dispatch(machineActions.setShouldShowCncWarning(value));
     }
+
     return showWarning && renderModal({
         onClose,
         renderBody: () => (
@@ -130,12 +141,13 @@ function useRenderWarning() {
 function Cnc({ history }) {
     const widgets = useSelector(state => state?.widget[pageHeadType]?.default?.widgets, shallowEqual);
     const [isDraggingWidget, setIsDraggingWidget] = useState(false);
+    const [showHome, setShowHome] = useState(false);
     const dispatch = useDispatch();
 
     useEffect(() => {
         dispatch(cncActions.init());
     }, []);
-
+    
     const recoveryModal = useRenderRecoveryModal(pageHeadType);
     const warningModal = useRenderWarning();
     const listActions = {
@@ -146,6 +158,18 @@ function Cnc({ history }) {
             setIsDraggingWidget(false);
         }
     };
+    useEffect(() => {
+        const listener = async (ev) => {
+            await dispatch(projectActions.save(pageHeadType));
+            ev.preventDefault();
+            ev.returnValue = 'ccc';
+        };
+        window.addEventListener('beforeunload', listener);
+        return () => {
+            window.removeEventListener('beforeunload', listener);
+        };
+    }, []);
+
     const actions = {
         onDropAccepted: (file) => {
             const extname = path.extname(file.name).toLowerCase();
@@ -177,7 +201,10 @@ function Cnc({ history }) {
         const leftItems = [
             {
                 title: 'Home',
-                action: () => history.push('/')
+                action: () => {
+                    setShowHome(true);
+                    window.scrollTo(0, 0);
+                }
             },
             {
                 type: 'separator'
@@ -214,6 +241,15 @@ function Cnc({ history }) {
 
         );
     }
+    function renderHome() {
+        const onClose = () => setShowHome(false);
+        console.log('renderHome', showHome);
+        return showHome && renderPopup({
+            onClose,
+            component: Home
+        });
+    }
+
 
     return (
         <div>
@@ -233,6 +269,7 @@ function Cnc({ history }) {
             </ProjectLayout>
             {recoveryModal}
             {warningModal}
+            {renderHome()}
         </div>
     );
 }

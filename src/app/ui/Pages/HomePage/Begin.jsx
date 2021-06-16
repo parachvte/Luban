@@ -58,11 +58,11 @@ const Begin = (props) => {
     };
 
     const onChangeRoute = async (pathname) => {
-        console.log('changed pathname', pathname, props.location);
         const oldPathname = props.location.pathname;
         const headType = getCurrentHeadType(oldPathname);
-        if (headType === 'workspace') {
-            props.history.push(headType);
+        console.log('changed pathname', pathname, headType, props.location);
+        if (headType === 'workspace' || oldPathname === '/') {
+            props.history.push(pathname);
         } else if (headType) {
             await dispatch(projectActions.save(headType));
             console.log('changed from', headType);

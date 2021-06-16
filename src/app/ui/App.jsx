@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 // import includes from 'lodash/includes';
 import PropTypes from 'prop-types';
-import { HashRouter, Route, withRouter, Switch, Prompt } from 'react-router-dom';
+// import { HashRouter, BrowserRouter, Route, withRouter, Switch, Prompt } from 'react-router-dom';
+import { HashRouter, BrowserRouter, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import ReactGA from 'react-ga';
 // import { Trans } from 'react-i18next';
@@ -16,12 +17,12 @@ import { actions as cncActions } from '../flux/cnc';
 import { actions as printingActions } from '../flux/printing';
 import { actions as workspaceActions } from '../flux/workspace';
 import { actions as textActions } from '../flux/text';
-import { actions as projectActions } from '../flux/project';
 import { actions as settingActions } from '../flux/setting';
-
+import { actions as projectActions } from '../flux/project';
 
 import i18n from '../lib/i18n';
 
+import HistoryListenerComponent from './HistoryListenerComponent';
 import HomePage from './Pages/HomePage';
 import Workspace from './Pages/Workspace';
 import Printing from './Pages/Printing';
@@ -49,7 +50,6 @@ function getCurrentHeadType(pathname) {
 
 class App extends PureComponent {
     static propTypes = {
-        ...withRouter.propTypes,
 
         // machineInfo: PropTypes.object.isRequired,
 
@@ -66,6 +66,8 @@ class App extends PureComponent {
         // projectState: PropTypes.object.isRequired,
         // onRecovery: PropTypes.func.isRequired,
         // quitRecovery: PropTypes.func.isRequired,
+        save: PropTypes.func.isRequired,
+        updateRecentProject: PropTypes.func.isRequired,
         saveAsFile: PropTypes.func.isRequired,
         saveAndClose: PropTypes.func.isRequired,
         openProject: PropTypes.func.isRequired,
@@ -81,8 +83,7 @@ class App extends PureComponent {
     router = React.createRef();
 
     // state = {
-    //     platform: 'unknown',
-    //     recoveringProject: false
+    //     modalVisible: false
     // };
 
     shortcutHandler = {
@@ -104,14 +105,20 @@ class App extends PureComponent {
 
 
     actions = {
-        handleBlockedNavigation: async (nextLocation) => {
-            console.log('location', nextLocation, window.location);
-            // if (!confirmedNavigation && shouldBlockNavigation(nextLocation)) {
-            await this.actions.saveNew();
-            console.log('after location');
-            return false;
-            // }
-        },
+        // closePannel: () => {
+        //     this.setState({
+        //         modalVisible: false
+        //     });
+        // },
+        // handleBlockedNavigation: async (nextLocation) => {
+        //     console.log('location', nextLocation, window.location);
+        //     // if (!confirmedNavigation && shouldBlockNavigation(nextLocation)) {
+        //     this.showModal(nextLocation);
+        //     await this.actions.saveNew();
+        //     console.log('after location');
+        //     return false;
+        //     // }
+        // },
         onChangeShouldShowWarning: (event) => {
             this.props.setShouldShowCncWarning(!event.target.checked);
             // this.setState({ shouldShowCncWarning: !event.target.checked });
@@ -368,33 +375,37 @@ class App extends PureComponent {
 
 
         return (
-            <HashRouter ref={this.router}>
-                <AppLayout>
-                    <Switch>
-                        <Route path="/" exact component={HomePage} />
-                        <Route path="/workspace" component={Workspace} />
-                        <Route path="/3dp" component={Printing} />
-                        <Route path="/laser" component={Laser} />
-                        <Route path="/cnc" component={Cnc} />
-                        <Route path="/settings" component={Settings} />
-                        <Route component={HomePage} />
-                    </Switch>
-                    <ToastContainer
-                        position="top-center"
-                        autoClose={5000}
-                        hideProgressBar
-                        newestOnTop
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                    />
+            <BrowserRouter>
+                <HashRouter ref={this.router}>
+                    <AppLayout>
+                        <Route component={HistoryListenerComponent} />
+                        <Switch>
+                            <Route path="/" exact component={HomePage} />
+                            <Route path="/workspace" component={Workspace} />
+                            <Route path="/3dp" component={Printing} />
+                            <Route path="/laser" component={Laser} />
+                            <Route path="/cnc" component={Cnc} />
+                            <Route path="/settings" component={Settings} />
+                            <Route component={HomePage} />
+                        </Switch>
+                        <ToastContainer
+                            position="top-center"
+                            autoClose={5000}
+                            hideProgressBar
+                            newestOnTop
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                        />
 
-                    <Prompt when message={() => 'dddd'} />
-                    {/* Your own alert/dialog/modal component */}
-                </AppLayout>
-            </HashRouter>
+                        {/* <Prompt when message={this.actions.handleBlockedNavigation} />*/}
+                        {/* Your own alert/dialog/modal component */}
+
+                    </AppLayout>
+                </HashRouter>
+            </BrowserRouter>
         );
     }
 }

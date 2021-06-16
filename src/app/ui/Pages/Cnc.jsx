@@ -1,11 +1,5 @@
-<<<<<<< Updated upstream
-// import React, { useState, useEffect } from 'react';
-import React, { useState, useEffect } from 'react';
-=======
-import React, { useState, useEffect } from 'react';
 
-// import React, { useState } from 'react';
->>>>>>> Stashed changes
+import React, { useState, useEffect } from 'react';
 import { shallowEqual, useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
@@ -28,7 +22,7 @@ import MainToolBar from '../Layouts/MainToolBar';
 import { actions as projectActions } from '../../flux/project';
 import { actions as cncActions } from '../../flux/cnc';
 import { actions as editorActions } from '../../flux/editor';
-import { actions as cncActions } from '../../flux/cnc';
+
 import { actions as machineActions } from '../../flux/machine';
 
 
@@ -147,7 +141,7 @@ function Cnc({ history }) {
     useEffect(() => {
         dispatch(cncActions.init());
     }, []);
-    
+
     const recoveryModal = useRenderRecoveryModal(pageHeadType);
     const warningModal = useRenderWarning();
     const listActions = {

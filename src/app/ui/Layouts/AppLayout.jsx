@@ -170,7 +170,7 @@ class AppLayout extends PureComponent {
                     if (isElectron()) {
                         const [, tail] = file.name.split('.');
                         if (!tail) return;
-                        if (tail.substring(0, 4) === 'snap' || tail === 'gcode') {
+                        if (tail.substring(0, 4) === 'snap' || tail === 'gcode' || tail === 'cnc' || tail === 'nc') {
                             UniApi.File.addRecentFiles({ name: file.name, path: file.path });
                         }
                     }

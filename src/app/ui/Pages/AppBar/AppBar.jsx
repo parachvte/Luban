@@ -26,7 +26,7 @@ class AppBar extends PureComponent {
                 name: file.name,
                 path: file.path || ''
             };
-            UniApi.Event.emit('open-file', null, file, [recentFile]);
+            UniApi.Event.emit('topbar-menu:open-file', file, [recentFile]);
         },
         showSettings() {
             const location = {

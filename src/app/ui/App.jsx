@@ -17,7 +17,7 @@ import { actions as cncActions } from '../flux/cnc';
 import { actions as printingActions } from '../flux/printing';
 import { actions as workspaceActions } from '../flux/workspace';
 import { actions as textActions } from '../flux/text';
-import { actions as projectActions } from '../flux/project';
+// import { actions as projectActions } from '../flux/project';
 // import { actions as settingActions } from '../flux/setting';
 
 
@@ -34,7 +34,7 @@ import Settings from './Pages/Settings';
 // import styles from './App.styl';
 // import Space from '../components/Space';
 
-import { getCurrentHeadType, HEAD_TYPE_ENV_NAME } from '../constants';
+// import { getCurrentHeadType, HEAD_TYPE_ENV_NAME } from '../constants';
 
 import UniApi from '../lib/uni-api';
 import AppLayout from './Layouts/AppLayout';
@@ -45,7 +45,7 @@ class App extends PureComponent {
 
         // machineInfo: PropTypes.object.isRequired,
 
-        setShouldShowCncWarning: PropTypes.func.isRequired,
+        // setShouldShowCncWarning: PropTypes.func.isRequired,
         machineInit: PropTypes.func.isRequired,
         developToolsInit: PropTypes.func.isRequired,
         functionsInit: PropTypes.func.isRequired,
@@ -54,19 +54,19 @@ class App extends PureComponent {
         // cncInit: PropTypes.func.isRequired,
         // printingInit: PropTypes.func.isRequired,
         textInit: PropTypes.func.isRequired,
-        initRecoverService: PropTypes.func.isRequired,
-        openProject: PropTypes.func.isRequired,
+        // initRecoverService: PropTypes.func.isRequired,
+        // openProject: PropTypes.func.isRequired,
         // projectState: PropTypes.object.isRequired,
         // onRecovery: PropTypes.func.isRequired,
         // quitRecovery: PropTypes.func.isRequired,
-        save: PropTypes.func.isRequired,
-        updateRecentProject: PropTypes.func.isRequired,
-        saveAsFile: PropTypes.func.isRequired,
-        saveAndClose: PropTypes.func.isRequired,
-        openProject: PropTypes.func.isRequired,
-        updateIsDownloading: PropTypes.func.isRequired,
-        updateAutoupdateMessage: PropTypes.func.isRequired,
-        updateShouldCheckForUpdate: PropTypes.func.isRequired,
+        // save: PropTypes.func.isRequired,
+        // updateRecentProject: PropTypes.func.isRequired,
+        // saveAsFile: PropTypes.func.isRequired,
+        // saveAndClose: PropTypes.func.isRequired,
+        // openProject: PropTypes.func.isRequired,
+        // updateIsDownloading: PropTypes.func.isRequired,
+        // updateAutoupdateMessage: PropTypes.func.isRequired,
+        // updateShouldCheckForUpdate: PropTypes.func.isRequired,
         shouldCheckForUpdate: PropTypes.bool.isRequired
         // resetAllUserSettings: PropTypes.func.isRequired
     };
@@ -97,85 +97,85 @@ class App extends PureComponent {
 
 
     actions = {
-        onChangeShouldShowWarning: (event) => {
-            this.props.setShouldShowCncWarning(!event.target.checked);
-        },
-        saveAsFile: () => {
-            const headType = getCurrentHeadType(this.router.current.history.location.pathname);
-            if (!headType) {
-                return;
-            }
-            this.props.saveAsFile(headType);
-        },
-        saveNew: async () => {
-            const headType = getCurrentHeadType(window.location.hash);
-            if (!headType) {
-                return;
-            }
-            await this.props.save(headType);
-        },
-        save: async () => {
-            const headType = getCurrentHeadType(this.router.current.history.location.pathname);
-            if (!headType) {
-                return;
-            }
-            await this.props.save(headType);
-        },
-        saveAll: async () => {
-            // TODO: dont need to save all!
-            // const currentHeadType = getCurrentHeadType(this.router.current.history.location.pathname);
-            // let message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[currentHeadType] });
-            // if (currentHeadType) {
-            //     await this.props.save(currentHeadType, { message });
-            // }
-            // const AllType = [HEAD_3DP, HEAD_CNC, HEAD_LASER];
-            // const index = AllType.indexOf(currentHeadType);
-            // if (index !== -1) {
-            //     AllType.splice(index, 1);
-            // }
-            // for (const headType of AllType) {
-            //     if (!this.props.projectState[headType].unSaved) continue;
-            //     message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[headType] });
-            //     this.router.current.history.push(`/${headType}`);
-            //     await new Promise((resolve) => {
-            //         setTimeout(() => {
-            //             resolve(this.props.save(headType, { message }));
-            //         }, 100);
-            //     });
-            // }
-        },
-        closeFile: async () => {
-            const currentHeadType = getCurrentHeadType(this.router.current.history.location.pathname);
-            const message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[currentHeadType] });
-            if (currentHeadType) {
-                await this.props.saveAndClose(currentHeadType, { message });
-            }
-        },
-        openProject: async (file) => {
-            if (!file) {
-                this.fileInput.current.value = null;
-                this.fileInput.current.click();
-            } else {
-                try {
-                    await this.props.openProject(file, this.router.current.history);
-                    UniApi.File.addRecentFiles(file);
-                } catch (e) {
-                    console.log(e.message);
-                }
-            }
-        },
+        // onChangeShouldShowWarning: (event) => {
+        //     this.props.setShouldShowCncWarning(!event.target.checked);
+        // },
+        // saveAsFile: () => {
+        //     const headType = getCurrentHeadType(this.router.current.history.location.pathname);
+        //     if (!headType) {
+        //         return;
+        //     }
+        //     this.props.saveAsFile(headType);
+        // },
+        // saveNew: async () => {
+        //     const headType = getCurrentHeadType(window.location.hash);
+        //     if (!headType) {
+        //         return;
+        //     }
+        //     await this.props.save(headType);
+        // },
+        // save: async () => {
+        //     const headType = getCurrentHeadType(this.router.current.history.location.pathname);
+        //     if (!headType) {
+        //         return;
+        //     }
+        //     await this.props.save(headType);
+        // },
+        // saveAll: async () => {
+        //     // TODO: dont need to save all!
+        //     // const currentHeadType = getCurrentHeadType(this.router.current.history.location.pathname);
+        //     // let message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[currentHeadType] });
+        //     // if (currentHeadType) {
+        //     //     await this.props.save(currentHeadType, { message });
+        //     // }
+        //     // const AllType = [HEAD_3DP, HEAD_CNC, HEAD_LASER];
+        //     // const index = AllType.indexOf(currentHeadType);
+        //     // if (index !== -1) {
+        //     //     AllType.splice(index, 1);
+        //     // }
+        //     // for (const headType of AllType) {
+        //     //     if (!this.props.projectState[headType].unSaved) continue;
+        //     //     message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[headType] });
+        //     //     this.router.current.history.push(`/${headType}`);
+        //     //     await new Promise((resolve) => {
+        //     //         setTimeout(() => {
+        //     //             resolve(this.props.save(headType, { message }));
+        //     //         }, 100);
+        //     //     });
+        //     // }
+        // },
+        // closeFile: async () => {
+        //     const currentHeadType = getCurrentHeadType(this.router.current.history.location.pathname);
+        //     const message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[currentHeadType] });
+        //     if (currentHeadType) {
+        //         await this.props.saveAndClose(currentHeadType, { message });
+        //     }
+        // },
+        // openProject: async (file) => {
+        //     if (!file) {
+        //         this.fileInput.current.value = null;
+        //         this.fileInput.current.click();
+        //     } else {
+        //         try {
+        //             await this.props.openProject(file, this.router.current.history);
+        //             UniApi.File.addRecentFiles(file);
+        //         } catch (e) {
+        //             console.log(e.message);
+        //         }
+        //     }
+        // },
         // updateRecentFile: (arr, type) => {
         //     this.props.updateRecentProject(arr, type);
         // },
-        initFileOpen: async () => {
-            const file = await UniApi.File.popFile();
-            if (file) {
-                await this.actions.openProject(file);
-            }
-            // start recover service after file opened on startup
-            // to ensure opened file set before service run
-            this.props.initRecoverService();
-        }
+        // initFileOpen: async () => {
+        //     const file = await UniApi.File.popFile();
+        //     if (file) {
+        //         await this.actions.openProject(file);
+        //     }
+        //     // start recover service after file opened on startup
+        //     // to ensure opened file set before service run
+        //     this.props.initRecoverService();
+        // }
     };
 
     componentDidMount() {
@@ -210,7 +210,7 @@ class App extends PureComponent {
 
         UniApi.Window.initWindow();
         // this.actions.initUniEvent();
-        this.actions.initFileOpen();
+        // this.actions.initFileOpen();
         // auto update
         setTimeout(() => {
             if (this.props.shouldCheckForUpdate) {
@@ -360,24 +360,24 @@ const mapDispatchToProps = (dispatch) => {
         cncInit: () => dispatch(cncActions.init()),
         printingInit: () => dispatch(printingActions.init()),
         textInit: () => dispatch(textActions.init()),
-        initRecoverService: () => dispatch(projectActions.initRecoverService()),
-        setShouldShowCncWarning: (value) => {
-            dispatch(machineActions.setShouldShowCncWarning(value));
-        },
-        openProject: (file, history) => dispatch(projectActions.open(file, history)),
+        // initRecoverService: () => dispatch(projectActions.initRecoverService()),
+        // setShouldShowCncWarning: (value) => {
+        //     dispatch(machineActions.setShouldShowCncWarning(value));
+        // },
+        // openProject: (file, history) => dispatch(projectActions.open(file, history)),
         functionsInit: () => {
             dispatch(editorActions.initSelectedModelListener('laser'));
             dispatch(editorActions.initSelectedModelListener('cnc'));
-        },
-        onRecovery: (headType) => dispatch(projectActions.onRecovery(headType)),
-        quitRecovery: (headType) => dispatch(projectActions.quitRecovery(headType)),
-        saveAsFile: (headType) => dispatch(projectActions.saveAsFile(headType)),
-        save: (headType, dialogOptions) => dispatch(projectActions.save(headType, dialogOptions)),
-        saveAndClose: (headType, opts) => dispatch(projectActions.saveAndClose(headType, opts)),
-        openProject: (file, history) => dispatch(projectActions.openProject(file, history)),
-        updateRecentProject: (arr, type) => dispatch(projectActions.updateRecentFile(arr, type)),
-        clearSavedEnvironment: (headType) => dispatch(projectActions.clearSavedEnvironment(headType)),
-        resetAllUserSettings: () => dispatch(settingActions.resetAllUserSettings())
+        }
+        // onRecovery: (headType) => dispatch(projectActions.onRecovery(headType)),
+        // quitRecovery: (headType) => dispatch(projectActions.quitRecovery(headType)),
+        // saveAsFile: (headType) => dispatch(projectActions.saveAsFile(headType)),
+        // save: (headType, dialogOptions) => dispatch(projectActions.save(headType, dialogOptions)),
+        // saveAndClose: (headType, opts) => dispatch(projectActions.saveAndClose(headType, opts)),
+        // openProject: (file, history) => dispatch(projectActions.openProject(file, history))
+        // updateRecentProject: (arr, type) => dispatch(projectActions.updateRecentFile(arr, type)),
+        // clearSavedEnvironment: (headType) => dispatch(projectActions.clearSavedEnvironment(headType)),
+        // resetAllUserSettings: () => dispatch(settingActions.resetAllUserSettings())
     };
 };
 

@@ -39,18 +39,18 @@ function saveRecentFile(file) {
 }
 
 export function addRecentFile(file, isSave = true) {
-    const menu = Menu.getApplicationMenu();
-    const itemRecentFiles = menu.getMenuItemById('recent-files');
-    const item = new MenuItem({
-        label: file.name,
-        path: file.path || '',
-        click: (menuItem, browserWindow) => {
-            // eslint-disable-next-line no-use-before-define
-            openFile(browserWindow, file);
-        }
-    });
-    itemRecentFiles.submenu.insert(0, item);
-    Menu.setApplicationMenu(menu);
+    // const menu = Menu.getApplicationMenu();
+    // const itemRecentFiles = menu.getMenuItemById('recent-files');
+    // const item = new MenuItem({
+    //     label: file.name,
+    //     path: file.path || '',
+    //     click: (menuItem, browserWindow) => {
+    //         // eslint-disable-next-line no-use-before-define
+    //         openFile(browserWindow, file);
+    //     }
+    // });
+    // itemRecentFiles.submenu.insert(0, item);
+    // Menu.setApplicationMenu(menu);
     if (isSave) saveRecentFile(file);
 }
 
@@ -62,12 +62,12 @@ function recoverRecentFiles(mainWindow) {
 }
 
 export function cleanAllRecentFiles() {
-    const menu = Menu.getApplicationMenu();
-    const itemRecentFiles = menu.getMenuItemById('recent-files');
+    // const menu = Menu.getApplicationMenu();
+    // const itemRecentFiles = menu.getMenuItemById('recent-files');
 
-    for (const item of itemRecentFiles.submenu.items) {
-        if (item.label !== 'Clean All Recent Files') item.visible = false;
-    }
+    // for (const item of itemRecentFiles.submenu.items) {
+    //     if (item.label !== 'Clean All Recent Files') item.visible = false;
+    // }
     const recentFileName = `${DataStorage.userDataDir}/recent-opened-files.json`;
     fs.writeFileSync(recentFileName, JSON.stringify([]), 'utf-8');
 }
@@ -259,17 +259,18 @@ export default class MenuBuilder {
     }
 
     getInitRecentFile() {
-        const menu = Menu.getApplicationMenu();
-        const itemRecentFiles = menu.getMenuItemById('recent-files').submenu.items;
-        const arr = [];
-        itemRecentFiles.forEach(item => {
-            if (!!item.path && !!item.visible) {
-                arr.push({
-                    name: item.label,
-                    path: item.path
-                });
-            }
-        });
+        // const menu = Menu.getApplicationMenu();
+        // const itemRecentFiles = menu.getMenuItemById('recent-files').submenu.items;
+        // const arr = [];
+        // itemRecentFiles.forEach(item => {
+        //     if (!!item.path && !!item.visible) {
+        //         arr.push({
+        //             name: item.label,
+        //             path: item.path
+        //         });
+        //     }
+        // });
+        const arr = getSavedRecentFile();
         return arr;
     }
 }

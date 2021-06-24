@@ -14,9 +14,7 @@ import FirmwareTool from '../Pages/SettingsMenu/FirmwareTool';
 import SoftwareUpdate from '../Pages/SettingsMenu/SoftwareUpdate';
 import {
     PAGE_EDITOR,
-    HEAD_3DP,
-    HEAD_CNC,
-    HEAD_LASER,
+    getCurrentHeadType,
     HEAD_TYPE_ENV_NAME,
     BBS_URL,
     SUPPORT_ZH,
@@ -33,16 +31,9 @@ import { actions as machineActions } from '../../flux/machine';
 import { actions as editorActions } from '../../flux/editor';
 import { actions as projectActions } from '../../flux/project';
 
-
-function getCurrentHeadType(pathname) {
-    let headType = null;
-    if (pathname.indexOf(HEAD_CNC) >= 0) headType = HEAD_CNC;
-    if (pathname.indexOf(HEAD_LASER) >= 0) headType = HEAD_LASER;
-    if (pathname.indexOf(HEAD_3DP) >= 0) headType = HEAD_3DP;
-    return headType;
-}
 class AppLayout extends PureComponent {
     static propTypes = {
+        initRecoverService: PropTypes.func.isRequired,
         save: PropTypes.func.isRequired,
         saveAndClose: PropTypes.func.isRequired,
         saveAsFile: PropTypes.func.isRequired,
@@ -176,7 +167,11 @@ class AppLayout extends PureComponent {
             } else {
                 try {
                     await this.props.openProject(file, this.props.history);
-                    UniApi.File.addRecentFiles(file);
+                    const [, tail] = file.name.split('.');
+                    if (!tail) return;
+                    if (isElectron()) {
+                        UniApi.File.addRecentFiles({ name: file.name, path: file.path });
+                    }
                 } catch (e) {
                     console.log(e.message);
                 }
@@ -185,13 +180,19 @@ class AppLayout extends PureComponent {
         updateRecentFile: (arr, type) => {
             this.props.updateRecentProject(arr, type);
         },
-
         saveAsFile: () => {
             const headType = getCurrentHeadType(this.props.history.location.pathname);
             if (!headType) {
                 return;
             }
             this.props.saveAsFile(headType);
+        },
+        saveNew: async () => {
+            const headType = getCurrentHeadType(window.location.hash);
+            if (!headType) {
+                return;
+            }
+            await this.props.save(headType);
         },
         save: async () => {
             const headType = getCurrentHeadType(this.props.history.location.pathname);
@@ -229,6 +230,15 @@ class AppLayout extends PureComponent {
             if (currentHeadType) {
                 await this.props.saveAndClose(currentHeadType, { message });
             }
+        },
+        initFileOpen: async () => {
+            const file = await UniApi.File.popFile();
+            if (file) {
+                await this.actions.openProject(file);
+            }
+            // start recover service after file opened on startup
+            // to ensure opened file set before service run
+            this.props.initRecoverService();
         },
         initUniEvent: () => {
             UniApi.Event.on('message', (event, message) => {
@@ -424,18 +434,15 @@ class AppLayout extends PureComponent {
                 this.props.updateMenu();
             });
             UniApi.Event.on('topbar-menu:disable', () => {
-                console.log('topbar-menu:disable');
                 this.props.disableMenu();
             });
             UniApi.Event.on('topbar-menu:enable', () => {
-                console.log('topbar-menu:enable');
                 this.props.enableMenu();
             });
             UniApi.Event.on('topbar-menu:should-update', () => {
                 this.props.updateMenu();
             });
             UniApi.Event.on('topbar-menu:update-electron-menu', (action) => {
-                console.log('topbar-menu:update-electron-menu', action.state);
                 UniApi.Menu.replaceMenu(action.state);
             });
         }
@@ -444,6 +451,7 @@ class AppLayout extends PureComponent {
     componentDidMount() {
         this.props.initMenuLanguage();
         this.actions.initUniEvent();
+        this.actions.initFileOpen();
 
         UniApi.Event.on('topbar-menu:preferences.show', this.actions.showPreferences);
         UniApi.Event.on('topbar-menu:developer-tools.show', this.actions.showDevelopTools);
@@ -483,8 +491,13 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
+        initRecoverService: () => dispatch(projectActions.initRecoverService()),
+        saveAsFile: (headType) => dispatch(projectActions.saveAsFile(headType)),
+        save: (headType, dialogOptions) => dispatch(projectActions.save(headType, dialogOptions)),
+        saveAndClose: (headType, opts) => dispatch(projectActions.saveAndClose(headType, opts)),
+        openProject: (file, history) => dispatch(projectActions.openProject(file, history)),
         updateRecentProject: (arr, type) => dispatch(projectActions.updateRecentFile(arr, type)),
-        openProject: (file, history) => dispatch(projectActions.open(file, history)),
+        // openProject: (file, history) => dispatch(projectActions.open(file, history)),
         loadCase: (pathConfig, history) => dispatch(projectActions.open(pathConfig, history)),
         updateMenu: () => dispatch(menuActions.updateMenu()),
         initMenuLanguage: () => dispatch(menuActions.initMenuLanguage()),

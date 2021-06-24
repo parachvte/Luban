@@ -1,4 +1,5 @@
 import isElectron from 'is-electron';
+import { cloneDeep, reverse } from 'lodash';
 import { getMenuItems } from '../../config/menu';
 import { MACHINE_SERIES } from '../../constants';
 import {
@@ -107,7 +108,7 @@ export const actions = {
 
         if (recentFilesSubmenu) {
             recentFilesSubmenu.submenu = [
-                ...(recentFiles.map(item => {
+                ...(reverse(cloneDeep(recentFiles)).map(item => {
                     item.label = item.name;
                     item.enabled = true;
                     item.click = function () {

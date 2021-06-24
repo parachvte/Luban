@@ -167,10 +167,12 @@ class AppLayout extends PureComponent {
             } else {
                 try {
                     await this.props.openProject(file, this.props.history);
-                    const [, tail] = file.name.split('.');
-                    if (!tail) return;
                     if (isElectron()) {
-                        UniApi.File.addRecentFiles({ name: file.name, path: file.path });
+                        const [, tail] = file.name.split('.');
+                        if (!tail) return;
+                        if (tail.substring(0, 4) === 'snap' || tail === 'gcode') {
+                            UniApi.File.addRecentFiles({ name: file.name, path: file.path });
+                        }
                     }
                 } catch (e) {
                     console.log(e.message);
@@ -258,6 +260,7 @@ class AppLayout extends PureComponent {
                 this.props.updateIsDownloading(false);
             });
             UniApi.Event.on('open-file', (event, file, arr) => {
+                console.log(event, file, arr);
                 this.actions.openProject(file);
                 if (arr && arr.length) {
                     this.actions.updateRecentFile(arr, 'update');

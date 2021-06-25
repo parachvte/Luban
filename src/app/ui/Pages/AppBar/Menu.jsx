@@ -9,10 +9,10 @@ import styles from './styles.styl';
 
 class Menu extends PureComponent {
     static propTypes = {
-        items: PropTypes.array,
         className: PropTypes.string,
-        activeMenu: PropTypes.func,
-        hideMenu: PropTypes.func
+        items: PropTypes.array.isRequired,
+        activeMenu: PropTypes.func.isRequired,
+        hideMenu: PropTypes.func.isRequired
     }
 
     ulRef = React.createRef();

@@ -204,27 +204,7 @@ class AppLayout extends PureComponent {
             await this.props.save(headType);
         },
         saveAll: async () => {
-            // TODO: dont need to save all!
-            // const currentHeadType = getCurrentHeadType(this.props.history.location.pathname);
-            // let message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[currentHeadType] });
-            // if (currentHeadType) {
-            //     await this.props.save(currentHeadType, { message });
-            // }
-            // const AllType = [HEAD_3DP, HEAD_CNC, HEAD_LASER];
-            // const index = AllType.indexOf(currentHeadType);
-            // if (index !== -1) {
-            //     AllType.splice(index, 1);
-            // }
-            // for (const headType of AllType) {
-            //     if (!this.props.projectState[headType].unSaved) continue;
-            //     message = i18n._('Do you want to save the changes in the {{headType}} editor?', { headType: HEAD_TYPE_ENV_NAME[headType] });
-            //     this.props.history.push(`/${headType}`);
-            //     await new Promise((resolve) => {
-            //         setTimeout(() => {
-            //             resolve(this.props.save(headType, { message }));
-            //         }, 100);
-            //     });
-            // }
+            await this.actions.closeFile();
         },
         closeFile: async () => {
             const currentHeadType = getCurrentHeadType(this.props.history.location.pathname);

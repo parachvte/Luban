@@ -425,7 +425,7 @@ class AppLayout extends PureComponent {
                 this.props.updateMenu();
             });
             UniApi.Event.on('appbar-menu:update-electron-menu', (action) => {
-                UniApi.Menu.replaceMenu(action.state);
+                UniApi.Menu.replaceMenu(action.state.menu);
             });
         }
     }

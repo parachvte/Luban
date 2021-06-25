@@ -8,7 +8,9 @@ export function appbarMenuMiddleware() {
         return function (action) {
             switch (action.type) {
                 case APPBAR_MENU_ACTION_UPDATE_STATE: // notify main process to update menu
-                    UniApi.Event.emit('appbar-menu:update-electron-menu', action);
+                    if (action.state.menu) {
+                        UniApi.Event.emit('appbar-menu:update-electron-menu', action);
+                    }
                     break;
                 default:
                     // update appbar-menu after current action processed

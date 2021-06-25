@@ -9,7 +9,7 @@ import styles from './styles.styl';
 class Submenu extends PureComponent {
     static propTypes = {
         className: PropTypes.string,
-        items: PropTypes.array.isRequired,
+        items: PropTypes.array,
         hideMenu: PropTypes.func.isRequired
     }
 

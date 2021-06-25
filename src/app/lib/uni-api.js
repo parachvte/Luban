@@ -397,7 +397,7 @@ const Window = {
             const electron = window.require('electron');
             electron.shell.openExternal(window.location.origin);
         } else {
-            window.location.href = window.location.origin;
+            window.open(window.location.origin);
         }
     },
     toggleFullscreen() {

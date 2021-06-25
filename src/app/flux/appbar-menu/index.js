@@ -56,30 +56,30 @@ export const actions = {
         dispatch({
             type: ACTION_UPDATE_STATE,
             state: {
-                menu: appbarMenu
+                menu: [...appbarMenu]
             }
         });
     },
     disableMenu: () => (dispatch, getState) => {
-        const appbarMenu = getState().appbarMenu.menu;
+        const menu = getState().appbarMenu.menu;
         let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         menuDisabledCount++;
-        traverseMenu(appbarMenu, (item) => {
+        traverseMenu(menu, (item) => {
             item.enabled = false;
         });
         dispatch({
             type: ACTION_UPDATE_STATE,
             state: {
-                menu: appbarMenu,
+                menu: [...menu],
                 menuDisabledCount
             }
         });
     },
     enableMenu: () => (dispatch, getState) => {
-        const appbarMenu = getState().appbarMenu.menu;
+        const menu = getState().appbarMenu.menu;
         let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         menuDisabledCount--;
-        traverseMenu(appbarMenu, (item) => {
+        traverseMenu(menu, (item) => {
             item.enabled = true;
         });
         dispatch({
@@ -87,22 +87,22 @@ export const actions = {
             state: {
                 menuDisabledCount
             }
-        })
+        });
         dispatch(actions.updateMenu());
     },
     updateMenu: () => (dispatch) => {
-        dispatch(actions.activeMenu(-1));
+        dispatch(actions.activateMenu(-1));
     },
     activateMenu: (menuIndex) => (dispatch, getState) => {
-        let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
+        const menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         if (menuDisabledCount > 0) return;
 
-        const appbarMenu = getState().appbarMenu.menu;
+        const menu = getState().appbarMenu.menu;
         const series = getState()?.machine?.series;
         const recentFiles = getState().project.general.recentFiles;
 
         // menu clicked
-        appbarMenu.forEach((item, i) => {
+        menu.forEach((item, i) => {
             item.active = !!item.active; // undefined to bool
             if (i === menuIndex) {
                 item.active = !item.active;
@@ -110,9 +110,9 @@ export const actions = {
                 item.active = false;
             }
         });
-        const fileMenu = appbarMenu.find(item => item.id === 'file');
-        const editMenu = appbarMenu.find(item => item.id === 'edit');
-        const windowMenu = appbarMenu.find(item => item.id === 'window');
+        const fileMenu = menu.find(item => item.id === 'file');
+        const editMenu = menu.find(item => item.id === 'edit');
+        const windowMenu = menu.find(item => item.id === 'window');
         const getStartedSubmenu = fileMenu.submenu.find(item => item.id === 'get-started');
         const recentFilesSubmenu = fileMenu.submenu.find(item => item.id === 'recent-files');
         const toggleDeveloperToolsSubmenu = windowMenu.submenu.find(item => item.id === 'toggle-developer-tools');
@@ -251,19 +251,19 @@ export const actions = {
         dispatch({
             type: ACTION_UPDATE_STATE,
             state: {
-                menu: appbarMenu
+                menu: [...menu]
             }
         });
     },
     hideMenu: () => (dispatch, getState) => {
-        const appbarMenu = getState().appbarMenu.menu;
-        appbarMenu.forEach((item) => {
+        const menu = getState().appbarMenu.menu;
+        menu.forEach((item) => {
             item.active = false;
         });
         dispatch({
             type: ACTION_UPDATE_STATE,
             state: {
-                menu: appbarMenu
+                menu: [...menu]
             }
         });
     }
@@ -272,6 +272,12 @@ export const actions = {
 export default function reducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case ACTION_UPDATE_STATE: {
+            // const newState = Object.assign({}, state, {
+            //     menu: action.state.menu ? action.state.menu : INITIAL_STATE.menu,
+            //     menuDisabledCount: action.state.menuDisabledCount || 0
+            // });
+            // console.log(action, newState);
+            // return newState;
             return Object.assign({}, state, action.state);
         }
         default: return state;

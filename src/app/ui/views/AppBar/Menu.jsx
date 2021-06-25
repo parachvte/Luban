@@ -11,18 +11,18 @@ class Menu extends PureComponent {
     static propTypes = {
         className: PropTypes.string,
         items: PropTypes.array.isRequired,
-        activeMenu: PropTypes.func.isRequired,
+        activateMenu: PropTypes.func.isRequired,
         hideMenu: PropTypes.func.isRequired
     }
 
     ulRef = React.createRef();
 
     actions = {
-        activeMenu: (index) => {
+        activateMenu: (index) => {
             if (typeof this.props.items[index].click === 'function') {
                 this.props.items[index].click();
             }
-            this.props.activeMenu(index);
+            this.props.activateMenu(index);
         },
         hideMenu: (event) => {
             if (event.path.indexOf(this.ulRef.current) < 1) {
@@ -49,7 +49,7 @@ class Menu extends PureComponent {
                         } else {
                             return (
                                 <li key={item.label ? item.label : item.id} className={classNames(styles['menu-item'])}>
-                                    <span role="button" tabIndex="0" onKeyPress={() => {}} className={styles.label} onClick={(e) => { e.stopPropagation(); this.actions.activeMenu(index); }}>{item.label}{item.active}</span>
+                                    <span role="button" tabIndex="0" onKeyPress={() => {}} className={styles.label} onClick={(e) => { e.stopPropagation(); this.actions.activateMenu(index); }}>{item.label}{item.active}</span>
                                     { item.accelerator ? <span className={styles.accelerator}>{item.accelerator.replace(/CommandOrControl|CmdOrCtrl/ig, 'Ctrl')}</span> : ''}
                                     { item.active ? <Submenu className={classNames(styles['menu-submenu'], styles['sub-2'])} items={item.submenu} /> : '' }
                                 </li>
@@ -64,13 +64,13 @@ class Menu extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        items: state.appbarMenu
+        items: state.appbarMenu.menu
     };
 };
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        activeMenu: (index) => dispatch(menuActions.activeMenu(index)),
+        activateMenu: (index) => dispatch(menuActions.activateMenu(index)),
         hideMenu: () => dispatch(menuActions.hideMenu())
     };
 };

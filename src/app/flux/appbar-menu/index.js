@@ -272,12 +272,6 @@ export const actions = {
 export default function reducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case ACTION_UPDATE_STATE: {
-            // const newState = Object.assign({}, state, {
-            //     menu: action.state.menu ? action.state.menu : INITIAL_STATE.menu,
-            //     menuDisabledCount: action.state.menuDisabledCount || 0
-            // });
-            // console.log(action, newState);
-            // return newState;
             return Object.assign({}, state, action.state);
         }
         default: return state;

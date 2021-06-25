@@ -240,7 +240,6 @@ class AppLayout extends PureComponent {
                 this.props.updateIsDownloading(false);
             });
             UniApi.Event.on('open-file', (event, file, arr) => {
-                console.log(event, file, arr);
                 this.actions.openProject(file);
                 if (arr && arr.length) {
                     this.actions.updateRecentFile(arr, 'update');

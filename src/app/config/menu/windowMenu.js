@@ -14,7 +14,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('window', 'reload');
                 } else {
-                    UniApi.Event.emit('topbar-menu:window', 'reload');
+                    UniApi.Event.emit('appbar-menu:window', 'reload');
                 }
             }
         },
@@ -27,7 +27,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('window', 'forceReload');
                 } else {
-                    UniApi.Event.emit('topbar-menu:window', 'forceReload');
+                    UniApi.Event.emit('appbar-menu:window', 'forceReload');
                 }
             }
         },
@@ -40,7 +40,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('window', 'viewInBrowser');
                 } else {
-                    UniApi.Event.emit('topbar-menu:window', 'viewInBrowser');
+                    UniApi.Event.emit('appbar-menu:window', 'viewInBrowser');
                 }
             }
         },
@@ -65,7 +65,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('window', 'toggleFullscreen');
                 } else {
-                    UniApi.Event.emit('topbar-menu:window', 'toggleFullscreen');
+                    UniApi.Event.emit('appbar-menu:window', 'toggleFullscreen');
                 }
             }
         }

@@ -19,7 +19,7 @@ export default {
                         if (isElectron()) {
                             browserWindow.webContents.send('new-file', { headType: '3dp', isRotate: false });
                         } else {
-                            UniApi.Event.emit('topbar-menu:new-file', { headType: '3dp', isRotate: false });
+                            UniApi.Event.emit('appbar-menu:new-file', { headType: '3dp', isRotate: false });
                         }
                     }
                 },
@@ -37,7 +37,7 @@ export default {
                                 if (isElectron()) {
                                     browserWindow.webContents.send('new-file', { headType: 'laser', isRotate: false });
                                 } else {
-                                    UniApi.Event.emit('topbar-menu:new-file', { headType: 'laser', isRotate: false });
+                                    UniApi.Event.emit('appbar-menu:new-file', { headType: 'laser', isRotate: false });
                                 }
                             }
                         },
@@ -49,7 +49,7 @@ export default {
                                 if (isElectron()) {
                                     browserWindow.webContents.send('new-file', { headType: 'laser', isRotate: true });
                                 } else {
-                                    UniApi.Event.emit('topbar-menu:new-file', { headType: 'laser', isRotate: true });
+                                    UniApi.Event.emit('appbar-menu:new-file', { headType: 'laser', isRotate: true });
                                 }
                             }
                         }
@@ -69,7 +69,7 @@ export default {
                                 if (isElectron()) {
                                     browserWindow.webContents.send('new-file', { headType: 'cnc', isRotate: false });
                                 } else {
-                                    UniApi.Event.emit('topbar-menu:new-file', { headType: 'cnc', isRotate: false });
+                                    UniApi.Event.emit('appbar-menu:new-file', { headType: 'cnc', isRotate: false });
                                 }
                             }
                         },
@@ -81,7 +81,7 @@ export default {
                                 if (isElectron()) {
                                     browserWindow.webContents.send('new-file', { headType: 'cnc', isRotate: true });
                                 } else {
-                                    UniApi.Event.emit('topbar-menu:new-file', { headType: 'cnc', isRotate: true });
+                                    UniApi.Event.emit('appbar-menu:new-file', { headType: 'cnc', isRotate: true });
                                 }
                             }
                         }
@@ -98,7 +98,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('open-file-in-app');
                 } else {
-                    UniApi.Event.emit('topbar-menu:open-file-in-browser');
+                    UniApi.Event.emit('appbar-menu:open-file-in-browser');
                 }
             }
         },
@@ -116,7 +116,7 @@ export default {
                         if (isElectron()) {
                             browserWindow.webContents.send('clear-recent-files');
                         } else {
-                            UniApi.Event.emit('topbar-menu:clear-recent-files');
+                            UniApi.Event.emit('appbar-menu:clear-recent-files');
                         }
                     }
                 }
@@ -139,9 +139,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('save');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('save');
-                    }
+                    UniApi.Event.emit('save');
                 }
             }
         },
@@ -154,9 +152,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('save-as-file');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('save-as-file');
-                    }
+                    UniApi.Event.emit('save-as-file');
                 }
             }
         },
@@ -169,9 +165,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('import');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:import');
-                    }
+                    UniApi.Event.emit('appbar-menu:import');
                 }
             }
         },
@@ -183,9 +177,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('export-model');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:export-model');
-                    }
+                    UniApi.Event.emit('appbar-menu:export-model');
                 }
             }
         },
@@ -197,9 +189,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('export-gcode');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:export-gcode');
-                    }
+                    UniApi.Event.emit('appbar-menu:export-gcode');
                 }
             }
         },
@@ -212,9 +202,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('app-quit');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('app-quit');
-                    }
+                    UniApi.Event.emit('app-quit');
                 }
             }
         }

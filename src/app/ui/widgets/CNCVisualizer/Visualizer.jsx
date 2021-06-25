@@ -242,7 +242,7 @@ class Visualizer extends Component {
         //     false
         // );
 
-        UniApi.Event.on('topbar-menu:cnc.import', this.actions.importFile);
+        UniApi.Event.on('appbar-menu:cnc.import', this.actions.importFile);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -329,7 +329,7 @@ class Visualizer extends Component {
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:cnc.import', this.actions.importFile);
+        UniApi.Event.off('appbar-menu:cnc.import', this.actions.importFile);
     }
 
     getNotice() {

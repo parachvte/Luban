@@ -5,16 +5,16 @@ import path from 'path';
 import events from 'events';
 import i18n from './i18n';
 
-class TopbarMenuEvent extends events.EventEmitter {}
+class AppbarMenuEvent extends events.EventEmitter {}
 
-const menuEvent = new TopbarMenuEvent();
+const menuEvent = new AppbarMenuEvent();
 /**
  * Event Listener in electron
  */
 const Event = {
     on: (eventName, callback) => {
         if (isElectron()) {
-            if (eventName.startsWith('topbar-menu:')) {
+            if (eventName.startsWith('appbar-menu:')) {
                 menuEvent.on(eventName, callback);
             } else {
                 const { ipcRenderer } = window.require('electron');
@@ -26,7 +26,7 @@ const Event = {
     },
     emit: (eventName, ...args) => {
         if (isElectron()) {
-            if (eventName.startsWith('topbar-menu:')) {
+            if (eventName.startsWith('appbar-menu:')) {
                 menuEvent.emit(eventName, ...args);
             } else {
                 const { ipcRenderer } = window.require('electron');
@@ -38,7 +38,7 @@ const Event = {
     },
     off: (eventName, callback) => {
         if (isElectron()) {
-            if (eventName.startsWith('topbar-menu:')) {
+            if (eventName.startsWith('appbar-menu:')) {
                 menuEvent.off(eventName, callback);
             } else {
                 const { ipcRenderer } = window.require('electron');

@@ -17,7 +17,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'forum');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'forum');
+                    UniApi.Event.emit('appbar-menu:help.link', 'forum');
                 }
             }
         },
@@ -28,7 +28,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'supports');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'supports');
+                    UniApi.Event.emit('appbar-menu:help.link', 'supports');
                 }
             }
         },
@@ -39,7 +39,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'tutorials');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'tutorials');
+                    UniApi.Event.emit('appbar-menu:help.link', 'tutorials');
                 }
             }
         },
@@ -50,7 +50,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'officialSite');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'officialSite');
+                    UniApi.Event.emit('appbar-menu:help.link', 'officialSite');
                 }
             }
         },
@@ -61,7 +61,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'market');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'market');
+                    UniApi.Event.emit('appbar-menu:help.link', 'market');
                 }
             }
         },
@@ -72,7 +72,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('help.link', 'myminifactory');
                 } else {
-                    UniApi.Event.emit('topbar-menu:help.link', 'myminifactory');
+                    UniApi.Event.emit('appbar-menu:help.link', 'myminifactory');
                 }
             }
         },
@@ -83,7 +83,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('check-for-updates.show');
                 } else {
-                    UniApi.Event.emit('topbar-menu:check-for-updates.show');
+                    UniApi.Event.emit('appbar-menu:check-for-updates.show');
                 }
             }
         },
@@ -94,7 +94,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('developer-tools.show');
                 } else {
-                    UniApi.Event.emit('topbar-menu:developer-tools.show');
+                    UniApi.Event.emit('appbar-menu:developer-tools.show');
                 }
             }
         }

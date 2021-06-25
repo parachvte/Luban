@@ -245,7 +245,7 @@ class Visualizer extends Component {
             false
         );
 
-        UniApi.Event.on('topbar-menu:laser.import', this.actions.importFile);
+        UniApi.Event.on('appbar-menu:laser.import', this.actions.importFile);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -308,7 +308,7 @@ class Visualizer extends Component {
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:laser.import', this.actions.importFile);
+        UniApi.Event.off('appbar-menu:laser.import', this.actions.importFile);
     }
 
     getNotice() {

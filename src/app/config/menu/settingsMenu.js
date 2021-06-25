@@ -15,7 +15,7 @@ export default {
                         activeTab: 'machine'
                     });
                 } else {
-                    UniApi.Event.emit('topbar-menu:preferences.show', {
+                    UniApi.Event.emit('appbar-menu:preferences.show', {
                         activeTab: 'machine'
                     });
                 }
@@ -31,7 +31,7 @@ export default {
                         activeTab: 'general'
                     });
                 } else {
-                    UniApi.Event.emit('topbar-menu:preferences.show', {
+                    UniApi.Event.emit('appbar-menu:preferences.show', {
                         activeTab: 'general'
                     });
                 }
@@ -48,7 +48,7 @@ export default {
                         activeTab: 'general'
                     });
                 } else {
-                    UniApi.Event.emit('topbar-menu:preferences.show', {
+                    UniApi.Event.emit('appbar-menu:preferences.show', {
                         activeTab: 'general'
                     });
                 }

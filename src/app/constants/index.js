@@ -540,12 +540,12 @@ export function getCurrentHeadType(pathname) {
 // Laser | CNC canvas min | max scale rate
 export const MAX_LASER_CNC_CANVAS_SCALE = 4;
 export const MIN_LASER_CNC_CANVAS_SCALE = 0.5;
-export const BBS_URL = 'https://forum.snapmaker.com/';
-export const SUPPORT_ZH = 'https://support.snapmaker.com/hc/zh-cn';
-export const SUPPORT_EN = 'https://support.snapmaker.com/hc/en-us';
-export const TUTORIAL_VIDEO = 'https://www.youtube.com/c/Snapmaker/playlists';
-export const OFFICIAL_SITE_ZH = 'https://snapmaker.cn/';
-export const OFFICIAL_SITE_EN = 'https://snapmaker.com/';
-export const MARKET_URL_ZH = 'https://snapmaker.world.tmall.com/?spm=a1z10.3-b.w5001-21696184167.3.40be7f386PAuCQ&scene=taobao_shop';
-export const MARKET_URL_EN = 'https://shop.snapmaker.com/';
+export const FORUM_URL = 'https://forum.snapmaker.com/';
+export const SUPPORT_ZH_URL = 'https://support.snapmaker.com/hc/zh-cn';
+export const SUPPORT_EN_URL = 'https://support.snapmaker.com/hc/en-us';
+export const TUTORIAL_VIDEO_URL = 'https://www.youtube.com/c/Snapmaker/playlists';
+export const OFFICIAL_SITE_ZH_URL = 'https://snapmaker.cn/';
+export const OFFICIAL_SITE_EN_URL = 'https://snapmaker.com/';
+export const MARKET_ZH_URL = 'https://snapmaker.world.tmall.com/?spm=a1z10.3-b.w5001-21696184167.3.40be7f386PAuCQ&scene=taobao_shop';
+export const MARKET_EN_URL = 'https://shop.snapmaker.com/';
 export const MYMINIFACTORY_URL = 'https://www.myminifactory.com/';

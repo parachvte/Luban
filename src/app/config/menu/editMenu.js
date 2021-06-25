@@ -15,9 +15,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+z', 'undo');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+z', 'undo');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+z', 'undo');
                 }
             }
         },
@@ -30,9 +28,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+shift+z', 'redo');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+shift+z', 'redo');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+shift+z', 'redo');
                 }
             }
         },
@@ -53,9 +49,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+c');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+c');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+c');
                 }
             }
         },
@@ -68,9 +62,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+d');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+d');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+d');
                 }
             }
         },
@@ -83,9 +75,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+v');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+v');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+v');
                 }
             }
         },
@@ -99,9 +89,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'mod+a');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'mod+a');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'mod+a');
                 }
             }
         },
@@ -114,9 +102,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'esc');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'esc');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'esc');
                 }
             }
         },
@@ -130,9 +116,7 @@ export default {
                 if (isElectron()) {
                     browserWindow.webContents.send('shortcut', 'del');
                 } else {
-                    if (this.enabled) {
-                        UniApi.Event.emit('topbar-menu:shortcut', 'del');
-                    }
+                    UniApi.Event.emit('appbar-menu:shortcut', 'del');
                 }
             }
         }

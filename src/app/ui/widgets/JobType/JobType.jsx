@@ -100,7 +100,7 @@ class JobType extends PureComponent {
     }
 
     componentDidMount() {
-        UniApi.Event.on('topbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
+        UniApi.Event.on('appbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -108,7 +108,7 @@ class JobType extends PureComponent {
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
+        UniApi.Event.off('appbar-menu:cnc-laser.new-file', this.actions.handleNewFile);
     }
 
     render() {

@@ -6,27 +6,27 @@ import isElectron from 'is-electron';
 import Mousetrap from 'mousetrap';
 import i18next from 'i18next';
 import { renderModal } from '../utils';
-import AppBar from '../Pages/AppBar';
+import AppBar from '../views/AppBar';
 import i18n from '../../lib/i18n';
 import UniApi from '../../lib/uni-api';
-import Settings from '../Pages/SettingsMenu/Settings';
-import FirmwareTool from '../Pages/SettingsMenu/FirmwareTool';
-import SoftwareUpdate from '../Pages/SettingsMenu/SoftwareUpdate';
+import Settings from '../Pages/Settings/Settings';
+import FirmwareTool from '../Pages/Settings/FirmwareTool';
+import SoftwareUpdate from '../Pages/Settings/SoftwareUpdate';
 import {
     PAGE_EDITOR,
     getCurrentHeadType,
     HEAD_TYPE_ENV_NAME,
-    BBS_URL,
-    SUPPORT_ZH,
-    SUPPORT_EN,
-    TUTORIAL_VIDEO,
-    OFFICIAL_SITE_ZH,
-    OFFICIAL_SITE_EN,
-    MARKET_URL_ZH,
-    MARKET_URL_EN,
+    FORUM_URL,
+    SUPPORT_ZH_URL,
+    SUPPORT_EN_URL,
+    TUTORIAL_VIDEO_URL,
+    OFFICIAL_SITE_ZH_URL,
+    OFFICIAL_SITE_EN_URL,
+    MARKET_ZH_URL,
+    MARKET_EN_URL,
     MYMINIFACTORY_URL
 } from '../../constants';
-import { actions as menuActions } from '../../flux/topbar-menu';
+import { actions as menuActions } from '../../flux/appbar-menu';
 import { actions as machineActions } from '../../flux/machine';
 import { actions as editorActions } from '../../flux/editor';
 import { actions as projectActions } from '../../flux/project';
@@ -84,14 +84,14 @@ class AppLayout extends PureComponent {
                         name: i18n._('Save'),
                         isPrimary: true,
                         onClick: () => {
-                            UniApi.Event.emit('topbar-menu:settings.save');
+                            UniApi.Event.emit('appbar-menu:settings.save');
                             onClose();
                         }
                     },
                     {
                         name: i18n._('Cancel'),
                         onClick: () => {
-                            UniApi.Event.emit('topbar-menu:settings.cancel');
+                            UniApi.Event.emit('appbar-menu:settings.cancel');
                             onClose();
                         }
                     }
@@ -121,7 +121,7 @@ class AppLayout extends PureComponent {
                         name: i18n._('Compile and Export'),
                         isPrimary: true,
                         onClick: () => {
-                            UniApi.Event.emit('topbar-menu:firmware-tools.export');
+                            UniApi.Event.emit('appbar-menu:firmware-tools.export');
                             onClose();
                         }
                     },
@@ -272,7 +272,7 @@ class AppLayout extends PureComponent {
             UniApi.Event.on('open-file-in-app', async () => {
                 const file = await UniApi.Dialog.showOpenFileDialog();
                 if (file && file.path) {
-                    UniApi.Event.emit('topbar-menu:open-file', file, [file]);
+                    UniApi.Event.emit('appbar-menu:open-file', file, [file]);
                 }
             });
             UniApi.Event.on('toggle-developer-tools', async () => {
@@ -281,46 +281,46 @@ class AppLayout extends PureComponent {
             });
 
             UniApi.Event.on('clear-recent-files', () => {
-                UniApi.Event.emit('topbar-menu:clear-recent-files');
+                UniApi.Event.emit('appbar-menu:clear-recent-files');
             });
             UniApi.Event.on('import', () => {
-                UniApi.Event.emit('topbar-menu:import');
+                UniApi.Event.emit('appbar-menu:import');
             });
             UniApi.Event.on('new-file', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:new-file', ...args);
+                UniApi.Event.emit('appbar-menu:new-file', ...args);
             });
             UniApi.Event.on('export-model', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:export-model', ...args);
+                UniApi.Event.emit('appbar-menu:export-model', ...args);
             });
             UniApi.Event.on('export-gcode', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:export-gcode', ...args);
+                UniApi.Event.emit('appbar-menu:export-gcode', ...args);
             });
             UniApi.Event.on('shortcut', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:shortcut', ...args);
+                UniApi.Event.emit('appbar-menu:shortcut', ...args);
             });
             UniApi.Event.on('developer-tools.show', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:developer-tools.show', ...args);
+                UniApi.Event.emit('appbar-menu:developer-tools.show', ...args);
             });
             UniApi.Event.on('check-for-updates.show', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:check-for-updates.show', ...args);
+                UniApi.Event.emit('appbar-menu:check-for-updates.show', ...args);
             });
             UniApi.Event.on('help.link', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:help.link', ...args);
+                UniApi.Event.emit('appbar-menu:help.link', ...args);
             });
             UniApi.Event.on('window', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:window', ...args);
+                UniApi.Event.emit('appbar-menu:window', ...args);
             });
             UniApi.Event.on('preferences.show', (event, ...args) => {
-                UniApi.Event.emit('topbar-menu:preferences.show', ...args);
+                UniApi.Event.emit('appbar-menu:preferences.show', ...args);
             });
 
-            UniApi.Event.on('topbar-menu:open-file', (file, arr) => {
+            UniApi.Event.on('appbar-menu:open-file', (file, arr) => {
                 this.actions.openProject(file);
                 if (arr && arr.length) {
                     this.actions.updateRecentFile(arr, 'update');
                 }
             });
-            UniApi.Event.on('topbar-menu:window', (type) => {
+            UniApi.Event.on('appbar-menu:window', (type) => {
                 switch (type) {
                     case 'reload': UniApi.Window.reload(); break;
                     case 'forceReload': UniApi.Window.forceReload(); break;
@@ -329,33 +329,33 @@ class AppLayout extends PureComponent {
                     default: break;
                 }
             });
-            UniApi.Event.on('topbar-menu:help.link', (type) => {
+            UniApi.Event.on('appbar-menu:help.link', (type) => {
                 switch (type) {
                     case 'forum':
-                        UniApi.Window.openLink(BBS_URL);
+                        UniApi.Window.openLink(FORUM_URL);
                         break;
                     case 'supports':
                         if (i18next.language === 'zh-cn') {
-                            UniApi.Window.openLink(SUPPORT_ZH);
+                            UniApi.Window.openLink(SUPPORT_ZH_URL);
                         } else {
-                            UniApi.Window.openLink(SUPPORT_EN);
+                            UniApi.Window.openLink(SUPPORT_EN_URL);
                         }
                         break;
                     case 'tutorials':
-                        UniApi.Window.openLink(TUTORIAL_VIDEO);
+                        UniApi.Window.openLink(TUTORIAL_VIDEO_URL);
                         break;
                     case 'officialSite':
                         if (i18next.language === 'zh-cn') {
-                            UniApi.Window.openLink(OFFICIAL_SITE_ZH);
+                            UniApi.Window.openLink(OFFICIAL_SITE_ZH_URL);
                         } else {
-                            UniApi.Window.openLink(OFFICIAL_SITE_EN);
+                            UniApi.Window.openLink(OFFICIAL_SITE_EN_URL);
                         }
                         break;
                     case 'market':
                         if (i18next.language === 'zh-cn') {
-                            UniApi.Window.openLink(MARKET_URL_ZH);
+                            UniApi.Window.openLink(MARKET_ZH_URL);
                         } else {
-                            UniApi.Window.openLink(MARKET_URL_EN);
+                            UniApi.Window.openLink(MARKET_EN_URL);
                         }
                         break;
                     case 'myminifactory':
@@ -364,51 +364,51 @@ class AppLayout extends PureComponent {
                     default: break;
                 }
             });
-            UniApi.Event.on('topbar-menu:shortcut', (...commands) => {
+            UniApi.Event.on('appbar-menu:shortcut', (...commands) => {
                 if (commands && commands.length > 0) {
                     Mousetrap.trigger(commands[0]);
                 }
             });
-            UniApi.Event.on('topbar-menu:new-file', async ({ headType, isRotate }) => {
+            UniApi.Event.on('appbar-menu:new-file', async ({ headType, isRotate }) => {
                 await this.actions.closeFile();
                 this.props.history.push(`/${headType}`);
                 if (headType === 'cnc' || headType === 'laser') {
-                    UniApi.Event.emit('topbar-menu:cnc-laser.new-file', isRotate);
+                    UniApi.Event.emit('appbar-menu:cnc-laser.new-file', isRotate);
                     this.props.switchToPage(headType, PAGE_EDITOR);
                 }
             });
-            UniApi.Event.on('topbar-menu:clear-recent-files', () => {
+            UniApi.Event.on('appbar-menu:clear-recent-files', () => {
                 this.actions.updateRecentFile([], 'reset');
                 UniApi.Menu.cleanAllRecentFiles();
             });
-            UniApi.Event.on('topbar-menu:import', async () => {
+            UniApi.Event.on('appbar-menu:import', async () => {
                 let fileObj;
                 if (isElectron()) {
                     const file = await UniApi.Dialog.showOpenFileDialog(this.props.history.location.pathname.slice(1));
                     fileObj = UniApi.File.constructFileObj(file.path, file.name.split('\\').pop());
                 }
                 switch (this.props.history.location.pathname) {
-                    case '/3dp': UniApi.Event.emit('topbar-menu:printing.import', fileObj); break;
-                    case '/laser': UniApi.Event.emit('topbar-menu:laser.import', fileObj); break;
-                    case '/cnc': UniApi.Event.emit('topbar-menu:cnc.import', fileObj); break;
-                    case '/workspace': UniApi.Event.emit('topbar-menu:workspace.import', fileObj); break;
+                    case '/3dp': UniApi.Event.emit('appbar-menu:printing.import', fileObj); break;
+                    case '/laser': UniApi.Event.emit('appbar-menu:laser.import', fileObj); break;
+                    case '/cnc': UniApi.Event.emit('appbar-menu:cnc.import', fileObj); break;
+                    case '/workspace': UniApi.Event.emit('appbar-menu:workspace.import', fileObj); break;
                     default: break;
                 }
             });
-            UniApi.Event.on('topbar-menu:export-model', () => {
+            UniApi.Event.on('appbar-menu:export-model', () => {
                 if (this.props.history.location.pathname === '/3dp') {
-                    UniApi.Event.emit('topbar-menu:printing.export-model');
+                    UniApi.Event.emit('appbar-menu:printing.export-model');
                 }
             });
-            UniApi.Event.on('topbar-menu:get-started', (caseItem) => {
+            UniApi.Event.on('appbar-menu:get-started', (caseItem) => {
                 this.props.loadCase(caseItem.pathConfig, this.props.history);
             });
-            UniApi.Event.on('topbar-menu:export-gcode', () => {
+            UniApi.Event.on('appbar-menu:export-gcode', () => {
                 switch (this.props.history.location.pathname) {
-                    case '/3dp': UniApi.Event.emit('topbar-menu:printing.export-gcode'); break;
-                    case '/laser': UniApi.Event.emit('topbar-menu:cnc-laser.export-gcode'); break;
-                    case '/cnc': UniApi.Event.emit('topbar-menu:cnc-laser.export-gcode'); break;
-                    case '/workspace': UniApi.Event.emit('topbar-menu:workspace.export-gcode'); break;
+                    case '/3dp': UniApi.Event.emit('appbar-menu:printing.export-gcode'); break;
+                    case '/laser': UniApi.Event.emit('appbar-menu:cnc-laser.export-gcode'); break;
+                    case '/cnc': UniApi.Event.emit('appbar-menu:cnc-laser.export-gcode'); break;
+                    case '/workspace': UniApi.Event.emit('appbar-menu:workspace.export-gcode'); break;
                     default: break;
                 }
             });
@@ -416,16 +416,16 @@ class AppLayout extends PureComponent {
             this.props.history.listen(() => {
                 this.props.updateMenu();
             });
-            UniApi.Event.on('topbar-menu:disable', () => {
+            UniApi.Event.on('appbar-menu:disable', () => {
                 this.props.disableMenu();
             });
-            UniApi.Event.on('topbar-menu:enable', () => {
+            UniApi.Event.on('appbar-menu:enable', () => {
                 this.props.enableMenu();
             });
-            UniApi.Event.on('topbar-menu:should-update', () => {
+            UniApi.Event.on('appbar-menu:should-update', () => {
                 this.props.updateMenu();
             });
-            UniApi.Event.on('topbar-menu:update-electron-menu', (action) => {
+            UniApi.Event.on('appbar-menu:update-electron-menu', (action) => {
                 UniApi.Menu.replaceMenu(action.state);
             });
         }
@@ -436,15 +436,15 @@ class AppLayout extends PureComponent {
         this.actions.initUniEvent();
         this.actions.initFileOpen();
 
-        UniApi.Event.on('topbar-menu:preferences.show', this.actions.showPreferences);
-        UniApi.Event.on('topbar-menu:developer-tools.show', this.actions.showDevelopTools);
-        UniApi.Event.on('topbar-menu:check-for-updates.show', this.actions.showCheckForUpdates);
+        UniApi.Event.on('appbar-menu:preferences.show', this.actions.showPreferences);
+        UniApi.Event.on('appbar-menu:developer-tools.show', this.actions.showDevelopTools);
+        UniApi.Event.on('appbar-menu:check-for-updates.show', this.actions.showCheckForUpdates);
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:preferences.show', this.actions.showPreferences);
-        UniApi.Event.off('topbar-menu:developer-tools.show', this.actions.showDevelopTools);
-        UniApi.Event.off('topbar-menu:check-for-updates.show', this.actions.showCheckForUpdates);
+        UniApi.Event.off('appbar-menu:preferences.show', this.actions.showPreferences);
+        UniApi.Event.off('appbar-menu:developer-tools.show', this.actions.showDevelopTools);
+        UniApi.Event.off('appbar-menu:check-for-updates.show', this.actions.showCheckForUpdates);
     }
 
     render() {

@@ -191,11 +191,11 @@ class VisualizerLeftBar extends PureComponent {
     };
 
     componentDidMount() {
-        UniApi.Event.on('topbar-menu:printing.import', this.actions.importFile);
+        UniApi.Event.on('appbar-menu:printing.import', this.actions.importFile);
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:printing.import', this.actions.importFile);
+        UniApi.Event.off('appbar-menu:printing.import', this.actions.importFile);
     }
 
     render() {

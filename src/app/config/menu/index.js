@@ -20,6 +20,7 @@ function onClickPreferences(menuItem, browserWindow) {
 }
 
 function getMenuItems() {
+    // this menu is only shown in MacOS
     if (isElectron() && window.require('electron').remote.process.platform === 'darwin') {
         // About
         menuItems.unshift({

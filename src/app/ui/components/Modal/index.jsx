@@ -13,7 +13,7 @@ class ModalWrapper extends PureComponent {
     };
 
     componentDidMount() {
-        UniApi.Event.emit('topbar-menu:disable');
+        UniApi.Event.emit('appbar-menu:disable');
         this.blockScrolling();
     }
 
@@ -28,7 +28,7 @@ class ModalWrapper extends PureComponent {
     }
 
     componentWillUnmount() {
-        UniApi.Event.emit('topbar-menu:enable');
+        UniApi.Event.emit('appbar-menu:enable');
         this.unblockScrolling();
     }
 

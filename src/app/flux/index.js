@@ -10,7 +10,7 @@ import developTools from './develop-tools';
 // import models from './models';
 import text from './text';
 import project from './project';
-import topbarMenu from './topbar-menu';
+import appbarMenu from './appbar-menu';
 
 export default combineReducers({
     workspace,
@@ -24,5 +24,5 @@ export default combineReducers({
     developTools,
     editor,
     project,
-    topbarMenu
+    appbarMenu
 });

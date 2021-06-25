@@ -10,11 +10,14 @@ import {
 import UniApi from '../../lib/uni-api';
 import i18n from '../../lib/i18n';
 
-export const ACTION_UPDATE_STATE = 'topbar-menu/ACTION_UPDATE_STATE';
+export const ACTION_UPDATE_STATE = 'appbar-menu/ACTION_UPDATE_STATE';
 
-const INITIAL_STATE = [
-    ...getMenuItems()
-];
+const INITIAL_STATE = {
+    menuDisabledCount: 0,
+    menu: [
+        ...getMenuItems()
+    ]
+};
 
 const hashStateMap = {
     '#/3dp': 'printing',
@@ -22,14 +25,12 @@ const hashStateMap = {
     '#/cnc': 'cnc'
 };
 
-let menuDisabledCount = 0;
-
 function caseConfigToMenuItems(caseConfig) {
     return caseConfig.map(item => {
         item.label = item.title;
         item.enabled = true;
         item.click = function () {
-            UniApi.Event.emit('topbar-menu:get-started', item);
+            UniApi.Event.emit('appbar-menu:get-started', item);
         };
         return item;
     });
@@ -48,56 +49,70 @@ function traverseMenu(menu, callback) {
 
 export const actions = {
     initMenuLanguage: () => (dispatch, getState) => {
-        const topbarMenu = getState().topbarMenu;
-        traverseMenu(topbarMenu, (item) => {
+        const appbarMenu = getState().appbarMenu.menu;
+        traverseMenu(appbarMenu, (item) => {
             item.label = i18n._(item.label);
         });
         dispatch({
             type: ACTION_UPDATE_STATE,
-            state: topbarMenu
+            state: {
+                menu: appbarMenu
+            }
         });
     },
     disableMenu: () => (dispatch, getState) => {
-        const topbarMenu = getState().topbarMenu;
+        const appbarMenu = getState().appbarMenu.menu;
+        let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         menuDisabledCount++;
-        traverseMenu(topbarMenu, (item) => {
+        traverseMenu(appbarMenu, (item) => {
             item.enabled = false;
         });
         dispatch({
             type: ACTION_UPDATE_STATE,
-            state: topbarMenu
+            state: {
+                menu: appbarMenu,
+                menuDisabledCount
+            }
         });
     },
     enableMenu: () => (dispatch, getState) => {
-        const topbarMenu = getState().topbarMenu;
+        const appbarMenu = getState().appbarMenu.menu;
+        let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         menuDisabledCount--;
-        traverseMenu(topbarMenu, (item) => {
+        traverseMenu(appbarMenu, (item) => {
             item.enabled = true;
         });
-        actions.updateMenu()(dispatch);
+        dispatch({
+            type: ACTION_UPDATE_STATE,
+            state: {
+                menuDisabledCount
+            }
+        })
+        dispatch(actions.updateMenu());
     },
     updateMenu: () => (dispatch) => {
         dispatch(actions.activeMenu(-1));
     },
-    activeMenu: (index) => (dispatch, getState) => {
+    activateMenu: (menuIndex) => (dispatch, getState) => {
+        let menuDisabledCount = getState().appbarMenu.menuDisabledCount;
         if (menuDisabledCount > 0) return;
 
-        const topbarMenu = getState().topbarMenu;
+        const appbarMenu = getState().appbarMenu.menu;
         const series = getState()?.machine?.series;
         const recentFiles = getState().project.general.recentFiles;
 
         // menu clicked
-        topbarMenu.forEach((item, i) => {
+        appbarMenu.forEach((item, i) => {
             item.active = !!item.active; // undefined to bool
-            if (i === index) {
+            if (i === menuIndex) {
                 item.active = !item.active;
             } else {
                 item.active = false;
             }
         });
-        const fileMenu = topbarMenu.find(item => item.id === 'file');
-        const editMenu = topbarMenu.find(item => item.id === 'edit');
-        const windowMenu = topbarMenu.find(item => item.id === 'window');
+        const fileMenu = appbarMenu.find(item => item.id === 'file');
+        const editMenu = appbarMenu.find(item => item.id === 'edit');
+        const windowMenu = appbarMenu.find(item => item.id === 'window');
         const getStartedSubmenu = fileMenu.submenu.find(item => item.id === 'get-started');
         const recentFilesSubmenu = fileMenu.submenu.find(item => item.id === 'recent-files');
         const toggleDeveloperToolsSubmenu = windowMenu.submenu.find(item => item.id === 'toggle-developer-tools');
@@ -112,7 +127,7 @@ export const actions = {
                     item.label = item.name;
                     item.enabled = true;
                     item.click = function () {
-                        UniApi.Event.emit('topbar-menu:open-file', { path: item.path, name: item.name }, []);
+                        UniApi.Event.emit('appbar-menu:open-file', { path: item.path, name: item.name }, []);
                     };
                     return item;
                 })),
@@ -235,17 +250,21 @@ export const actions = {
 
         dispatch({
             type: ACTION_UPDATE_STATE,
-            state: topbarMenu
+            state: {
+                menu: appbarMenu
+            }
         });
     },
     hideMenu: () => (dispatch, getState) => {
-        const topbarMenu = getState().topbarMenu;
-        topbarMenu.forEach((item) => {
+        const appbarMenu = getState().appbarMenu.menu;
+        appbarMenu.forEach((item) => {
             item.active = false;
         });
         dispatch({
             type: ACTION_UPDATE_STATE,
-            state: topbarMenu
+            state: {
+                menu: appbarMenu
+            }
         });
     }
 };
@@ -253,7 +272,7 @@ export const actions = {
 export default function reducer(state = INITIAL_STATE, action) {
     switch (action.type) {
         case ACTION_UPDATE_STATE: {
-            return Object.assign([], state, action.state);
+            return Object.assign({}, state, action.state);
         }
         default: return state;
     }

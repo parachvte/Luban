@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import classNames from 'classnames';
-import { actions as menuActions } from '../../../flux/topbar-menu';
+import { actions as menuActions } from '../../../flux/appbar-menu';
 import styles from './styles.styl';
 
 
@@ -25,7 +25,7 @@ class Submenu extends PureComponent {
     render() {
         if (this.props.items) {
             return (
-                <ul className={classNames(styles['lu-topbar-menu'], this.props.className)}>
+                <ul className={classNames(styles['lu-appbar-menu'], this.props.className)}>
                     {
                         this.props.items.length > 0 ? this.props.items.map((item) => {
                             if (item.type === 'separator') {

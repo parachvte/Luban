@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
-import { actions as menuActions } from '../../../flux/topbar-menu';
+import { actions as menuActions } from '../../../flux/appbar-menu';
 import Submenu from './Submenu';
 import styles from './styles.styl';
 
@@ -41,7 +41,7 @@ class Menu extends PureComponent {
 
     render() {
         return (
-            <ul ref={this.ulRef} className={classNames(styles['lu-topbar-menu'], this.props.className)}>
+            <ul ref={this.ulRef} className={classNames(styles['lu-appbar-menu'], this.props.className)}>
                 {
                     this.props.items.map((item, index) => {
                         if (item.type === 'separator') {
@@ -64,7 +64,7 @@ class Menu extends PureComponent {
 
 const mapStateToProps = (state) => {
     return {
-        items: state.topbarMenu
+        items: state.appbarMenu
     };
 };
 

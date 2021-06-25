@@ -1,21 +1,19 @@
 import UniApi from './uni-api';
 import {
-    ACTION_UPDATE_STATE as TOPBAR_MENU_ACTION_UPDATE_STATE
-} from '../flux/topbar-menu';
+    ACTION_UPDATE_STATE as APPBAR_MENU_ACTION_UPDATE_STATE
+} from '../flux/appbar-menu';
 
-export function topbarMenuMiddleware() {
+export function appbarMenuMiddleware() {
     return function (next) {
         return function (action) {
-            let timer;
             switch (action.type) {
-                case TOPBAR_MENU_ACTION_UPDATE_STATE: // notify main process to update menu
-                    UniApi.Event.emit('topbar-menu:update-electron-menu', action);
+                case APPBAR_MENU_ACTION_UPDATE_STATE: // notify main process to update menu
+                    UniApi.Event.emit('appbar-menu:update-electron-menu', action);
                     break;
                 default:
-                    // update topbar-menu after current action processed
-                    timer = setTimeout(() => {
-                        clearTimeout(timer);
-                        UniApi.Event.emit('topbar-menu:should-update');
+                    // update appbar-menu after current action processed
+                    setTimeout(() => {
+                        UniApi.Event.emit('appbar-menu:should-update');
                     }, 0);
                     break;
             }

@@ -116,7 +116,7 @@ class Output extends PureComponent {
     }
 
     componentDidMount() {
-        UniApi.Event.on('topbar-menu:cnc-laser.export-gcode', this.actions.onExport);
+        UniApi.Event.on('appbar-menu:cnc-laser.export-gcode', this.actions.onExport);
     }
 
     componentWillReceiveProps(nextProps) {
@@ -129,7 +129,7 @@ class Output extends PureComponent {
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:cnc-laser.export-gcode', this.actions.onExport);
+        UniApi.Event.off('appbar-menu:cnc-laser.export-gcode', this.actions.onExport);
     }
 
     renderWorkspace() {

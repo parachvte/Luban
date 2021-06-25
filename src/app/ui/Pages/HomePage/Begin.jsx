@@ -47,7 +47,7 @@ const Begin = (props) => {
     };
 
     const onClickToUpload = () => {
-        UniApi.Event.emit('topbar-menu:open-file-in-browser');
+        UniApi.Event.emit('appbar-menu:open-file-in-browser');
     };
     return (
         <div className={styles['create-new-project']}>

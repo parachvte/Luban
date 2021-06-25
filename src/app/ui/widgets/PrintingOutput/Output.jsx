@@ -139,13 +139,13 @@ class Output extends PureComponent {
     };
 
     componentDidMount() {
-        UniApi.Event.on('topbar-menu:printing.export-gcode', this.actions.onClickExportGcode);
-        UniApi.Event.on('topbar-menu:printing.export-model', this.actions.onClickExportModel);
+        UniApi.Event.on('appbar-menu:printing.export-gcode', this.actions.onClickExportGcode);
+        UniApi.Event.on('appbar-menu:printing.export-model', this.actions.onClickExportModel);
     }
 
     componentWillUnmount() {
-        UniApi.Event.off('topbar-menu:printing.export-gcode', this.actions.onClickExportGcode);
-        UniApi.Event.off('topbar-menu:printing.export-model', this.actions.onClickExportModel);
+        UniApi.Event.off('appbar-menu:printing.export-gcode', this.actions.onClickExportGcode);
+        UniApi.Event.off('appbar-menu:printing.export-model', this.actions.onClickExportModel);
     }
 
     renderWorkspace() {

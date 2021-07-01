@@ -65,6 +65,7 @@ function ObjectListBox(props) {
                         return (
                             <ModelItem
                                 model={model}
+                                visible={model.visible}
                                 key={model.modelID}
                                 styles={styles}
                                 isSelected={selectedModelArray && selectedModelArray.includes(model)}

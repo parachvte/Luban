@@ -29,7 +29,7 @@ class SVGParser {
             'circle': new CircleTagParser(TOLERANCE),
             'ellipse': new EllipseTagParser(TOLERANCE),
             'line': new LineTagParser(TOLERANCE),
-            'path': new PathTagParser(TOLERANCE),
+            'path': new PathTagParser(TOLERANCE * 0.5),
             'polygon': new PolygonTagParser(TOLERANCE),
             'polyline': new PolylineTagParser(TOLERANCE),
             'rect': new RectTagParser(TOLERANCE)

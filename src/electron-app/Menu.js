@@ -27,7 +27,8 @@ function saveRecentFile(file) {
     const arr = getSavedRecentFile();
 
     const index = arr.find(f => f.name === file.name);
-    if (index !== -1) {
+    if (index && index !== -1) {
+        console.log('inside splice', arr, index);
         arr.splice(index, 1);
     }
     arr.push(file);
@@ -57,12 +58,14 @@ export function addRecentFile(file, isSave = true) {
 
 function recoverRecentFiles(mainWindow) {
     const arr = getSavedRecentFile();
+    console.log('recoverRecentFiles', arr);
     for (const file of arr) {
         addRecentFile(file, false, mainWindow);
     }
 }
 
 export function cleanAllRecentFiles() {
+    console.log('cleanAllRecentFiles');
     // const menu = Menu.getApplicationMenu();
     // const itemRecentFiles = menu.getMenuItemById('recent-files');
 

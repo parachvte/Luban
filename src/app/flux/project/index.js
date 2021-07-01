@@ -137,6 +137,7 @@ export const actions = {
         }
 
         dispatch(actions.updateState(headType, { findLastEnvironment: false, unSaved: false }));
+        console.log('clearSavedEnvironment');
     },
 
     onRecovery: (envHeadType, envObj, backendRecover = true) => async (dispatch, getState) => {
@@ -243,7 +244,7 @@ export const actions = {
         UniApi.Menu.setItemEnabled('save', !!openedFile);
     },
 
-    saveAsFile: (headType) => async (dispatch) => {
+    saveAsFile: (headType) => async (dispatch, getState) => {
         const { body: { targetFile } } = await api.packageEnv({ headType });
         const tmpFile = `/Tmp/${targetFile}`;
         const openedFile = await UniApi.File.saveAs(targetFile, tmpFile);
@@ -251,6 +252,7 @@ export const actions = {
             await dispatch(actions.setOpenedFileWithType(headType, openedFile));
         }
         await dispatch(actions.clearSavedEnvironment(headType));
+        console.log('saveAsFile', getState()?.project[headType]);
     },
     save: (headType, dialogOptions = false) => async (dispatch, getState) => {
         // save should return when no model in editor
@@ -365,9 +367,10 @@ export const actions = {
                 } else {
                     await dispatch(actions.setOpenedFileWithType(headType, JSON.parse(file)));
                 }
+                dispatch(actions.updateState(headType, { unSaved: false }));
+            } else {
+                dispatch(actions.updateState(headType, { unSaved: false, openedFile: null }));
             }
-
-            dispatch(actions.updateState(headType, { unSaved: false }));
         } else if (tail === 'gcode') {
             dispatch(workspaceActions.uploadGcodeFile(file));
             history.push('/workspace');
@@ -431,10 +434,11 @@ export const actions = {
             dispatch(printingActions.destroyGcodeLine());
             await dispatch(printingActions.initSize());
         }
-
+        console.log('before closeProject');
         modState.toolPathGroup && modState.toolPathGroup.deleteAllToolPaths();
         modState.modelGroup.removeAllModels();
-        modState.SVGActions && modState.SVGActions.svgContentGroup.removeAllElements();
+        modState.SVGActions && modState.SVGActions.svgContentGroup && modState.SVGActions.svgContentGroup.removeAllElements();
+        console.log('after closeProject before setOpenedFile');
         UniApi.Window.setOpenedFile();
     },
 

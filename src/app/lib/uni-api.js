@@ -358,6 +358,7 @@ const Window = {
     },
 
     setOpenedFile(filename = 'new') {
+        console.trace('window setOpenedFile', filename);
         if (!this.window) {
             this.initWindow();
         }

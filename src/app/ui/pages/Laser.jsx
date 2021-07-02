@@ -198,7 +198,7 @@ function Laser() {
             {
                 name: i18n._('Cancel'),
 
-                onclick: () => { setShowCameraCapture(false); }
+                onClick: () => { setShowCameraCapture(false); }
             }
         ],
         onClose: () => { setShowCameraCapture(false); }

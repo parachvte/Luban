@@ -237,6 +237,9 @@ const ToolPathListBox = (props) => {
         selectToolPathId: (id) => {
             dispatch(editorActions.selectToolPathId(props.headType, id));
         },
+        selectToolPathById: (id) => {
+            dispatch(editorActions.selectToolPathById(props.headType, id));
+        },
         onClickVisible: (id, visible, check) => {
             dispatch(editorActions.updateToolPath(props.headType, id, {
                 visible: !visible,

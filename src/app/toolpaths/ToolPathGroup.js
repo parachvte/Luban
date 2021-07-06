@@ -9,7 +9,7 @@ import { MATERIAL_UNSELECTED, MATERIAL_SELECTED } from '../lib/renderer/ToolPath
 class ToolPathGroup {
     toolPaths = [];
 
-    selectedToolPathId = '';
+    selectedToolPathArray = [];
 
     modelGroup;
 
@@ -85,17 +85,25 @@ class ToolPathGroup {
 
     // Select
     selectToolPathById(toolPathId) {
-        this.selectedToolPathId = toolPathId;
+        this.selectedToolPathArray = [toolPathId];
         this.addSelectedToolpathColor();
         this._updated();
     }
 
     // Unselect when selected id === toolPathId
     selectToolPathId(toolPathId) {
-        if (this.selectedToolPathId === toolPathId) {
-            this.selectedToolPathId = '';
+        if (this.selectedToolPathArray.includes(toolPathId)) {
+            const newArray = [];
+            this.selectedToolPathArray.forEach(
+                (id) => {
+                    if (id !== toolPathId) {
+                        newArray.push(id);
+                    }
+                }
+            );
+            this.selectedToolPathArray = newArray;
         } else {
-            this.selectedToolPathId = toolPathId;
+            this.selectedToolPathArray.push(toolPathId);
         }
         this.addSelectedToolpathColor();
         this._updated();
@@ -196,7 +204,7 @@ class ToolPathGroup {
             });
             this.toolPaths.push(toolPath);
             this.toolPathObjects.add(toolPath.object);
-            this.selectedToolPathId = toolPath.id;
+            this.selectToolPathById(toolPath.id);
         }
         if (shouldCommitGenerate) {
             toolPath.commitGenerateToolPath();
@@ -204,39 +212,45 @@ class ToolPathGroup {
     }
 
     addSelectedToolpathColor() {
-        const selectedToolpath = this._getToolPath(this.selectedToolPathId);
-        let newIndex = -1;
         // 2D SVGCanvas
         const { modelGroup } = this;
         modelGroup.models.forEach((model) => {
             model.updateIsToolPathSelect(false);
         });
-        if (selectedToolpath && selectedToolpath.modelIDs) {
-            for (const id of selectedToolpath?.modelIDs) {
-                const model = modelGroup.getModel(id);
-                model.updateIsToolPathSelect(true);
-            }
-        }
-
-        // 3D SMCanvas
-        this.toolPathObjects.children.forEach((item, index) => {
-            if (selectedToolpath && selectedToolpath.object === item) {
-                newIndex = index;
-                item.children.forEach((meshObj) => {
-                    meshObj.material = MATERIAL_SELECTED;
-                });
-            } else {
-                item.children.forEach((meshObj) => {
-                    meshObj.material = MATERIAL_UNSELECTED;
-                });
+        this.selectedToolPathArray.forEach((id) => {
+            const selectedToolpath = this._getToolPath(id);
+            if (selectedToolpath && selectedToolpath.modelIDs) {
+                for (const modelId of selectedToolpath?.modelIDs) {
+                    const model = modelGroup.getModel(modelId);
+                    model.updateIsToolPathSelect(true);
+                }
             }
         });
-        if (selectedToolpath && newIndex !== this.toolPathObjects.children.length - 1) {
-            // The cloned object must be used to force updating the scene
-            this.toolPathObjects.remove(selectedToolpath.object);
-            selectedToolpath.object = selectedToolpath.object.clone();
-            this.toolPathObjects.add(selectedToolpath.object);
-        }
+
+        // 3D SMCanvas
+        this.toolPathObjects.children.forEach((item) => {
+            item.children.forEach((meshObj) => {
+                meshObj.material = MATERIAL_UNSELECTED;
+            });
+        });
+        this.selectedToolPathArray.forEach((id) => {
+            const selectedToolpath = this._getToolPath(id);
+            this.toolPathObjects.children.forEach((item) => {
+                if (selectedToolpath && selectedToolpath.object.uuid === item.uuid) {
+                    console.log('in', item);
+                    item.children.forEach((meshObj) => {
+                        console.log('mesh', meshObj);
+                        meshObj.material = MATERIAL_SELECTED;
+                    });
+                }
+            });
+        });
+        // this.toolPaths.forEach((toolpath) => {
+        //     // The cloned object must be used to force updating the scene
+        //     this.toolPathObjects.remove(toolpath.object);
+        //     toolpath.object = toolpath.object.clone();
+        //     this.toolPathObjects.add(toolpath.object);
+        // });
     }
 
     toolPathToUp(toolPathId) {
@@ -283,9 +297,7 @@ class ToolPathGroup {
             this.toolPathObjects.remove(toolPath.object);
         }
 
-        if (this.selectedToolPathId === toolPathId) {
-            this.selectedToolPathId = '';
-        }
+        this.selectedToolPathArray = [];
 
         this._updated();
     }
@@ -298,7 +310,7 @@ class ToolPathGroup {
             }
         });
         this.toolPaths = [];
-        this.selectedToolPathId = '';
+        this.selectedToolPathArray = [];
 
         this._updated();
     }

@@ -22,18 +22,34 @@ class SVGContentGroup {
         this.backgroundGroup.setAttribute('id', 'svg-data-background');
 
         // construct filter used in toolPath
-        const filter = document.createElementNS(NS.SVG, 'filter');
-        filter.setAttribute('id', 'inSelectedToolPath');
-        const filterElement = document.createElementNS(NS.SVG, 'feColorMatrix');
-        filterElement.setAttribute('type', 'matrix');
-        filterElement.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
-        filter.append(filterElement);
+        const filterText = document.createElementNS(NS.SVG, 'filter');
+        filterText.setAttribute('id', 'inSelectedToolPathText');
+        const filterElementText = document.createElementNS(NS.SVG, 'feColorMatrix');
+        filterElementText.setAttribute('type', 'matrix');
+        filterElementText.setAttribute('values', '0.25 0 0 0 0.25 0 0.5 0 0 0.5 0 0 0.75 0 0.75 0 0 0 0.8 0');
+        filterText.append(filterElementText);
+
+        const filterSVG = document.createElementNS(NS.SVG, 'filter');
+        filterSVG.setAttribute('id', 'inSelectedToolPathSVG');
+        const filterElementSVG = document.createElementNS(NS.SVG, 'feColorMatrix');
+        filterElementSVG.setAttribute('type', 'matrix');
+        filterElementSVG.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
+        filterSVG.append(filterElementSVG);
+
+        const filterImage = document.createElementNS(NS.SVG, 'filter');
+        filterImage.setAttribute('id', 'inSelectedToolPathImage');
+        const filterElementImage = document.createElementNS(NS.SVG, 'feColorMatrix');
+        filterElementImage.setAttribute('type', 'matrix');
+        filterElementImage.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
+        filterImage.append(filterElementImage);
 
         this.group = document.createElementNS(NS.SVG, 'g');
         this.group.setAttribute('id', 'svg-data');
 
         this.svgContent.append(this.backgroundGroup);
-        this.svgContent.append(filter);
+        this.svgContent.append(filterText);
+        this.svgContent.append(filterSVG);
+        this.svgContent.append(filterImage);
         this.svgContent.append(this.group);
         // this.selectorManager = new SelectorManager({
         //     getRoot: () => this.svgContent,

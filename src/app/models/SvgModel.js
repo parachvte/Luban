@@ -267,34 +267,40 @@ class SvgModel extends BaseModel {
      */
     updateIsToolPathSelect(selected) {
         this.isToolPathSelect = selected;
-        if (selected) {
-            this.elem.setAttribute('filter', 'url(#inSelectedToolPath)');
-        } else {
-            this.elem.setAttribute('filter', 'none');
+
+        switch (this.type) {
+            // case 'path':
+            case 'circle':
+            case 'rect':
+            case 'ellipse':
+                // if (selected) {
+                //     this.elem.setAttribute('fill', '#4383CB');
+                // } else {
+                //     this.elem.setAttribute('fill', DEFAULT_FILL_COLOR);
+                // }
+                if (selected) {
+                    this.elem.setAttribute('filter', 'url(#inSelectedToolPathSVG)');
+                } else {
+                    this.elem.setAttribute('filter', 'none');
+                }
+                break;
+            case 'text':
+                if (selected) {
+                    this.elem.setAttribute('filter', 'url(#inSelectedToolPathText)');
+                } else {
+                    this.elem.setAttribute('filter', 'none');
+                }
+                break;
+            case 'image':
+                if (selected) {
+                    this.elem.setAttribute('filter', 'url(#inSelectedToolPathImage)');
+                } else {
+                    this.elem.setAttribute('filter', 'none');
+                }
+                break;
+            default:
+                break;
         }
-        // switch (this.type) {
-        //     // case 'path':
-        //     case 'circle':
-        //     case 'rect':
-        //     case 'ellipse':
-        //         if (selected) {
-        //             this.elem.setAttribute('fill', '#4383CB');
-        //         } else {
-        //             this.elem.setAttribute('fill', DEFAULT_FILL_COLOR);
-        //         }
-        //         break;
-        //     case 'text':
-        //         if (selected) {
-        //             this.elem.setAttribute('fill', '#4383CB');
-        //         } else {
-        //             this.elem.setAttribute('fill', '#000000');
-        //         }
-        //         break;
-        //     case 'image':
-        //         break;
-        //     default:
-        //         break;
-        // }
     }
 
     genModelConfig() {

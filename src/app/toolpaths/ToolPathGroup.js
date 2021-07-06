@@ -237,9 +237,7 @@ class ToolPathGroup {
             const selectedToolpath = this._getToolPath(id);
             this.toolPathObjects.children.forEach((item) => {
                 if (selectedToolpath && selectedToolpath.object.uuid === item.uuid) {
-                    console.log('in', item);
                     item.children.forEach((meshObj) => {
-                        console.log('mesh', meshObj);
                         meshObj.material = MATERIAL_SELECTED;
                     });
                 }

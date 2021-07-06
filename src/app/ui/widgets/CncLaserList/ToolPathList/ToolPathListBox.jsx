@@ -102,7 +102,7 @@ const ToolpathItem = ({ toolPath, selectedToolPathIDArray, selectToolPathId, sel
                                 )}
                                 title={i18n._('Hide')}
                                 onClick={() => {
-                                    selectToolPathById(toolPath.id);
+                                    // selectToolPathById(toolPath.id);
                                     onClickVisible(toolPath.id, toolPath.visible, toolPath.check);
                                 }}
                                 disabled={disabled}
@@ -117,7 +117,7 @@ const ToolpathItem = ({ toolPath, selectedToolPathIDArray, selectToolPathId, sel
                                 )}
                                 title={i18n._('Show')}
                                 onClick={() => {
-                                    selectToolPathById(toolPath.id);
+                                    // selectToolPathById(toolPath.id);
                                     onClickVisible(toolPath.id, toolPath.visible, toolPath.check);
                                 }}
                                 disabled={disabled}

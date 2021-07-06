@@ -273,11 +273,6 @@ class SvgModel extends BaseModel {
             case 'circle':
             case 'rect':
             case 'ellipse':
-                // if (selected) {
-                //     this.elem.setAttribute('fill', '#4383CB');
-                // } else {
-                //     this.elem.setAttribute('fill', DEFAULT_FILL_COLOR);
-                // }
                 if (selected) {
                     this.elem.setAttribute('filter', 'url(#inSelectedToolPathSVG)');
                 } else {

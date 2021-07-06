@@ -21,7 +21,26 @@ class SVGContentGroup {
         this.backgroundGroup = document.createElementNS(NS.SVG, 'g');
         this.backgroundGroup.setAttribute('id', 'svg-data-background');
 
-        // construct filter used in toolPath
+        this.group = document.createElementNS(NS.SVG, 'g');
+        this.group.setAttribute('id', 'svg-data');
+
+        this.svgContent.append(this.backgroundGroup);
+        this.svgContent.append(this.group);
+
+        this.initFilter();
+        // this.selectorManager = new SelectorManager({
+        //     getRoot: () => this.svgContent,
+        //     scale: this.scale
+        // });
+        this.operatorPoints = new OperatorPoints({
+            getRoot: () => this.svgContent,
+            scale: this.scale
+        });
+        this.operatorPoints.showOperator(true);
+    }
+
+    // construct filter used in toolPath
+    initFilter() {
         const filterText = document.createElementNS(NS.SVG, 'filter');
         filterText.setAttribute('id', 'inSelectedToolPathText');
         const filterElementText = document.createElementNS(NS.SVG, 'feColorMatrix');
@@ -43,23 +62,9 @@ class SVGContentGroup {
         filterElementImage.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
         filterImage.append(filterElementImage);
 
-        this.group = document.createElementNS(NS.SVG, 'g');
-        this.group.setAttribute('id', 'svg-data');
-
-        this.svgContent.append(this.backgroundGroup);
         this.svgContent.append(filterText);
         this.svgContent.append(filterSVG);
         this.svgContent.append(filterImage);
-        this.svgContent.append(this.group);
-        // this.selectorManager = new SelectorManager({
-        //     getRoot: () => this.svgContent,
-        //     scale: this.scale
-        // });
-        this.operatorPoints = new OperatorPoints({
-            getRoot: () => this.svgContent,
-            scale: this.scale
-        });
-        this.operatorPoints.showOperator(true);
     }
 
     // for create new elem

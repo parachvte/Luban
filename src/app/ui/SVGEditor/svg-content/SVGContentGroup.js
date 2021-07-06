@@ -21,10 +21,19 @@ class SVGContentGroup {
         this.backgroundGroup = document.createElementNS(NS.SVG, 'g');
         this.backgroundGroup.setAttribute('id', 'svg-data-background');
 
+        // construct filter used in toolPath
+        const filter = document.createElementNS(NS.SVG, 'filter');
+        filter.setAttribute('id', 'inSelectedToolPath');
+        const filterElement = document.createElementNS(NS.SVG, 'feColorMatrix');
+        filterElement.setAttribute('type', 'matrix');
+        filterElement.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
+        filter.append(filterElement);
+
         this.group = document.createElementNS(NS.SVG, 'g');
         this.group.setAttribute('id', 'svg-data');
 
         this.svgContent.append(this.backgroundGroup);
+        this.svgContent.append(filter);
         this.svgContent.append(this.group);
         // this.selectorManager = new SelectorManager({
         //     getRoot: () => this.svgContent,

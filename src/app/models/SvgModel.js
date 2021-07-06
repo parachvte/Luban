@@ -13,6 +13,7 @@ import api from '../api';
 import { checkIsImageSuffix } from '../../shared/lib/utils';
 
 import BaseModel from './BaseModel';
+// import { DEFAULT_FILL_COLOR } from '../ui/SVGEditor/constants';
 
 const EVENTS = {
     UPDATE: { type: 'update' }
@@ -184,6 +185,8 @@ class SvgModel extends BaseModel {
         this.elem = elem;
         this.size = size;
 
+        this.isToolPathSelect = false;
+
         this.geometry = new THREE.PlaneGeometry(this.width, this.height);
         const material = new THREE.MeshBasicMaterial({ color: 0xe0e0e0, visible: false });
 
@@ -257,6 +260,41 @@ class SvgModel extends BaseModel {
      */
     updateSize(size) {
         this.size = size;
+    }
+
+    /**
+     *
+     */
+    updateIsToolPathSelect(selected) {
+        this.isToolPathSelect = selected;
+        if (selected) {
+            this.elem.setAttribute('filter', 'url(#inSelectedToolPath)');
+        } else {
+            this.elem.setAttribute('filter', 'none');
+        }
+        // switch (this.type) {
+        //     // case 'path':
+        //     case 'circle':
+        //     case 'rect':
+        //     case 'ellipse':
+        //         if (selected) {
+        //             this.elem.setAttribute('fill', '#4383CB');
+        //         } else {
+        //             this.elem.setAttribute('fill', DEFAULT_FILL_COLOR);
+        //         }
+        //         break;
+        //     case 'text':
+        //         if (selected) {
+        //             this.elem.setAttribute('fill', '#4383CB');
+        //         } else {
+        //             this.elem.setAttribute('fill', '#000000');
+        //         }
+        //         break;
+        //     case 'image':
+        //         break;
+        //     default:
+        //         break;
+        // }
     }
 
     genModelConfig() {
@@ -1004,6 +1042,7 @@ class SvgModel extends BaseModel {
             mode: this.mode,
 
             visible: this.visible,
+            isToolPathSelect: this.isToolPathSelect,
 
             sourceHeight: this.sourceHeight,
             sourceWidth: this.sourceWidth,

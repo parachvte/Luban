@@ -206,6 +206,19 @@ class ToolPathGroup {
     addSelectedToolpathColor() {
         const selectedToolpath = this._getToolPath(this.selectedToolPathId);
         let newIndex = -1;
+        // 2D SVGCanvas
+        const { modelGroup } = this;
+        modelGroup.models.forEach((model) => {
+            model.updateIsToolPathSelect(false);
+        });
+        if (selectedToolpath && selectedToolpath.modelIDs) {
+            for (const id of selectedToolpath?.modelIDs) {
+                const model = modelGroup.getModel(id);
+                model.updateIsToolPathSelect(true);
+            }
+        }
+
+        // 3D SMCanvas
         this.toolPathObjects.children.forEach((item, index) => {
             if (selectedToolpath && selectedToolpath.object === item) {
                 newIndex = index;

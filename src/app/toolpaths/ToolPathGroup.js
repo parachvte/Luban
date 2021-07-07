@@ -243,12 +243,14 @@ class ToolPathGroup {
                 }
             });
         });
-        // this.toolPaths.forEach((toolpath) => {
-        //     // The cloned object must be used to force updating the scene
-        //     this.toolPathObjects.remove(toolpath.object);
-        //     toolpath.object = toolpath.object.clone();
-        //     this.toolPathObjects.add(toolpath.object);
-        // });
+        // The cloned object must be used to force updating the scene
+        // The mesh object last add will show first in SMCanvas
+        this.selectedToolPathArray.forEach((id) => {
+            const selectedToolpath = this._getToolPath(id);
+            this.toolPathObjects.remove(selectedToolpath.object);
+            selectedToolpath.object = selectedToolpath.object.clone();
+            this.toolPathObjects.add(selectedToolpath.object);
+        });
     }
 
     toolPathToUp(toolPathId) {

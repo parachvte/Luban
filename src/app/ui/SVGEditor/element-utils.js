@@ -78,6 +78,7 @@ function createSVGElement(data) {
     setAttributes(element, {
         // fill: '#00B7E9',
         fill: DEFAULT_FILL_COLOR,
+        'fill-opacity': 0,
         stroke: '#000000'
     });
     setAttributes(element, data.attr);

@@ -45,21 +45,21 @@ class SVGContentGroup {
         filterText.setAttribute('id', 'inSelectedToolPathText');
         const filterElementText = document.createElementNS(NS.SVG, 'feColorMatrix');
         filterElementText.setAttribute('type', 'matrix');
-        filterElementText.setAttribute('values', '0.25 0 0 0 0.25 0 0.5 0 0 0.5 0 0 0.75 0 0.75 0 0 0 0.8 0');
+        filterElementText.setAttribute('values', '0.125 0 0 0 0.125 0 0.25 0 0 0.25 0 0 0.375 0 0.375 0 0 0 0.8 0');
         filterText.append(filterElementText);
 
         const filterSVG = document.createElementNS(NS.SVG, 'filter');
         filterSVG.setAttribute('id', 'inSelectedToolPathSVG');
         const filterElementSVG = document.createElementNS(NS.SVG, 'feColorMatrix');
         filterElementSVG.setAttribute('type', 'matrix');
-        filterElementSVG.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
+        filterElementSVG.setAttribute('values', '0.125 0 0 0 0.125 0 0.25 0 0 0.25 0 0 0.375 0 0.375 0 0 0 0.8 0');
         filterSVG.append(filterElementSVG);
 
         const filterImage = document.createElementNS(NS.SVG, 'filter');
         filterImage.setAttribute('id', 'inSelectedToolPathImage');
         const filterElementImage = document.createElementNS(NS.SVG, 'feColorMatrix');
         filterElementImage.setAttribute('type', 'matrix');
-        filterElementImage.setAttribute('values', '0.25 0 0 0 0 0 0.5 0 0 0 0 0 0.75 0 0 0 0 0 0.8 0');
+        filterElementImage.setAttribute('values', '0.125 0 0 0 0.125 0 0.25 0 0 0.25 0 0 0.375 0 0.375 0 0 0 0.8 0');
         filterImage.append(filterElementImage);
 
         this.svgContent.append(filterText);

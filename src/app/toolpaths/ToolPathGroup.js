@@ -84,7 +84,7 @@ class ToolPathGroup {
     }
 
     // Select
-    selectToolPathById(toolPathId) {
+    selectToolPathById(toolPathId = null) {
         if (!toolPathId) {
             this.selectedToolPathArray = [];
         } else {
@@ -226,7 +226,7 @@ class ToolPathGroup {
             if (selectedToolpath && selectedToolpath.modelIDs) {
                 for (const modelId of selectedToolpath?.modelIDs) {
                     const model = modelGroup.getModel(modelId);
-                    model.updateIsToolPathSelect(true);
+                    model && model.updateIsToolPathSelect(true);
                 }
             }
         });
@@ -303,7 +303,7 @@ class ToolPathGroup {
             this.toolPathObjects.remove(toolPath.object);
         }
 
-        this.selectedToolPathArray = [];
+        this.selectToolPathById(null);
 
         this._updated();
     }
@@ -316,7 +316,7 @@ class ToolPathGroup {
             }
         });
         this.toolPaths = [];
-        this.selectedToolPathArray = [];
+        this.selectToolPathById(null);
 
         this._updated();
     }

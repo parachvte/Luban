@@ -203,6 +203,7 @@ export const actions = {
             for (let k = 0; k < toolpaths.length; k++) {
                 toolPathGroup.saveToolPath(toolpaths[k], { materials }, false);
             }
+            toolPathGroup.selectToolPathById(null);
             dispatch(modActions.updateState(envHeadType, toolPathGroup));
         }
         dispatch(modActions.updateState(envHeadType, restState));

@@ -78,14 +78,14 @@ function createSVGElement(data) {
     setAttributes(element, {
         // fill: '#00B7E9',
         fill: DEFAULT_FILL_COLOR,
-        'fill-opacity': 0,
+        'fill-opacity': (data.element === 'text' ? 1 : 0),
         stroke: '#000000'
     });
-    setAttributes(element, data.attr);
     cleanupAttributes(element);
     if (data.element === 'text' && data.attr.textContent) {
         element.textContent = data.attr.textContent;
     }
+    setAttributes(element, data.attr);
     // add children?
     return element;
 }

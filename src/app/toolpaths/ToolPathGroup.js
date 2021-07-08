@@ -74,7 +74,7 @@ class ToolPathGroup {
 
         if (toolPath) {
             await toolPath.onGenerateToolPath(taskResult);
-            this.addSelectedToolpathColor();
+            this.addSelectedToolpathColor(true);
             this._updated();
         }
     }
@@ -85,7 +85,11 @@ class ToolPathGroup {
 
     // Select
     selectToolPathById(toolPathId) {
-        this.selectedToolPathArray = [toolPathId];
+        if (!toolPathId) {
+            this.selectedToolPathArray = [];
+        } else {
+            this.selectedToolPathArray = [toolPathId];
+        }
         this.addSelectedToolpathColor();
         this._updated();
     }
@@ -211,7 +215,7 @@ class ToolPathGroup {
         }
     }
 
-    addSelectedToolpathColor() {
+    addSelectedToolpathColor(withoutSelection = false) {
         // 2D SVGCanvas
         const { modelGroup } = this;
         modelGroup.models.forEach((model) => {
@@ -245,12 +249,14 @@ class ToolPathGroup {
         });
         // The cloned object must be used to force updating the scene
         // The mesh object last add will show first in SMCanvas
-        this.selectedToolPathArray.forEach((id) => {
-            const selectedToolpath = this._getToolPath(id);
-            this.toolPathObjects.remove(selectedToolpath.object);
-            selectedToolpath.object = selectedToolpath.object.clone();
-            this.toolPathObjects.add(selectedToolpath.object);
-        });
+        if (!withoutSelection) {
+            this.selectedToolPathArray.forEach((id) => {
+                const selectedToolpath = this._getToolPath(id);
+                this.toolPathObjects.remove(selectedToolpath.object);
+                selectedToolpath.object = selectedToolpath.object.clone();
+                this.toolPathObjects.add(selectedToolpath.object);
+            });
+        }
     }
 
     toolPathToUp(toolPathId) {

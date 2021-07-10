@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { PureComponent } from 'react';
 import * as Icons from 'snapmaker-react-icon';
 import classNames from 'classnames';
-import Anchor from '../Anchor';
+import { noop } from 'lodash';
 
 class SvgIcon extends PureComponent {
     static propTypes = {
@@ -73,10 +73,13 @@ class SvgIcon extends PureComponent {
                         onChange={inputInfo.onChange}
                     />
                 )}
-                <Anchor
+                <div
                     className={classNames(className, 'display-inline')}
                     title={title}
                     disabled={disabled}
+                    onKeyDown={noop}
+                    role="button"
+                    tabIndex={0}
                     onClick={onClick}
                     onFocus={() => 0}
                     onBlur={() => 0}
@@ -100,7 +103,7 @@ class SvgIcon extends PureComponent {
                             {spanText}
                         </div>
                     )}
-                </Anchor>
+                </div>
             </span>
         );
     }

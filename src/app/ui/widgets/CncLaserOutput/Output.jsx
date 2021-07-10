@@ -188,6 +188,7 @@ class Output extends PureComponent {
                     >
                         {i18n._('Preview')}
                     </Button>
+
                     {displayedType === DISPLAYED_TYPE_TOOLPATH && !this.state.showExportOptions && (
                         <Button
                             type="primary"

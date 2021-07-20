@@ -20,7 +20,7 @@ export default class DeleteOperation2D extends Operation {
         const svgActions = this.state.svgActions;
         const toolPathGroup = this.state.toolPathGroup;
 
-        const id = model.elem.id;
+        const id = model.modelID;
         toolPathGroup.toolPaths.forEach((item) => {
             const index = item.modelIDs.indexOf(id);
             if (index > -1) {
@@ -44,13 +44,15 @@ export default class DeleteOperation2D extends Operation {
         const svgActions = this.state.svgActions;
         const toolPathGroup = this.state.toolPathGroup;
 
-        const id = model.elem.id;
+        const id = model.modelID;
         this.state.toolPaths.forEach((item) => {
             if (!toolPathGroup.toolPaths.includes(item)) {
                 toolPathGroup.toolPaths.push(item);
                 toolPathGroup.toolPathObjects.add(item.object);
             }
-            item.modelIDs.push(id);
+            if (item.modelIDs.indexOf(id) < 0) {
+                item.modelIDs.push(id);
+            }
         });
         this.state.toolPaths = [];
         toolPathGroup._updated();

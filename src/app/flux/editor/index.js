@@ -700,11 +700,12 @@ export const actions = {
                 svgActions: SVGActions,
                 toolPathGroup,
                 toolPaths: toolPathGroup.toolPaths.filter((item) => {
-                    const index = item.modelIDs.indexOf(svgModel.elem.id);
+                    const index = item.modelIDs.indexOf(svgModel.modelID);
                     if (index > -1) {
                         item.modelIDs.splice(index, 1);
+                        return true;
                     }
-                    return true;
+                    return false;
                 })
             });
             operations.push(operation);

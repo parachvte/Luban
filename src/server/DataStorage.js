@@ -111,8 +111,7 @@ class DataStorage {
                  const src = path.join(CURA_ENGINE_CONFIG_LOCAL, file);
                  const dst = path.join(this.configDir, file);
                  if (fs.statSync(src).isFile()) {
-                     // console.log('path', dst);
-                     if (!fs.existsSync(dst)) {
+                     if (fs.existsSync(dst)) {
                          continue;
                      }
                      fs.copyFileSync(src, dst, () => {
@@ -135,7 +134,6 @@ class DataStorage {
                  const srcPath = path.join(src, file);
                  const dstPath = path.join(dst, file);
                  if (fs.statSync(srcPath).isFile()) {
-                     // console.log('path', dstPath);
                      if (fs.existsSync(dstPath)) {
                          return;
                      }

@@ -1570,7 +1570,8 @@ export const actions = {
         };
         createLoadModelWorker(uploadPath, onMessage);
     },
-    recordAddOperation: (model) => (dispatch) => {
+    recordAddOperation: (model) => (dispatch, getState) => {
+        const { modelGroup } = getState().printing;
         if (!model.supportTag) {
             // support should be recorded when mouse clicked
             const operation = new AddOperation3D({
@@ -1579,6 +1580,19 @@ export const actions = {
             });
             const operations = new Operations();
             operations.push(operation);
+            operations.registCallbackAfterAll(() => {
+                const modelState = modelGroup.getState();
+                if (!modelState.hasModel) {
+                    dispatch(actions.updateState({
+                        stage: PRINTING_STAGE.EMPTY,
+                        inProgress: false,
+                        progress: 0
+                    }));
+                }
+                dispatch(actions.updateState(modelState));
+                dispatch(actions.destroyGcodeLine());
+                dispatch(actions.render());
+            });
             dispatch(operationHistoryActions.setOperations(INITIAL_STATE.name, operations));
         }
     }

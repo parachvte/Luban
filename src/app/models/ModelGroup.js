@@ -264,7 +264,7 @@ class ModelGroup extends EventEmitter {
             model.meshObject.removeEventListener('update', this.onModelUpdate);
             model.meshObject.parent.remove(model.meshObject);
         }
-        this.models.splice(0);
+        this.models = [];
     }
 
     /**

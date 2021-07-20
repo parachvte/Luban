@@ -94,56 +94,41 @@ function ToolSelector(props) {
     return (
         <div>
             <React.Fragment>
-                <div className="sm-parameter-container">
-                    <div
-                        className={classNames(
-                            styles['manager-wrapper']
-                        )}
-                    >
-                        <span className={classNames(
-                            'sm-parameter-row__label',
-                            styles['manager-select-name'],
-                        )}
-                        >
-                            {i18n._('Tool')}
-                        </span>
-                        {(isModifiedDefinition
-                            && (
-                                <span
-                                    className={classNames(
-                                        styles['manager-is-modified']
-                                    )}
-                                />
-                            )
-                        )}
-                        <Select
-                            className={classNames(
-                                styles['manager-select'],
-                                'sm-parameter-row__select'
-                            )}
-                            clearable={false}
-                            isGroup
-                            valueObj={valueObj}
-                            options={toolDefinitionOptions}
-                            placeholder={i18n._('Choose profile')}
-                            onChange={onChangeActiveToolListValue}
-                        />
-                        <p className={classNames(
-                            styles['manager-detail'],
-                        )}
-                        >
-                            {foundDefinition && `${i18n._('Material')} : ${foundDefinition.label}`}
-                        </p>
-                        <Anchor
-                            onClick={onShowCncToolManager}
-                        >
+                <div className="position-re sm-flex justify-space-between height-32 margin-vertical-8">
+                    <span className="sm-flex-auto">
+                        {i18n._('Tool')}
+                    </span>
+                    {(isModifiedDefinition
+                        && (
                             <span
                                 className={classNames(
-                                    styles['manager-icon'],
+                                    styles['manager-is-modified']
                                 )}
                             />
-                        </Anchor>
-                    </div>
+                        )
+                    )}
+                    <Select
+                        className="sm-flex-auto"
+                        clearable={false}
+                        isGroup
+                        valueObj={valueObj}
+                        options={toolDefinitionOptions}
+                        placeholder={i18n._('Choose profile')}
+                        onChange={onChangeActiveToolListValue}
+                    />
+                    <p className="sm-flex-auto">
+                        {foundDefinition && `${i18n._('Material')} : ${foundDefinition.label}`}
+                    </p>
+                    <Anchor
+                        className="sm-flex-auto"
+                        onClick={onShowCncToolManager}
+                    >
+                        <span
+                            className={classNames(
+                                styles['manager-icon'],
+                            )}
+                        />
+                    </Anchor>
                 </div>
                 {renderModalView()}
             </React.Fragment>

@@ -453,19 +453,6 @@ const ToolPathListBox = (props) => {
                     onClose={() => setEditingToolpath(null)}
                 />
             )}
-
-            {selectedToolPath && selectedToolPath.headType === HEAD_CNC && activeToolListDefinition && (
-                <ToolSelector
-                    toolDefinition={activeToolListDefinition}
-                    toolDefinitions={toolDefinitions}
-                    isModifiedDefinition={() => {
-                        return !Object.entries(activeToolListDefinition.settings).every(([key, setting]) => {
-                            return fastEditSettings && fastEditSettings[key].default_value === setting.default_value;
-                        });
-                    }}
-                    setCurrentValueAsProfile={() => {}}
-                />
-            )}
             {selectedToolPath && (
                 <div className={classNames(
                     'border-default-grey-1',
@@ -474,6 +461,18 @@ const ToolPathListBox = (props) => {
                     'clearfix'
                 )}
                 >
+                    {selectedToolPath && selectedToolPath.headType === HEAD_CNC && activeToolListDefinition && (
+                        <ToolSelector
+                            toolDefinition={activeToolListDefinition}
+                            toolDefinitions={toolDefinitions}
+                            isModifiedDefinition={() => {
+                                return !Object.entries(activeToolListDefinition.settings).every(([key, setting]) => {
+                                    return fastEditSettings && fastEditSettings[key].default_value === setting.default_value;
+                                });
+                            }}
+                            setCurrentValueAsProfile={() => {}}
+                        />
+                    )}
                     <ToolParameters
                         settings={fastEditSettings}
                         updateToolConfig={actions.updateToolConfig}
